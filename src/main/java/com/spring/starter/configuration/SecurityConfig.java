@@ -36,28 +36,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationConfig jwtConfig() {
         return new JwtAuthenticationConfig();
     }
-    
-	@Autowired
-	DataSource dataSource;
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Autowired
+    DataSource dataSource;
 
-	// Enable jdbc authentication
-	@Autowired
-	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder());
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public JdbcUserDetailsManager jdbcUserDetailsManager() throws Exception {
-		JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
-		jdbcUserDetailsManager.setDataSource(dataSource);
-		return jdbcUserDetailsManager;
-	}
-    
+    // Enable jdbc authentication
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public JdbcUserDetailsManager jdbcUserDetailsManager() throws Exception {
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
+        jdbcUserDetailsManager.setDataSource(dataSource);
+        return jdbcUserDetailsManager;
+    }
+
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -80,8 +80,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(config.getUrl()).permitAll()
                 .antMatchers("/staffUsers/addNewUser").hasRole("ADMIN")
                 .antMatchers("/staffUsers/addStaffUserFirstTime").permitAll()
-                .antMatchers("/staffUsers/login").permitAll()
+                .antMatchers("/staffUsers/login/**").permitAll()
                 .antMatchers("/staffRoles").permitAll()
+                .antMatchers("/CustomerServiceRequest/**").permitAll()
                 .anyRequest().authenticated();
     }
 }

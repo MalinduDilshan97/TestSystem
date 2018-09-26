@@ -51,11 +51,11 @@ public class CustomerServiceRequestForm {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<ChangeIdentificationForm> changeIdentification;
+	private List<IdentificationForm> changeIdentification;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<ChangeTelephoneNoOrEmail> changeTelephoneNoOrEmail;
+	private List<ContactDetails> contactDetails;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
@@ -80,8 +80,8 @@ public class CustomerServiceRequestForm {
 	public CustomerServiceRequestForm(int customerServiceRequestFormId, Customer customer,
 			List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebit> atmOrDebit,
 			List<ChangeMailingMailModel> changeMailingMail, List<ChangePermanentMail> changePermanentMail,
-			List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<ChangeIdentificationForm> changeIdentification,
-			List<ChangeTelephoneNoOrEmail> changeTelephoneNoOrEmail,
+			List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<IdentificationForm> changeIdentification,
+			List<ContactDetails> contactDetails,
 			List<BankStatementOrPassbookForm> bankStatementOrPassbookForm, List<FdOrCd> fdOrCd,
 			List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm, String otherRequests,
 			boolean status) {
@@ -95,7 +95,7 @@ public class CustomerServiceRequestForm {
 		this.changePermanentMail = changePermanentMail;
 		this.smsAlertsForCreditCard = smsAlertsForCreditCard;
 		this.changeIdentification = changeIdentification;
-		this.changeTelephoneNoOrEmail = changeTelephoneNoOrEmail;
+		this.contactDetails = contactDetails;
 		this.bankStatementOrPassbookForm = bankStatementOrPassbookForm;
 		this.fdOrCd = fdOrCd;
 		this.stopPaymentOrRevocationPaymentForm = stopPaymentOrRevocationPaymentForm;
@@ -169,20 +169,20 @@ public class CustomerServiceRequestForm {
 		this.smsAlertsForCreditCard = smsAlertsForCreditCard;
 	}
 
-	public List<ChangeIdentificationForm> getChangeIdentification() {
+	public List<IdentificationForm> getChangeIdentification() {
 		return changeIdentification;
 	}
 
-	public void setChangeIdentification(List<ChangeIdentificationForm> changeIdentification) {
+	public void setChangeIdentification(List<IdentificationForm> changeIdentification) {
 		this.changeIdentification = changeIdentification;
 	}
 
-	public List<ChangeTelephoneNoOrEmail> getChangeTelephoneNoOrEmail() {
-		return changeTelephoneNoOrEmail;
+	public List<ContactDetails> getContactDetails() {
+		return contactDetails;
 	}
 
-	public void setChangeTelephoneNoOrEmail(List<ChangeTelephoneNoOrEmail> changeTelephoneNoOrEmail) {
-		this.changeTelephoneNoOrEmail = changeTelephoneNoOrEmail;
+	public void setContactDetails(List<ContactDetails> contactDetails) {
+		this.contactDetails = contactDetails;
 	}
 
 	public List<BankStatementOrPassbookForm> getBankStatementOrPassbookForm() {
