@@ -2,6 +2,7 @@ package com.spring.starter.controller;
 
 
 import com.spring.starter.DTO.WithholdingFdCdDTO;
+import com.spring.starter.model.DuplicateFdCdCert;
 import com.spring.starter.model.OtherFdCdRelatedRequest;
 import com.spring.starter.service.FdorCdService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +27,8 @@ public class FdorCdController {
         return fdorCdService.addRelatedRequest(otherFdCdRelatedRequest,requestId);
     }
 
+    @PostMapping("addDuplicateFdCdCert")
+    public ResponseEntity<?> addDuplicateFdCdCert(@RequestBody DuplicateFdCdCert duplicateFdCdCert,@RequestParam(name="requestId") int requestId){
+       return fdorCdService.addDuplicateFdCdCert(duplicateFdCdCert,requestId);
+    }
 }

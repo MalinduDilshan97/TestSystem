@@ -1,10 +1,7 @@
 package com.spring.starter.service.impl;
 
 import com.spring.starter.DTO.WithholdingFdCdDTO;
-import com.spring.starter.Repository.CustomerServiceRequestRepository;
-import com.spring.starter.Repository.FdCdNumbersRepository;
-import com.spring.starter.Repository.OtherFdCdRelatedRequestRepository;
-import com.spring.starter.Repository.WithholdingFdCdRepository;
+import com.spring.starter.Repository.*;
 import com.spring.starter.model.*;
 import com.spring.starter.service.FdorCdService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,8 @@ public class FdorCdServiceImpl implements FdorCdService {
     WithholdingFdCdRepository withholdingFdCdRepository;
     @Autowired
     OtherFdCdRelatedRequestRepository otherFdCdRelatedRequestRepository;
+    @Autowired
+    DuplicateFdCdCertRepository duplicateFdCdCertRepository;
 
 
 
@@ -121,5 +120,42 @@ public class FdorCdServiceImpl implements FdorCdService {
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<?> addDuplicateFdCdCert(DuplicateFdCdCert duplicateFdCdCert, int requestId) {
+        ResponseModel responsemodel = new ResponseModel();
+        Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(requestId);
+        if(!customerServiceRequest.isPresent()) {
+            responsemodel.setMessage("There is No such service Available");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
+        int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
+        if(serviceRequestId != 10)
+        {
+            responsemodel.setMessage("Invalid Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<DuplicateFdCdCert> duplicateFdCdCertOptional=duplicateFdCdCertRepository.findByRequestId(requestId);
+        if (duplicateFdCdCertOptional.isPresent()){
+            duplicateFdCdCert.setDuplicateId(duplicateFdCdCertOptional.get().getDuplicateId());
+        }
+
+        duplicateFdCdCert.setCustomerServiceRequest(customerServiceRequest.get());
+        try{
+            duplicateFdCdCertRepository.save(duplicateFdCdCert);
+            responsemodel.setMessage("Successfully added duplicate fd/cd");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        }catch (Exception e){
+        responsemodel.setMessage("Error  in creating duplicate fd/cd");
+        responsemodel.setStatus(false);
+        return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+    }
+
+    }
+
 
 }
