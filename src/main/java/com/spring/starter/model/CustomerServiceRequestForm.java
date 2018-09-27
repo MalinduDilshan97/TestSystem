@@ -35,7 +35,7 @@ public class CustomerServiceRequestForm {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<AtmOrDebit> atmOrDebit;
+	private List<AtmOrDebitCardRequest> atmOrDebitCardRequest;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
@@ -51,11 +51,11 @@ public class CustomerServiceRequestForm {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<ChangeIdentificationForm> changeIdentification;
+	private List<IdentificationForm> changeIdentification;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<ChangeTelephoneNoOrEmail> changeTelephoneNoOrEmail;
+	private List<ContactDetails> contactDetails;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
@@ -67,7 +67,7 @@ public class CustomerServiceRequestForm {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm;
+	private List<EffectOrRevokePayment> effectOrRevokePayment;
 
 	private String otherRequests;
 
@@ -78,27 +78,27 @@ public class CustomerServiceRequestForm {
 	}
 
 	public CustomerServiceRequestForm(int customerServiceRequestFormId, Customer customer,
-			List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebit> atmOrDebit,
-			List<ChangeMailingMailModel> changeMailingMail, List<ChangePermanentMail> changePermanentMail,
-			List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<ChangeIdentificationForm> changeIdentification,
-			List<ChangeTelephoneNoOrEmail> changeTelephoneNoOrEmail,
-			List<BankStatementOrPassbookForm> bankStatementOrPassbookForm, List<FdOrCd> fdOrCd,
-			List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm, String otherRequests,
-			boolean status) {
+                                      List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebitCardRequest> atmOrDebitCardRequest,
+                                      List<ChangeMailingMailModel> changeMailingMail, List<ChangePermanentMail> changePermanentMail,
+                                      List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<IdentificationForm> changeIdentification,
+                                      List<ContactDetails> contactDetails,
+                                      List<BankStatementOrPassbookForm> bankStatementOrPassbookForm, List<FdOrCd> fdOrCd,
+                                      List<EffectOrRevokePayment> effectOrRevokePayment, String otherRequests,
+                                      boolean status) {
 		super();
 		CustomerServiceRequestFormId = customerServiceRequestFormId;
 		this.customer = customer;
 		this.customerServiceRequest = customerServiceRequest;
 		this.staffUser = staffUser;
-		this.atmOrDebit = atmOrDebit;
+		this.atmOrDebitCardRequest = atmOrDebitCardRequest;
 		this.changeMailingMail = changeMailingMail;
 		this.changePermanentMail = changePermanentMail;
 		this.smsAlertsForCreditCard = smsAlertsForCreditCard;
 		this.changeIdentification = changeIdentification;
-		this.changeTelephoneNoOrEmail = changeTelephoneNoOrEmail;
+		this.contactDetails = contactDetails;
 		this.bankStatementOrPassbookForm = bankStatementOrPassbookForm;
 		this.fdOrCd = fdOrCd;
-		this.stopPaymentOrRevocationPaymentForm = stopPaymentOrRevocationPaymentForm;
+		this.effectOrRevokePayment = effectOrRevokePayment;
 		this.otherRequests = otherRequests;
 		this.status = status;
 	}
@@ -137,12 +137,12 @@ public class CustomerServiceRequestForm {
 		this.staffUser = staffUser;
 	}
 
-	public List<AtmOrDebit> getAtmOrDebit() {
-		return atmOrDebit;
+	public List<AtmOrDebitCardRequest> getAtmOrDebitCardRequest() {
+		return atmOrDebitCardRequest;
 	}
 
-	public void setAtmOrDebit(List<AtmOrDebit> atmOrDebit) {
-		this.atmOrDebit = atmOrDebit;
+	public void setAtmOrDebitCardRequest(List<AtmOrDebitCardRequest> atmOrDebitCardRequest) {
+		this.atmOrDebitCardRequest = atmOrDebitCardRequest;
 	}
 
 	public List<ChangeMailingMailModel> getChangeMailingMail() {
@@ -169,20 +169,20 @@ public class CustomerServiceRequestForm {
 		this.smsAlertsForCreditCard = smsAlertsForCreditCard;
 	}
 
-	public List<ChangeIdentificationForm> getChangeIdentification() {
+	public List<IdentificationForm> getChangeIdentification() {
 		return changeIdentification;
 	}
 
-	public void setChangeIdentification(List<ChangeIdentificationForm> changeIdentification) {
+	public void setChangeIdentification(List<IdentificationForm> changeIdentification) {
 		this.changeIdentification = changeIdentification;
 	}
 
-	public List<ChangeTelephoneNoOrEmail> getChangeTelephoneNoOrEmail() {
-		return changeTelephoneNoOrEmail;
+	public List<ContactDetails> getContactDetails() {
+		return contactDetails;
 	}
 
-	public void setChangeTelephoneNoOrEmail(List<ChangeTelephoneNoOrEmail> changeTelephoneNoOrEmail) {
-		this.changeTelephoneNoOrEmail = changeTelephoneNoOrEmail;
+	public void setContactDetails(List<ContactDetails> contactDetails) {
+		this.contactDetails = contactDetails;
 	}
 
 	public List<BankStatementOrPassbookForm> getBankStatementOrPassbookForm() {
@@ -201,13 +201,13 @@ public class CustomerServiceRequestForm {
 		this.fdOrCd = fdOrCd;
 	}
 
-	public List<StopPaymentOrRevocationPaymentForm> getStopPaymentOrRevocationPaymentForm() {
-		return stopPaymentOrRevocationPaymentForm;
+	public List<EffectOrRevokePayment> getEffectOrRevokePayment() {
+		return effectOrRevokePayment;
 	}
 
-	public void setStopPaymentOrRevocationPaymentForm(
-			List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm) {
-		this.stopPaymentOrRevocationPaymentForm = stopPaymentOrRevocationPaymentForm;
+	public void setEffectOrRevokePayment(
+			List<EffectOrRevokePayment> effectOrRevokePayment) {
+		this.effectOrRevokePayment = effectOrRevokePayment;
 	}
 
 	public String getOtherRequests() {

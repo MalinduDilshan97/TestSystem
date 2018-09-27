@@ -1,161 +1,206 @@
 package com.spring.starter.service.impl;
 
-import java.util.Optional;
-
 import javax.transaction.Transactional;
 
+import com.spring.starter.DTO.*;
+import com.spring.starter.Repository.*;
+import com.spring.starter.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.spring.starter.Repository.AtmOrDebitRepository;
-import com.spring.starter.Repository.CustomerServiceRequestRepository;
-import com.spring.starter.model.AtmOrDebit;
-import com.spring.starter.model.CustomerServiceRequest;
-import com.spring.starter.model.ResponseModel;
 import com.spring.starter.service.AtmOrDebitCardService;
+
+import java.util.Optional;
 
 @Service
 @Transactional
 public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
 
-	@Autowired
-	private CustomerServiceRequestRepository customerServiceRequestRepository; 
-	
-	@Autowired AtmOrDebitRepository atmOrDebitRepository;
-	
-	
-	@Override
-	public ResponseEntity<?> atmOrDebitCardRequest(AtmOrDebit atmOrDebit, int customerServiceRequestId) {
-		ResponseModel responsemodel = new ResponseModel();
-		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
-		if(!customerServiceRequest.isPresent()) {
-			responsemodel.setMessage("There is No such service Available");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
-		}
-		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != 2) 
-		{
-			responsemodel.setMessage("Invalied Request");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-		}
-		
-		Optional<AtmOrDebit> optionalAtmOrDebit = atmOrDebitRepository.getFormFromCSR(customerServiceRequestId);
-		if(optionalAtmOrDebit.isPresent()) {
-			atmOrDebit.setAtmOrDebitId(optionalAtmOrDebit.get().getAtmOrDebitId());
-		}
-		
-		atmOrDebit.setCustomerServiceRequest(customerServiceRequest.get());
-		if(atmOrDebit.isSubscribeToSmsAlerts()) 
-		{
-			if(atmOrDebit.getMobileNumberForSmsAlert() == null) 
-			{
-				responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		} if(atmOrDebit.isIncresePointOfSale()) {
-			if(atmOrDebit.getIncresingAmmount() == 0) 
-			{
-				responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		} if(atmOrDebit.isLinkNewAccountToCard()) {
-			if(atmOrDebit.getPrimaryAccNo() == null || atmOrDebit.getSecondaryAccNo()==null || atmOrDebit.getNewPrimaryAccountNo()==null) {
-				responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		} if(atmOrDebit.isReissueAPin()) {
-			if(atmOrDebit.isAtBranch()) 
-			{
-				if(atmOrDebit.getBranch() == null) 
-				{
-					responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-					responsemodel.setStatus(false);
-					return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-				} 
-			} else if(atmOrDebit.isPostToAddress()) {
-				if(atmOrDebit.getPostAddress()==null) {
-					responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-					responsemodel.setStatus(false);
-					return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-				}
-			}
-		}
-		try {
-		atmOrDebitRepository.save(atmOrDebit);
-		responsemodel.setMessage("atm or debit request saved successfully");
-		responsemodel.setStatus(true);
-		return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-		} catch (Exception e) {
-			responsemodel.setMessage("Something went wrong with the DB connection");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
-		}
-	}
-	
-	public ResponseEntity<?> updateAtmOrDebitCardRequest(AtmOrDebit request ,int FormId){
-		ResponseModel responsemodel = new ResponseModel();
-	 	Optional<AtmOrDebit> atmOrDebitOpt = atmOrDebitRepository.findById(FormId);
-	 	if(!atmOrDebitOpt.isPresent()) {
-			responsemodel.setMessage("Invalied Request");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-	 	}
-	 	request.setAtmOrDebitId(atmOrDebitOpt.get().getAtmOrDebitId());
-		if(request.isSubscribeToSmsAlerts()) 
-		{
-			if(request.getMobileNumberForSmsAlert() == null) 
-			{
-				responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		} if(request.isIncresePointOfSale()) {
-			if(request.getIncresingAmmount() == 0) 
-			{
-				responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		} if(request.isLinkNewAccountToCard()) {
-			if(request.getPrimaryAccNo() == null || request.getSecondaryAccNo()==null || request.getNewPrimaryAccountNo()==null) {
-				responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		} if(request.isReissueAPin()) {
-			if(request.isAtBranch()) 
-			{
-				if(request.getBranch() == null) 
-				{
-					responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-					responsemodel.setStatus(false);
-					return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-				} 
-			} else if(request.isPostToAddress()) {
-				if(request.getPostAddress()==null) {
-					responsemodel.setMessage("Please Complete All your the Data For Complete the request");
-					responsemodel.setStatus(false);
-					return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-				}
-			}
-		}
-		
-		try {
-			atmOrDebitRepository.save(request);
-			responsemodel.setMessage("atm or debit request saved successfully");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-			} catch (Exception e) {
-				responsemodel.setMessage("Something went wrong with the DB connection");
-				responsemodel.setStatus(true);
-				return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
-			}
-	}
+    @Autowired
+    private CustomerServiceRequestRepository customerServiceRequestRepository;
+    @Autowired
+    private AtmOrDebitCardRequestRepository atmOrDebitCardRequestRepository;
+    @Autowired
+    private ReIssuePinRequestRepository reIssuePinRequestRepository;
+    @Autowired
+    private SmsSubscriptionRepository smsSubscriptionRepository;
+    @Autowired
+    private PosLimitRepository posLimitRepository;
+    @Autowired
+    private LinkedAccountRepository linkedAccountRepository;
+    @Autowired
+    private ChangePrimaryAccountRepository changePrimaryAccountRepository;
+
+    private ResponseModel res = new ResponseModel();
+
+    @Override
+    public ResponseEntity<?> atmOrDebitCardRequest(AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO) {
+
+        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()){
+            res.setMessage(" No Data Found To Complete The Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }else{
+
+            CustomerServiceRequest customerServiceRequest=optional.get();
+
+            AtmOrDebitCardRequest atmOrDebitCardRequest=new AtmOrDebitCardRequest(0,
+                    atmOrDebitCardRequestDTO.getCardNumber(),customerServiceRequest);
+
+            if (atmOrDebitCardRequestRepository.save(atmOrDebitCardRequest)!=null){
+                res.setMessage(" Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            }else{
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<?> reIssueAPin(ReIssuePinRequestDTO reIssuePinRequestDTO) {
+        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(reIssuePinRequestDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()){
+            res.setMessage(" No Data Found To Complete The Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }else{
+
+            CustomerServiceRequest customerServiceRequest=optional.get();
+
+            ReIssuePinRequest reIssuePinRequest= new ReIssuePinRequest(0,
+                    reIssuePinRequestDTO.getBranch(),
+                    reIssuePinRequestDTO.getAddress(),
+                    customerServiceRequest);
+
+            if (reIssuePinRequestRepository.save(reIssuePinRequest)!=null){
+                res.setMessage(" Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            }else{
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> smsSubscription(SmsSubscriptionDTO smsSubscriptionDTO) {
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(smsSubscriptionDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()) {
+            res.setMessage(" No Data Found To Complete The Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        } else {
+
+            CustomerServiceRequest customerServiceRequest = optional.get();
+
+            SmsSubscription smsSubscription = new SmsSubscription(0, smsSubscriptionDTO.getCardNumber(),
+                    smsSubscriptionDTO.getMobileNumber(),
+                    customerServiceRequest);
+
+            SmsSubscription save = smsSubscriptionRepository.save(smsSubscription);
+
+            if (save != null) {
+                res.setMessage(" Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            } else {
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> increasePosLimit(PosLimitDTO posLimitDTO) {
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(posLimitDTO.getCustomerServiceRequestId());
+            if (!optional.isPresent()) {
+                res.setMessage(" No Data Found To Complete The Request");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            } else {
+
+                CustomerServiceRequest customerServiceRequest = optional.get();
+
+            PosLimit posLimit= new PosLimit(0,posLimitDTO.getCardNumber(),posLimitDTO.getValue(),customerServiceRequest);
+
+            if (posLimitRepository.save(posLimit)!=null){
+                res.setMessage(" Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            }else{
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> accountLinkedToTheCard(LinkedAccountDTO linkedAccountDTO) {
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(linkedAccountDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()) {
+            res.setMessage(" No Data Found To Complete The Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        } else {
+
+            CustomerServiceRequest customerServiceRequest = optional.get();
+
+            LinkedAccount linkedAccount= new LinkedAccount(0,
+                    linkedAccountDTO.getCardNumber(),
+                    linkedAccountDTO.getPrimaryAccount(),
+                    linkedAccountDTO.getSecondaryAccount(),
+                    customerServiceRequest);
+
+            if (linkedAccountRepository.save(linkedAccount)!=null){
+                res.setMessage(" Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            }else{
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> changePrimaryAccount(ChangePrimaryAccountDTO changePrimaryAccountDTO) {
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(changePrimaryAccountDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()) {
+            res.setMessage(" No Data Found To Complete The Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        } else {
+
+            CustomerServiceRequest customerServiceRequest = optional.get();
+
+            ChangePrimaryAccount changePrimaryAccount= new ChangePrimaryAccount(0,changePrimaryAccountDTO.getCardNumber(),
+                    changePrimaryAccountDTO.getAccountNumber(),customerServiceRequest);
+
+            if (changePrimaryAccountRepository.save(changePrimaryAccount)!=null){
+                res.setMessage(" Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            }else{
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+    }
 }

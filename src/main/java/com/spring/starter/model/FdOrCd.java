@@ -34,7 +34,6 @@ public class FdOrCd {
 	private String fdOrCdrequest;
 	
 	private boolean fdOrCallDepositCertificate;
-	
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="csrId")

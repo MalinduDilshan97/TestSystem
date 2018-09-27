@@ -1,109 +1,62 @@
 package com.spring.starter.model;
 
-import java.util.Date;
-import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "effect_or_revoke_payment")
 public class EffectOrRevokePayment {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int EffectOrRevokePaymentId;
-	
-	private String chequeNumber;
-	
-	private double value;
-	
-	private String payeeName;
-	
-	private Date dateOfCheque;
-	
-	private String reasonToStopPayment;
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customerAccountNoId")
-	private List<CustomerAccountNo> customerAccountNos;
 
-	public EffectOrRevokePayment() {
-		super();
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int EffectOrRevokePaymentId;
+    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CustomerAccountNoId")
+    private CustomerAccountNo customerAccountNo;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_service_request_id")
+    private CustomerServiceRequest customerServiceRequest;
 
-	public EffectOrRevokePayment(int effectOrRevokePaymentId, String chequeNumber, double value, String payeeName,
-			Date dateOfCheque, String reasonToStopPayment, List<CustomerAccountNo> customerAccountNos) {
-		super();
-		EffectOrRevokePaymentId = effectOrRevokePaymentId;
-		this.chequeNumber = chequeNumber;
-		this.value = value;
-		this.payeeName = payeeName;
-		this.dateOfCheque = dateOfCheque;
-		this.reasonToStopPayment = reasonToStopPayment;
-		this.customerAccountNos = customerAccountNos;
-	}
+    public EffectOrRevokePayment() {
+    }
 
-	public int getEffectOrRevokePaymentId() {
-		return EffectOrRevokePaymentId;
-	}
+    public EffectOrRevokePayment(int effectOrRevokePaymentId, String status, CustomerAccountNo customerAccountNo, CustomerServiceRequest customerServiceRequest) {
+        EffectOrRevokePaymentId = effectOrRevokePaymentId;
+        this.status = status;
+        this.customerAccountNo = customerAccountNo;
+        this.customerServiceRequest = customerServiceRequest;
+    }
 
-	public void setEffectOrRevokePaymentId(int effectOrRevokePaymentId) {
-		EffectOrRevokePaymentId = effectOrRevokePaymentId;
-	}
+    public int getEffectOrRevokePaymentId() {
+        return EffectOrRevokePaymentId;
+    }
 
-	public String getChequeNumber() {
-		return chequeNumber;
-	}
+    public void setEffectOrRevokePaymentId(int effectOrRevokePaymentId) {
+        EffectOrRevokePaymentId = effectOrRevokePaymentId;
+    }
 
-	public void setChequeNumber(String chequeNumber) {
-		this.chequeNumber = chequeNumber;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public double getValue() {
-		return value;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public void setValue(double value) {
-		this.value = value;
-	}
+    public CustomerAccountNo getCustomerAccountNo() {
+        return customerAccountNo;
+    }
 
-	public String getPayeeName() {
-		return payeeName;
-	}
+    public void setCustomerAccountNo(CustomerAccountNo customerAccountNo) {
+        this.customerAccountNo = customerAccountNo;
+    }
 
-	public void setPayeeName(String payeeName) {
-		this.payeeName = payeeName;
-	}
+    public CustomerServiceRequest getCustomerServiceRequest() {
+        return customerServiceRequest;
+    }
 
-	public Date getDateOfCheque() {
-		return dateOfCheque;
-	}
-
-	public void setDateOfCheque(Date dateOfCheque) {
-		this.dateOfCheque = dateOfCheque;
-	}
-
-	public String getReasonToStopPayment() {
-		return reasonToStopPayment;
-	}
-
-	public void setReasonToStopPayment(String reasonToStopPayment) {
-		this.reasonToStopPayment = reasonToStopPayment;
-	}
-
-	public List<CustomerAccountNo> getCustomerAccountNos() {
-		return customerAccountNos;
-	}
-
-	public void setCustomerAccountNos(List<CustomerAccountNo> customerAccountNos) {
-		this.customerAccountNos = customerAccountNos;
-	}
-
+    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+        this.customerServiceRequest = customerServiceRequest;
+    }
 }
