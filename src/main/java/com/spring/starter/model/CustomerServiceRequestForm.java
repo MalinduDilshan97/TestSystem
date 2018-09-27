@@ -35,7 +35,7 @@ public class CustomerServiceRequestForm {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<AtmOrDebit> atmOrDebit;
+	private List<AtmOrDebitCardRequest> atmOrDebitCardRequest;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
@@ -78,7 +78,7 @@ public class CustomerServiceRequestForm {
 	}
 
 	public CustomerServiceRequestForm(int customerServiceRequestFormId, Customer customer,
-                                      List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebit> atmOrDebit,
+                                      List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebitCardRequest> atmOrDebitCardRequest,
                                       List<ChangeMailingMailModel> changeMailingMail, List<ChangePermanentMail> changePermanentMail,
                                       List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<IdentificationForm> changeIdentification,
                                       List<ContactDetails> contactDetails,
@@ -90,7 +90,7 @@ public class CustomerServiceRequestForm {
 		this.customer = customer;
 		this.customerServiceRequest = customerServiceRequest;
 		this.staffUser = staffUser;
-		this.atmOrDebit = atmOrDebit;
+		this.atmOrDebitCardRequest = atmOrDebitCardRequest;
 		this.changeMailingMail = changeMailingMail;
 		this.changePermanentMail = changePermanentMail;
 		this.smsAlertsForCreditCard = smsAlertsForCreditCard;
@@ -137,12 +137,12 @@ public class CustomerServiceRequestForm {
 		this.staffUser = staffUser;
 	}
 
-	public List<AtmOrDebit> getAtmOrDebit() {
-		return atmOrDebit;
+	public List<AtmOrDebitCardRequest> getAtmOrDebitCardRequest() {
+		return atmOrDebitCardRequest;
 	}
 
-	public void setAtmOrDebit(List<AtmOrDebit> atmOrDebit) {
-		this.atmOrDebit = atmOrDebit;
+	public void setAtmOrDebitCardRequest(List<AtmOrDebitCardRequest> atmOrDebitCardRequest) {
+		this.atmOrDebitCardRequest = atmOrDebitCardRequest;
 	}
 
 	public List<ChangeMailingMailModel> getChangeMailingMail() {

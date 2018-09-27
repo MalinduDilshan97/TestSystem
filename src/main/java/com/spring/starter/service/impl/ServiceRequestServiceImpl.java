@@ -12,6 +12,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.spring.starter.DTO.SignatureDTO;
+import com.spring.starter.Repository.*;
+import com.spring.starter.model.*;
 import com.spring.starter.util.FileStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,19 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.spring.starter.DTO.CustomerDTO;
 import com.spring.starter.Exception.CustomException;
-import com.spring.starter.Repository.AtmOrDebitRepository;
-import com.spring.starter.Repository.CustomerAccountNoRepository;
-import com.spring.starter.Repository.CustomerRepository;
-import com.spring.starter.Repository.CustomerServiceRequestRepository;
-import com.spring.starter.Repository.ServiceRequestRepository;
-import com.spring.starter.Repository.StaffUserRepository;
-import com.spring.starter.model.AtmOrDebit;
-import com.spring.starter.model.Customer;
-import com.spring.starter.model.CustomerAccountNo;
-import com.spring.starter.model.CustomerServiceRequest;
-import com.spring.starter.model.ResponseModel;
-import com.spring.starter.model.ServiceRequest;
-import com.spring.starter.model.StaffUser;
+import com.spring.starter.Repository.AtmOrDebitCardRequestRepository;
+import com.spring.starter.model.AtmOrDebitCardRequest;
 import com.spring.starter.service.ServiceRequestService;
 
 @Service
@@ -55,7 +46,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private StaffUserRepository staffUserRepository;
 
     @Autowired
-    private AtmOrDebitRepository atmOrDebitRepository;
+    private AtmOrDebitCardRequestRepository atmOrDebitCardRequestRepository;
     @Autowired
     private FileStorage fileStorage;
     private ResponseModel res = new ResponseModel();
@@ -272,7 +263,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         }
     }
 /*	@Override
-	public ResponseEntity<?> atmOrDebitCardRequest(AtmOrDebit atmOrDebit, int customerServiceRequestId)
+	public ResponseEntity<?> atmOrDebitCardRequest(AtmOrDebitCardRequest atmOrDebit, int customerServiceRequestId)
 	{
 		ResponseModel responsemodel = new ResponseModel();
 		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
@@ -288,24 +279,24 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 			responsemodel.setStatus(false);
 			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
 		}
-		List<AtmOrDebit> atmOrDebits = new ArrayList<>();
+		List<AtmOrDebitCardRequest> atmOrDebits = new ArrayList<>();
 		CustomerServiceRequestForm customerServiceRequestForm;
 		Optional<CustomerServiceRequestForm> csrfOpt = customerServiceRequestFormRepository.getCustomerServiceRequestFormForCustomerServiceRequest(customerServiceRequestId); 
 		if(csrfOpt.isPresent()) {
 			customerServiceRequestForm = csrfOpt.get();
-			if(!customerServiceRequestForm.getAtmOrDebit().isEmpty()) 
+			if(!customerServiceRequestForm.getAtmOrDebitCardRequest().isEmpty())
 			{
-				atmOrDebits = customerServiceRequestForm.getAtmOrDebit();
+				atmOrDebits = customerServiceRequestForm.getAtmOrDebitCardRequest();
 			}
 		} else {
 			customerServiceRequestForm = new CustomerServiceRequestForm();
 			customerServiceRequestForm.setCustomerServiceRequest(customerServiceRequest.get());
 			customerServiceRequestForm.setCustomer(customerServiceRequest.get().getCustomer());
 		}
-		atmOrDebit = atmOrDebitRepository.save(atmOrDebit);
+		atmOrDebit = atmOrDebitCardRequestRepository.save(atmOrDebit);
 		atmOrDebits.add(atmOrDebit);
 		
-		customerServiceRequestForm.setAtmOrDebit(atmOrDebits);
+		customerServiceRequestForm.setAtmOrDebitCardRequest(atmOrDebits);
 		customerServiceRequestForm = customerServiceRequestFormRepository.save(customerServiceRequestForm);
 		return new ResponseEntity<>(customerServiceRequestForm,HttpStatus.CREATED);
 	}*/
@@ -322,7 +313,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
         if (serviceRequestId == 2) {
             System.out.println("entred1");
-            Optional<AtmOrDebit> aodOptional = atmOrDebitRepository.getFormFromCSR(customerServiceRequestId);
+            Optional<AtmOrDebitCardRequest> aodOptional = atmOrDebitCardRequestRepository.getFormFromCSR(customerServiceRequestId);
             if (!aodOptional.isPresent()) {
                 responsemodel.setMessage("Customer Havent fill the form yet");
                 responsemodel.setStatus(false);
