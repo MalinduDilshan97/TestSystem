@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class LoginDTO implements Serializable {
 
-	public LoginDTO() {
-	}
-
 	private String username;
 	private String password;
+	
+	public LoginDTO() {
+	}
 	
 	public LoginDTO(String username, String password) {
 		super();
