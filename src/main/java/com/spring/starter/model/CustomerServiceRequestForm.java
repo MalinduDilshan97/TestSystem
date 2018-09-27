@@ -67,7 +67,7 @@ public class CustomerServiceRequestForm {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CustomerServiceRequestFormId")
-	private List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm;
+	private List<EffectOrRevokePayment> effectOrRevokePayment;
 
 	private String otherRequests;
 
@@ -78,13 +78,13 @@ public class CustomerServiceRequestForm {
 	}
 
 	public CustomerServiceRequestForm(int customerServiceRequestFormId, Customer customer,
-			List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebit> atmOrDebit,
-			List<ChangeMailingMailModel> changeMailingMail, List<ChangePermanentMail> changePermanentMail,
-			List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<IdentificationForm> changeIdentification,
-			List<ContactDetails> contactDetails,
-			List<BankStatementOrPassbookForm> bankStatementOrPassbookForm, List<FdOrCd> fdOrCd,
-			List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm, String otherRequests,
-			boolean status) {
+                                      List<CustomerServiceRequest> customerServiceRequest, StaffUser staffUser, List<AtmOrDebit> atmOrDebit,
+                                      List<ChangeMailingMailModel> changeMailingMail, List<ChangePermanentMail> changePermanentMail,
+                                      List<SMSAlertsForCreditCard> smsAlertsForCreditCard, List<IdentificationForm> changeIdentification,
+                                      List<ContactDetails> contactDetails,
+                                      List<BankStatementOrPassbookForm> bankStatementOrPassbookForm, List<FdOrCd> fdOrCd,
+                                      List<EffectOrRevokePayment> effectOrRevokePayment, String otherRequests,
+                                      boolean status) {
 		super();
 		CustomerServiceRequestFormId = customerServiceRequestFormId;
 		this.customer = customer;
@@ -98,7 +98,7 @@ public class CustomerServiceRequestForm {
 		this.contactDetails = contactDetails;
 		this.bankStatementOrPassbookForm = bankStatementOrPassbookForm;
 		this.fdOrCd = fdOrCd;
-		this.stopPaymentOrRevocationPaymentForm = stopPaymentOrRevocationPaymentForm;
+		this.effectOrRevokePayment = effectOrRevokePayment;
 		this.otherRequests = otherRequests;
 		this.status = status;
 	}
@@ -201,13 +201,13 @@ public class CustomerServiceRequestForm {
 		this.fdOrCd = fdOrCd;
 	}
 
-	public List<StopPaymentOrRevocationPaymentForm> getStopPaymentOrRevocationPaymentForm() {
-		return stopPaymentOrRevocationPaymentForm;
+	public List<EffectOrRevokePayment> getEffectOrRevokePayment() {
+		return effectOrRevokePayment;
 	}
 
-	public void setStopPaymentOrRevocationPaymentForm(
-			List<StopPaymentOrRevocationPaymentForm> stopPaymentOrRevocationPaymentForm) {
-		this.stopPaymentOrRevocationPaymentForm = stopPaymentOrRevocationPaymentForm;
+	public void setEffectOrRevokePayment(
+			List<EffectOrRevokePayment> effectOrRevokePayment) {
+		this.effectOrRevokePayment = effectOrRevokePayment;
 	}
 
 	public String getOtherRequests() {
