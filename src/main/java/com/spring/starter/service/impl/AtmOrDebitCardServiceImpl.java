@@ -98,7 +98,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
 		}
 	}
 	
-	public ResponseEntity<?> updateAtmOrDebitCardRequest(AtmOrDebit request ,int FormId){
+	/*public ResponseEntity<?> updateAtmOrDebitCardRequest(AtmOrDebit request ,int FormId){
 		ResponseModel responsemodel = new ResponseModel();
 	 	Optional<AtmOrDebit> atmOrDebitOpt = atmOrDebitRepository.findById(FormId);
 	 	if(!atmOrDebitOpt.isPresent()) {
@@ -156,5 +156,5 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
 				responsemodel.setStatus(true);
 				return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
 			}
-	}
+	}*/
 }

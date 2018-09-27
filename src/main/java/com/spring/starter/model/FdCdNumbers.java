@@ -1,10 +1,8 @@
 package com.spring.starter.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "fd_cd_numbers")
@@ -13,18 +11,11 @@ public class FdCdNumbers {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int FdCdNumbersId;
-	
+	@NotNull
 	private String fdCdNumber;
 
-	public FdCdNumbers() {
-		super();
-	}
 
-	public FdCdNumbers(int fdCdNumbersId, String fdCdNumber) {
-		super();
-		FdCdNumbersId = fdCdNumbersId;
-		this.fdCdNumber = fdCdNumber;
-	}
+	public FdCdNumbers() {super();}
 
 	public int getFdCdNumbersId() {
 		return FdCdNumbersId;
@@ -41,5 +32,6 @@ public class FdCdNumbers {
 	public void setFdCdNumber(String fdCdNumber) {
 		this.fdCdNumber = fdCdNumber;
 	}
-	
+
+
 }
