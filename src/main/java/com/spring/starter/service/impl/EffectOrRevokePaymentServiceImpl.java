@@ -35,7 +35,6 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
     private CustomerServiceRequestRepository customerServiceRequestRepository;
 
     private ResponseModel res = new ResponseModel();
-    private Date date;
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
