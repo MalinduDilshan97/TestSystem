@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="internet_banking")
@@ -16,7 +19,10 @@ public class InternetBanking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int internetBankingId;
-	
+
+	@NotNull
+	@Size(min = 2)
+	@Pattern(regexp = "^([A-Za-z0-9_])*$")
 	private String internetBankingUserId;
 	
 	private boolean activeUser = false; 

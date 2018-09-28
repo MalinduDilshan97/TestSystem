@@ -22,6 +22,8 @@ import com.spring.starter.model.NDBBranch;
 import com.spring.starter.model.ReissueLoginPasswordModel;
 import com.spring.starter.service.InternetBankingService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/serviceRequest/internet-banking")
 public class InternetBankingController {
@@ -34,9 +36,20 @@ public class InternetBankingController {
 		//return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
 		return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
 	}
+
+	@PutMapping("/reissue-password")
+	public ResponseEntity<?> updateReissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
+		return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
+	}
 	
 	@PostMapping("/link-JointAccounts")
 	public ResponseEntity<?> linkJointAccounts(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+		return internetBankingService.linkJointAccounts(accountDTO, requestId);
+	}
+
+	@PutMapping("/link-JointAccounts")
+	public ResponseEntity<?> updateLinkJointAccounts(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
 		return internetBankingService.linkJointAccounts(accountDTO, requestId);
 	}
 	
@@ -46,7 +59,16 @@ public class InternetBankingController {
 	}
 	
 	@PostMapping("/other-service")
-	public ResponseEntity<?> otherServices(@RequestBody InternetBanking internetBanking,@RequestParam(name="requestId") int requestId){
+	public ResponseEntity<?> otherServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(internetBanking,HttpStatus.OK);
+
+		return internetBankingService.internetOtherService(internetBanking, requestId);
+	}
+
+	@PutMapping("/other-service")
+	public ResponseEntity<?> updateServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(internetBanking,HttpStatus.OK);
+
 		return internetBankingService.internetOtherService(internetBanking, requestId);
 	}
 	

@@ -26,9 +26,8 @@
 
 mylogfile.log
 mylogfile.log
-<<<<<<< HEAD
+
 *.gz
-=======
+
 .gz
 /File Storage/
->>>>>>> 7d9816bcbb728d8ffed53266dab6c1fb4d0755d0

@@ -110,7 +110,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
-        Optional<ServiceRequest> serviceRequestOpt = serviceRequestRepository.findById(serviceRequestId);
+        Optional<ServiceRequest> serviceRequestOpt = serviceRequestRepository.getFromDigiId(serviceRequestId);
         if (!serviceRequestOpt.isPresent()) {
             responsemodel.setMessage("Invalied bank service");
             responsemodel.setStatus(false);

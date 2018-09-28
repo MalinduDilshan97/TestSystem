@@ -261,6 +261,7 @@ public class InternetBankingImpl implements InternetBankingService{
 	
 	public ResponseEntity<?> reissuePasswordService(ReissueLoginPasswordDTO loginPasswordModel,int customerServiceRequestId){
 		ResponseModel responsemodel = new ResponseModel();
+		ReissueLoginPasswordModel reissueLoginPasswordModel = new ReissueLoginPasswordModel();
 		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
 		if(!customerServiceRequest.isPresent()) {
 			responsemodel.setMessage("There is No such service Available");
@@ -274,13 +275,21 @@ public class InternetBankingImpl implements InternetBankingService{
 			responsemodel.setStatus(false);
 			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
 		}
-		
+		NDBBranch ndbBranch = new NDBBranch();
 		if(loginPasswordModel.isAtBranch()){
 			if(loginPasswordModel.getBranchId() == 0) {
 				responsemodel.setMessage("Complete Bank Details");
 				responsemodel.setStatus(false);
 				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
 			}
+			Optional<NDBBranch> branchOpt = branchRepository.findById(loginPasswordModel.getBranchId());
+			if(!branchOpt.isPresent()) {
+				responsemodel.setMessage("Invalied Bank Details");
+				responsemodel.setStatus(false);
+				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+			}
+			ndbBranch = branchOpt.get();
+			reissueLoginPasswordModel.setBranch(ndbBranch);
 		}
 		if(loginPasswordModel.isPostToAddress()) {
 			if(loginPasswordModel.getAddresss() == null) {
@@ -291,21 +300,14 @@ public class InternetBankingImpl implements InternetBankingService{
 		}
 		
 		Optional<ReissueLoginPasswordModel> reissueLoginPasswordOpt = loginPasswordModelRepository.getFormFromCSR(customerServiceRequestId);
-		ReissueLoginPasswordModel reissueLoginPasswordModel = new ReissueLoginPasswordModel();
+
 		if(reissueLoginPasswordOpt.isPresent()) {
 			reissueLoginPasswordModel.setReissueLoginPasswordModelId(reissueLoginPasswordOpt.get().getReissueLoginPasswordModelId());
 		}
 		
-		Optional<NDBBranch> branchOpt = branchRepository.findById(loginPasswordModel.getBranchId());
-		if(!branchOpt.isPresent()) {
-			responsemodel.setMessage("Invalied Bank Details");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-		}
-		
+
 		reissueLoginPasswordModel.setBankingUserId(loginPasswordModel.getBankingUserId());
 		reissueLoginPasswordModel.setAtBranch(loginPasswordModel.isAtBranch());
-		reissueLoginPasswordModel.setBranch(branchOpt.get());
 		reissueLoginPasswordModel.setPostToAddress(loginPasswordModel.isPostToAddress());
 		reissueLoginPasswordModel.setAddresss(loginPasswordModel.getAddresss());
 		reissueLoginPasswordModel.setPostToCorrespondenceAddress(loginPasswordModel.isPostToCorrespondenceAddress());
@@ -367,7 +369,7 @@ public class InternetBankingImpl implements InternetBankingService{
 		
 		try {
 			linkAccountModelRepository.save(linkAccountModel);
-			responsemodel.setMessage("Request Saved Successfully");
+			responsemodel.setMessage("Request Created Successfully");
 			responsemodel.setStatus(true);
 			return new ResponseEntity<> (responsemodel,HttpStatus.CREATED);
 		} catch (Exception e) {
@@ -444,16 +446,16 @@ public class InternetBankingImpl implements InternetBankingService{
 		}
 		
 		Optional<InternetBanking> internetBankingOpt = internetBankingRepository.getFormFromCSR(customerServiceRequestId);
-		InternetBanking internetBanking = new InternetBanking();
-		internetBanking.setCustomerServiceRequest(customerServiceRequest.get());
+
+		banking.setCustomerServiceRequest(customerServiceRequest.get());
 		if(internetBankingOpt.isPresent()) {
-			internetBanking.setInternetBankingId(internetBankingOpt.get().getInternetBankingId());
+			banking.setInternetBankingId(internetBankingOpt.get().getInternetBankingId());
 		}
 		try {
-			internetBankingRepository.save(internetBanking);
+			internetBankingRepository.save(banking);
 			responsemodel.setMessage("service Saved Successfully");
 			responsemodel.setStatus(true);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
 		} catch (Exception e) {
 			throw new CustomException(e.getMessage());
 		}
