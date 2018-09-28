@@ -106,7 +106,8 @@ public class FdorCdServiceImpl implements FdorCdService {
         if (otherFdCdRelatedRequestOptional.isPresent()){
             otherFdCdRelatedRequest.setRelatedReqId(otherFdCdRelatedRequestOptional.get().getRelatedReqId());
         }
-
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC+5.30"));
+        otherFdCdRelatedRequest.setDate(new Date());
         otherFdCdRelatedRequest.setCustomerServiceRequest(customerServiceRequest.get());
 
         try {
@@ -142,7 +143,8 @@ public class FdorCdServiceImpl implements FdorCdService {
         if (duplicateFdCdCertOptional.isPresent()){
             duplicateFdCdCert.setDuplicateId(duplicateFdCdCertOptional.get().getDuplicateId());
         }
-
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC+5.30"));
+        duplicateFdCdCert.setDate(new Date());
         duplicateFdCdCert.setCustomerServiceRequest(customerServiceRequest.get());
         try{
             duplicateFdCdCertRepository.save(duplicateFdCdCert);
