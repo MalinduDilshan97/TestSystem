@@ -3,8 +3,9 @@ package com.spring.starter.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "sms_subscription")
-public class SmsSubscription implements Serializable {
+@Entity
+@Table(name = "sms_subscription")
+public class SmsSubscription  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
