@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class ChangePermenentMailServiceImpl implements ChangePermenentMailServic
 		}
 		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
 		System.out.println(serviceRequestId);
-		if(serviceRequestId != 3) 
+		if(serviceRequestId != ServiceRequestIdConfig.CHANGE_PERMENT_ADDRESS)
 		{
 			responsemodel.setMessage("Invalid Request");
 			responsemodel.setStatus(false);

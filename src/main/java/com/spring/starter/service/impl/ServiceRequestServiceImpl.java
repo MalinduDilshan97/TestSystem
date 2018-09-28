@@ -70,13 +70,13 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         ResponseModel responsemodel = new ResponseModel();
 
         List<String> accNo = customerDTO.getAccountNos();
-        Customer customer;
-        Optional<Customer> customerOpt = customerRepository.getCustomerFromIdentity(customerDTO.getIdentification());
+        Customer customer = new Customer();
+/*        Optional<Customer> customerOpt = customerRepository.getCustomerFromIdentity(customerDTO.getIdentification());
         if (customerOpt.isPresent()) {
             customer = customerOpt.get();
         } else {
             customer = new Customer();
-        }
+        }*/
         customer.setIdentification(customerDTO.getIdentification());
         customer.setName(customerDTO.getName());
         customer.setMobileNo(customerDTO.getMobileNo());
@@ -106,7 +106,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         ResponseModel responsemodel = new ResponseModel();
         Optional<Customer> customerOpt = customerRepository.findById(customerId);
         if (!customerOpt.isPresent()) {
-            responsemodel.setMessage("Customer is not avalilabe");
+            responsemodel.setMessage("Customer is not avalilable");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }

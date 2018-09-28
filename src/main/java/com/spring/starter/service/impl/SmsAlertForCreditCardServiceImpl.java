@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
 		}
 		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != 4) 
+		if(serviceRequestId != ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERT_CREDIT_CARD)
 		{
 			responsemodel.setMessage("Invalied Request");
 			responsemodel.setStatus(false);

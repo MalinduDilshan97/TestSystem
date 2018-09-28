@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -269,7 +270,7 @@ public class InternetBankingImpl implements InternetBankingService{
 			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
 		}
 		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != 7) 
+		if(serviceRequestId != ServiceRequestIdConfig.REISSUE_LOGIN_PASSWORD)
 		{
 			responsemodel.setMessage("Invalied Request");
 			responsemodel.setStatus(false);
@@ -336,7 +337,7 @@ public class InternetBankingImpl implements InternetBankingService{
 		}
 		
 		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != 8) 
+		if(serviceRequestId != ServiceRequestIdConfig.LINK_FOLLOWING_JOINT_ACCOUNTS)
 		{
 			responsemodel.setMessage("Invalied Request");
 			responsemodel.setStatus(false);
@@ -388,7 +389,7 @@ public class InternetBankingImpl implements InternetBankingService{
 			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
 		}
 		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != 9) 
+		if(serviceRequestId != ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY)
 		{
 			responsemodel.setMessage("Invalied Request");
 			responsemodel.setStatus(false);
@@ -438,7 +439,7 @@ public class InternetBankingImpl implements InternetBankingService{
 			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
 		}
 		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != 10) 
+		if(serviceRequestId != ServiceRequestIdConfig.OTHER_INTERNET_BANKING_SERVICES)
 		{
 			responsemodel.setMessage("Invalied Request");
 			responsemodel.setStatus(false);
