@@ -3,8 +3,9 @@ package com.spring.starter.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "reissue_pin_request")
-public class ReIssuePinRequest implements Serializable {
+@Entity
+@Table(name = "reissue_pin_request")
+public class ReIssuePinRequest  {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

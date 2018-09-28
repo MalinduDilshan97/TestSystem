@@ -40,7 +40,7 @@ public class ChangePermenentMailServiceImpl implements ChangePermenentMailServic
 		System.out.println(serviceRequestId);
 		if(serviceRequestId != 3) 
 		{
-			responsemodel.setMessage("Invalied Request");
+			responsemodel.setMessage("Invalid Request");
 			responsemodel.setStatus(false);
 			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
 		}

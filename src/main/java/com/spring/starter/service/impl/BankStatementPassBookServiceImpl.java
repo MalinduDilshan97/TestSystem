@@ -48,8 +48,21 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
         } else {
 
             CustomerServiceRequest customerServiceRequest = optional.get();
+            DuplicatePassBookRequest duplicatePassBookRequest = new DuplicatePassBookRequest();
 
-            DuplicatePassBookRequest duplicatePassBookRequest = new DuplicatePassBookRequest(0, duplicatePassBookRequestDTO.getAccountNumber(), customerServiceRequest);
+            int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
+            if (serviceRequestId != 3) {
+                res.setMessage("Invalid Request");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+            Optional<DuplicatePassBookRequest> bookRequest = duplicatePassBookRequestRepository.getFormFromCSR(serviceRequestId);
+            if (bookRequest.isPresent()) {
+                duplicatePassBookRequest.setDuplicatePassBookRequestId(bookRequest.get().getDuplicatePassBookRequestId());
+            }
+
+            duplicatePassBookRequest.setAccountNumber(duplicatePassBookRequestDTO.getAccountNumber());
+            duplicatePassBookRequest.setCustomerServiceRequest(customerServiceRequest);
 
             if (duplicatePassBookRequestRepository.save(duplicatePassBookRequest) != null) {
                 res.setMessage(" Request Successfully Saved To The System");
@@ -73,24 +86,36 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
         } else {
 
             CustomerServiceRequest customerServiceRequest = optional.get();
+            AccountStatementIssueRequest accountStatementIssueRequest = new AccountStatementIssueRequest();
 
-            Date from = null;
+
             try {
-                from = df.parse(accountStatementIssueRequestDTO.getFromDate());
+                Date from = df.parse(accountStatementIssueRequestDTO.getFromDate());
                 Date to = df.parse(accountStatementIssueRequestDTO.getToDate());
 
-                AccountStatementIssueRequest accountStatementIssueRequest=new AccountStatementIssueRequest(0,
-                        accountStatementIssueRequestDTO.getAccountNo(),
-                        from,
-                        to,
-                        accountStatementIssueRequestDTO.getNatureOfStatement(),
-                        customerServiceRequest);
+                int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
+                if (serviceRequestId != 3) {
+                    res.setMessage("Invalid Request");
+                    res.setStatus(false);
+                    return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+                }
 
-                if (accountStatementIssueRequestRepository.save(accountStatementIssueRequest)!=null){
+                Optional<AccountStatementIssueRequest>request=accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
+                if (request.isPresent()){
+                    accountStatementIssueRequest.setAccountStatementIssueRequestId(request.get().getAccountStatementIssueRequestId());
+                }
+
+                accountStatementIssueRequest.setAccountNo(accountStatementIssueRequestDTO.getAccountNo());
+                accountStatementIssueRequest.setFromDate(from);
+                accountStatementIssueRequest.setToDate(to);
+                accountStatementIssueRequest.setNatureOfStatement(accountStatementIssueRequestDTO.getNatureOfStatement());
+                accountStatementIssueRequest.setCustomerServiceRequest(customerServiceRequest);
+
+                if (accountStatementIssueRequestRepository.save(accountStatementIssueRequest) != null) {
                     res.setMessage(" Request Successfully Saved To The System");
                     res.setStatus(true);
                     return new ResponseEntity<>(res, HttpStatus.CREATED);
-                }else{
+                } else {
                     res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                     res.setStatus(false);
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -100,7 +125,6 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
             } catch (ParseException e) {
                 throw new CustomException("Failed TO Save The Request... Operation Unsuccessful Input Date To This Format (YYYY-MM-DD)");
             }
-
 
 
         }

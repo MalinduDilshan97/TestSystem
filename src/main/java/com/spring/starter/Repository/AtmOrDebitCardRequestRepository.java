@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AtmOrDebitCardRequestRepository extends JpaRepository<AtmOrDebitCardRequest, Integer> {
 
-	@Query("SELECT aod FROM AtmOrDebitCardRequest aod WHERE aod.customerServiceRequest.customerServiceRequestId=?1")
+	@Query("SELECT adcr FROM AtmOrDebitCardRequest adcr WHERE adcr.customerServiceRequest.customerServiceRequestId=?1")
 	Optional<AtmOrDebitCardRequest> getFormFromCSR(int customerServiceRequestId);
-	
+
+
 }

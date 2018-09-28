@@ -20,8 +20,18 @@ public class BankStatementPassBookController {
         return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO);
     }
 
-    @PostMapping("/AccountStatemnt")
+    @PutMapping("/duplicatePassbook")
+    public ResponseEntity<?> duplicatePassBookRequestUpdate(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO){
+        return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO);
+    }
+
+    @PostMapping("/AccountStatement")
     public ResponseEntity<?> AccountStatementRequest(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO){
+        return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
+    }
+
+    @PutMapping("/AccountStatement")
+    public ResponseEntity<?> AccountStatementRequestUpdate(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO){
         return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
     }
 
