@@ -54,6 +54,7 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
             CustomerServiceRequest customerServiceRequest=optional.get();
 
+
 //          creating a new Path
                 String location=("/"+optional.get().getCustomerServiceRequestId()+"");
 //          Saving and getting storage url
@@ -65,8 +66,16 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
                 }else {
 
-                    IdentificationForm identificationForm=new IdentificationForm(0,identificationFormDTO.getIdentification(),
-                            url,customerServiceRequest);
+                    IdentificationForm identificationForm=new IdentificationForm();
+
+                    Optional<IdentificationForm> request=changeIdentificationFormRepository.getFormFromCSR(identificationFormDTO.getCustomerServiceRequestId());
+                    if (request.isPresent()){
+                        identificationForm.setChangeIdentificationFormId(identificationFormDTO.getCustomerServiceRequestId());
+                    }
+
+                    identificationForm.setIdentification(identificationFormDTO.getIdentification());
+                    identificationForm.setDocumentUrl(url);
+                    identificationForm.setCustomerServiceRequest(customerServiceRequest);
 
                     if (changeIdentificationFormRepository.save(identificationForm)!=null){
                         res.setMessage(" Request Form Successfully Saved To The System");
@@ -93,16 +102,19 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
         }
         int serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
         if(serviceRequestId != ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
-            res.setMessage("Invalied Request");
+            res.setMessage("Invalid Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
         else{
 
             CustomerServiceRequest customerServiceRequest=optional.get();
-
             ContactDetails contactDetails=new ContactDetails();
-            contactDetails.setContactDetailsId(0);
+            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(contactDetailsDTO.getCustomerServiceRequestId());
+            if (request.isPresent()){
+                contactDetails.setContactDetailsId(contactDetailsDTO.getCustomerServiceRequestId());
+            }
+
             contactDetails.setMobileNumber(contactDetailsDTO.getMobileNumber());
             contactDetails.setOfficeNumber(contactDetailsDTO.getOfficeNumber());
             contactDetails.setResidenceNumber(contactDetailsDTO.getResidenceNumber());
