@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ndb-phygital
+  labels:
+    app: ndb-phygital
+spec:
+  selector:
+    app: ndb-phygital
+  ports:
+  - port: 8080
+    targetPort: 8081
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ndb-phygital
+spec:
+  selector:
+    matchLabels:
+      app: ndb-phygital
+      env: stag
+  replicas: 1
+  template:
+    metadata:
+      name: ndb-phygital
+      labels:
+        app: ndb-phygital
+        env: stag
+    spec:
+      containers:
+      - name: ndb-phygital
+        env:
+        - name: DB_HOST
+          value: 'mysql-xdb-pxc'
+        - name: DB_NAME
+          value: ndb-phygital
+        - name: DB_USER_NAME
+          value: ndb-phygital
+        - name: DB_PASSWORD
+          value: arimac@123
+        - name: DB_PORT
+          value: "3306"
+        image: asia.gcr.io/arimac-staging/ndb-phygital
+        ports:
+        - containerPort: 8081

@@ -1,7 +1,9 @@
 package com.spring.starter.controller;
 
 import com.spring.starter.DTO.AccountStatementIssueRequestDTO;
+import com.spring.starter.DTO.BankStatementAccountDTO;
 import com.spring.starter.DTO.DuplicatePassBookRequestDTO;
+import com.spring.starter.model.StatementFrequency;
 import com.spring.starter.service.BankStatementPassBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +36,16 @@ public class BankStatementPassBookController {
     public ResponseEntity<?> AccountStatementRequestUpdate(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO){
         return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
     }
+
+    @PostMapping("/e-statement")
+    public ResponseEntity<?> e_satementRequest(@RequestBody BankStatementAccountDTO bankStatementAccountDTO, @RequestParam(name="requestId") int requestId){
+        return bankStatementPassBookService.estatementService(bankStatementAccountDTO,requestId);
+    }
+
+    @PostMapping("/statementFrequency")
+    public ResponseEntity<?> statementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name="requestId") int requestId){
+        return bankStatementPassBookService.statementFrequencyService(statementFrequency,requestId);
+    }
+
 
 }

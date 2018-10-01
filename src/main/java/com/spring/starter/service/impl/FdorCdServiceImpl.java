@@ -2,6 +2,7 @@ package com.spring.starter.service.impl;
 
 import com.spring.starter.DTO.WithholdingFdCdDTO;
 import com.spring.starter.Repository.*;
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.service.FdorCdService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class FdorCdServiceImpl implements FdorCdService {
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != 10)
+        if(serviceRequestId != ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE)
         {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
@@ -95,7 +96,7 @@ public class FdorCdServiceImpl implements FdorCdService {
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != 10)
+        if(serviceRequestId != ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS)
         {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
@@ -132,7 +133,7 @@ public class FdorCdServiceImpl implements FdorCdService {
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != 10)
+        if(serviceRequestId != ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE)
         {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);

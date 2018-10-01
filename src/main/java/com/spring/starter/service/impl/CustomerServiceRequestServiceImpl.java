@@ -5,6 +5,7 @@ import com.spring.starter.DTO.IdentificationFormDTO;
 import com.spring.starter.Repository.ChangeIdentificationFormRepository;
 import com.spring.starter.Repository.ContactDetailsRepository;
 import com.spring.starter.Repository.CustomerServiceRequestRepository;
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.ContactDetails;
 import com.spring.starter.model.CustomerServiceRequest;
 import com.spring.starter.model.IdentificationForm;
@@ -35,13 +36,21 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
     @Override
     public ResponseEntity<?> changeIdentificationDetails(IdentificationFormDTO identificationFormDTO) {
-
+        ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(identificationFormDTO.getCustomerServiceRequestId());
+
         if (!optional.isPresent()){
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
+
             return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
-        }else{
+        }
+        int serviceRequestId = serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
+        if(serviceRequestId != ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO){
+            responsemodel.setMessage("Invalied Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        } else{
 
             CustomerServiceRequest customerServiceRequest=optional.get();
 
@@ -81,7 +90,14 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
-        }else{
+        }
+        int serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
+        if(serviceRequestId != ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
+            res.setMessage("Invalied Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        else{
 
             CustomerServiceRequest customerServiceRequest=optional.get();
 

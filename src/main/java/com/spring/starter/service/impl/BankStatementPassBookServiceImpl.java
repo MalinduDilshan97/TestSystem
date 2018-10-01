@@ -5,6 +5,7 @@ import com.spring.starter.DTO.BankStatementAccountDTO;
 import com.spring.starter.DTO.DuplicatePassBookRequestDTO;
 import com.spring.starter.Exception.CustomException;
 import com.spring.starter.Repository.*;
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.service.BankStatementPassBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if (serviceRequestId != 11) {
+        if (serviceRequestId != ServiceRequestIdConfig.PI_ACTIVE_CACEL_ESTATEMENT_FACILITY_FOR_ACCOUNTS) {
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
@@ -110,7 +111,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
             DuplicatePassBookRequest duplicatePassBookRequest = new DuplicatePassBookRequest();
 
             int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-            if (serviceRequestId != 3) {
+            if (serviceRequestId != ServiceRequestIdConfig.PASSBOOK_DUPLICATE_PASSBOOK_REQUEST) {
                 res.setMessage("Invalid Request");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -146,7 +147,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
         System.out.println(serviceRequestId);
-        if(serviceRequestId != 12)
+        if(serviceRequestId != ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO)
         {
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
@@ -197,7 +198,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                 Date to = df.parse(accountStatementIssueRequestDTO.getToDate());
 
                 int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-                if (serviceRequestId != 3) {
+                if (serviceRequestId != ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD) {
                     res.setMessage("Invalid Request");
                     res.setStatus(false);
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);

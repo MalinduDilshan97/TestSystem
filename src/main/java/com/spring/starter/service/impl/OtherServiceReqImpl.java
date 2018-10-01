@@ -2,6 +2,7 @@ package com.spring.starter.service.impl;
 
 import com.spring.starter.Repository.CustomerServiceRequestRepository;
 import com.spring.starter.Repository.OtherServiceRequestRepository;
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.CustomerServiceRequest;
 import com.spring.starter.model.OtherServiceRequest;
 import com.spring.starter.model.ResponseModel;
@@ -36,7 +37,7 @@ public class OtherServiceReqImpl implements OtherServiceReqService {
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != 10)
+        if(serviceRequestId != ServiceRequestIdConfig.OTHER)
         {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);

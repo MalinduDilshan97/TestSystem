@@ -321,6 +321,7 @@ public class StaffUserServiceImpl implements StaffUserService {
 		staffUser.setUsername(staffUserDTO.getUsername());
 		staffUser.setPassword(encryptedPassword);
 		staffUser.setStaffRole(staffRole.get());
+		staffUser.setActive(1);
 		try {
 		staffUserRepository.save(staffUser);
 		return new ResponseEntity<>("{\"message\":\"User Added Successfully\",\"Status\":"+true+"}",HttpStatus.CREATED);
