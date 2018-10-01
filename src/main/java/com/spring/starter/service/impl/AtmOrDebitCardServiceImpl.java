@@ -56,9 +56,9 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         }
         Optional<AtmOrDebitCardRequest> request=atmOrDebitCardRequestRepository.getFormFromCSR(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
         if (request.isPresent()){
-            atmOrDebitCardRequest.setAtmOrDebitRequestid(request.get().getAtmOrDebitRequestid());
+            atmOrDebitCardRequest.setAtmOrDebitRequestId(request.get().getAtmOrDebitRequestId());
         }
-            atmOrDebitCardRequest.setAtmOrDebitRequestid(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
+            atmOrDebitCardRequest.setRequestType(atmOrDebitCardRequestDTO.getRequestType());
             atmOrDebitCardRequest.setCardNumber(atmOrDebitCardRequestDTO.getCardNumber());
             atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
 
