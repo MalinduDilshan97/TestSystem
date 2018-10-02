@@ -2,8 +2,6 @@ package com.spring.starter.configuration;
 
 public class ServiceRequestIdConfig {
 
-
-
     public static int CARD_REQUEST=1;
     public static int RE_ISSUE_A_PIN=2;
     public static int SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS=3;
@@ -27,5 +25,6 @@ public class ServiceRequestIdConfig {
     public static int OTHER_FD_CD_RELATED_REQUESTS=21;
     public static int DUPLICATE_FD_CD_CERTIFICATE=22;
     public static int OTHER=23;
+    public static int STOP_REVOKE_PAYMENT = 24;
 
 }

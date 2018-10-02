@@ -23,7 +23,7 @@ public class Customer {
 	private String name;
 	
 	@NonNull
-	@Column(unique=true)
+	@Column
 	private String identification;
 	
 	@NonNull

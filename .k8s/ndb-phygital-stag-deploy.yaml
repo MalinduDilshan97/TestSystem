@@ -34,9 +34,9 @@ spec:
         - name: DB_HOST
           value: 'mysql-xdb-pxc'
         - name: DB_NAME
-          value: ndb-phygital
+          value: ndb_phygital
         - name: DB_USER_NAME
-          value: ndb-phygital
+          value: ndb_phygital
         - name: DB_PASSWORD
           value: arimac@123
         - name: DB_PORT
