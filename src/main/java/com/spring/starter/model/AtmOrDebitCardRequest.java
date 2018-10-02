@@ -8,8 +8,9 @@ public class AtmOrDebitCardRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int atmOrDebitRequestid;
+    private int atmOrDebitRequestId;
     private long cardNumber;
+    private String requestType;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
@@ -17,18 +18,19 @@ public class AtmOrDebitCardRequest {
     public AtmOrDebitCardRequest() {
     }
 
-    public AtmOrDebitCardRequest(int atmOrDebitRequestid, long cardNumber, CustomerServiceRequest customerServiceRequest) {
-        this.atmOrDebitRequestid = atmOrDebitRequestid;
+    public AtmOrDebitCardRequest(int atmOrDebitRequestId, long cardNumber, String requestType, CustomerServiceRequest customerServiceRequest) {
+        this.atmOrDebitRequestId = atmOrDebitRequestId;
         this.cardNumber = cardNumber;
+        this.requestType = requestType;
         this.customerServiceRequest = customerServiceRequest;
     }
 
-    public int getAtmOrDebitRequestid() {
-        return atmOrDebitRequestid;
+    public int getAtmOrDebitRequestId() {
+        return atmOrDebitRequestId;
     }
 
-    public void setAtmOrDebitRequestid(int atmOrDebitRequestid) {
-        this.atmOrDebitRequestid = atmOrDebitRequestid;
+    public void setAtmOrDebitRequestId(int atmOrDebitRequestId) {
+        this.atmOrDebitRequestId = atmOrDebitRequestId;
     }
 
     public long getCardNumber() {
@@ -37,6 +39,14 @@ public class AtmOrDebitCardRequest {
 
     public void setCardNumber(long cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
     }
 
     public CustomerServiceRequest getCustomerServiceRequest() {

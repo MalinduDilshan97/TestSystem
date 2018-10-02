@@ -76,6 +76,11 @@ public class ServiceRequestController {
         return serviceRequestService.addAStaffHandled(principal, requestId);
     }
 
+    @GetMapping("/completeAllCustomerRequests")
+    public ResponseEntity<?> completeAllRequests(Principal principal,@RequestParam(name = "customerId") int customerId){
+        return serviceRequestService.completeAllCustomerRequests(principal,customerId);
+    }
+
     @GetMapping("/getServiceRequestForm")
     public ResponseEntity<?> getServiceRequestForm(@RequestParam(name = "requestId") int requestId) {
         return serviceRequestService.getServiceRequestForm(requestId);

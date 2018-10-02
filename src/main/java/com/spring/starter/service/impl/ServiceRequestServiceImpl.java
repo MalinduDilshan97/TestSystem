@@ -286,9 +286,17 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         staffHandled.add(staffUser.get());
         customerServiceRequest.setStatus(true);
         customerServiceRequest.setStaffUser(staffHandled);
-        responsemodel.setMessage("User Request finished successfully");
-        responsemodel.setStatus(true);
-        return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        CustomerServiceRequest save = customerServiceRequestRepository.save(customerServiceRequest);
+        if (save!=null){
+            responsemodel.setMessage("User Request finished successfully");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        }else{
+            responsemodel.setMessage("User Request Unsuccessful");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     public ResponseEntity<?> addAStaffHandled(Principal principal, int requestId) {
@@ -305,18 +313,26 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         Optional<StaffUser> staffUser = staffUserRepository.findById(Integer.parseInt(principal.getName()));
         staffHandled.add(staffUser.get());
         customerServiceRequest.setStaffUser(staffHandled);
-        responsemodel.setMessage("User Request finished successfully");
-        responsemodel.setStatus(true);
-        return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        CustomerServiceRequest save = customerServiceRequestRepository.save(customerServiceRequest);
+        if (save!=null){
+            responsemodel.setMessage("Part OF User Request finished successfully");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        }else{
+            responsemodel.setMessage("User Request Unsuccessful");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
     }
 
     public ResponseEntity<?> completeAllCustomerRequests(Principal principal, int customerId) {
         ResponseModel responsemodel = new ResponseModel();
         List<CustomerServiceRequest> allCustomers = customerServiceRequestRepository.getAllCustomerRequest(customerId);
-        List<StaffUser> staffHandled;
+
 
         for (CustomerServiceRequest customerServiceRequest : allCustomers) {
-            CustomerServiceRequest request = new CustomerServiceRequest();
+            List<StaffUser> staffHandled;
+            CustomerServiceRequest request = customerServiceRequest;
             request.setStatus(true);
             if (customerServiceRequest.getStaffUser().isEmpty()) {
                 staffHandled = new ArrayList<>();

@@ -15,8 +15,8 @@ public class CustomerServiceRequestController {
     @Autowired
     private CustomerServiceRequestService customerServiceRequestService;
 
-    @PostMapping("/update/identification")
-    public ResponseEntity<?> updateIdentifications(@RequestParam MultipartFile file,
+    @PostMapping("/identification-change")
+    public ResponseEntity<?> IdentificationsChange(@RequestParam MultipartFile file,
                                                    @RequestParam String identification,
                                                    @RequestParam int customerServiceRequestId) {
 
@@ -24,8 +24,22 @@ public class CustomerServiceRequestController {
         return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO);
     }
 
-    @PostMapping("/update/contacts")
+    @PutMapping("/identification-change")
+    public ResponseEntity<?> updateIdentificationsChange(@RequestParam MultipartFile file,
+                                                   @RequestParam String identification,
+                                                   @RequestParam int customerServiceRequestId) {
+
+        IdentificationFormDTO identificationFormDTO = new IdentificationFormDTO(identification, file, customerServiceRequestId);
+        return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO);
+    }
+
+    @PostMapping("/contacts-change")
     public ResponseEntity<?> changeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO){
+        return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO);
+    }
+
+    @PutMapping("/contacts-change")
+    public ResponseEntity<?> updateChangeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO){
         return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO);
     }
 
