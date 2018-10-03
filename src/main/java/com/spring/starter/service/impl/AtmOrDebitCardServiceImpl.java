@@ -79,10 +79,46 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
 
         if (atmOrDebitCardRequestRepository.save(atmOrDebitCardRequest) != null) {
+
+            serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+            serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+            serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+            serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+            boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+            if (result) {
+                serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                serviceRequestFormLog.setIp(request.getRemoteAddr());
+                serviceRequestFormLog.setStatus(true);
+                serviceRequestFormLog.setMessage("Request Form Successfully Saved To The  System");
+                serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+            }
+
             res.setMessage(" Request Successfully Saved To The Database");
             res.setStatus(true);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         } else {
+
+            serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+            serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+            serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+            serviceRequestCustomerLog.setMessage("Failed TO Save The Request... Operation Unsuccessful");
+            boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+            if (result) {
+                serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                serviceRequestFormLog.setIp(request.getRemoteAddr());
+                serviceRequestFormLog.setStatus(true);
+                serviceRequestFormLog.setMessage(" Failed TO Save The  Request... Operation Unsuccessful");
+                serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+            }
+
             res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -197,10 +233,46 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             SmsSubscription save = smsSubscriptionRepository.save(smsSubscription);
 
             if (save != null) {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Request Form Successfully Saved To The System");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Request Successfully Saved To The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
             } else {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Failed TO Save The Request... Operation Unsuccessful");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Failed TO Save The Request...Operation Unsuccessful");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -239,10 +311,46 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             posLimit.setCustomerServiceRequest(customerServiceRequest);
 
             if (posLimitRepository.save(posLimit) != null) {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage("  Request Form Successfully Saved To The System");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage("Request Successfully Saved To The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
             } else {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Failed TO Save The Request...  Operation Unsuccessful");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Failed TO Save The Request...  Operation  Unsuccessful");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage("Failed TO Save The Request... Operation Unsuccessful");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -281,10 +389,46 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             linkedAccount.setCustomerServiceRequest(customerServiceRequest);
 
             if (linkedAccountRepository.save(linkedAccount) != null) {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Request Form Successfully Saved To The System ");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Request Successfully Saved To The System.");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
             } else {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage(" Failed TO Save The Request...  Operation Unsuccessful");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Failed TO Save The Request... Operation  Unsuccessful");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -321,10 +465,46 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             changePrimaryAccount.setCustomerServiceRequest(customerServiceRequest);
 
             if (changePrimaryAccountRepository.save(changePrimaryAccount) != null) {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Request Form  Successfully Saved To The System");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Request Successfully Saved To The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
             } else {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Failed TO Save The Request...  Operation Unsuccessful");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Failed TO Save The Request...   Operation  Unsuccessful");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);

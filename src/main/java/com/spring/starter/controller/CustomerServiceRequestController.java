@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/CustomerServiceRequest")
 public class CustomerServiceRequestController {
@@ -16,31 +18,33 @@ public class CustomerServiceRequestController {
     private CustomerServiceRequestService customerServiceRequestService;
 
     @PostMapping("/identification-change")
-    public ResponseEntity<?> IdentificationsChange(@RequestParam MultipartFile file,
+    public ResponseEntity<?> IdentificationsChange(HttpServletRequest request,
+                                                   @RequestParam MultipartFile file,
                                                    @RequestParam String identification,
                                                    @RequestParam int customerServiceRequestId) {
 
         IdentificationFormDTO identificationFormDTO = new IdentificationFormDTO(identification, file, customerServiceRequestId);
-        return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO);
+        return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO,request);
     }
 
     @PutMapping("/identification-change")
-    public ResponseEntity<?> updateIdentificationsChange(@RequestParam MultipartFile file,
+    public ResponseEntity<?> updateIdentificationsChange(HttpServletRequest request,
+                                                         @RequestParam MultipartFile file,
                                                          @RequestParam String identification,
                                                          @RequestParam int customerServiceRequestId) {
 
         IdentificationFormDTO identificationFormDTO = new IdentificationFormDTO(identification, file, customerServiceRequestId);
-        return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO);
+        return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO,request);
     }
 
     @PostMapping("/contacts-change")
-    public ResponseEntity<?> changeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO) {
-        return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO);
+    public ResponseEntity<?> changeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO,HttpServletRequest request) {
+        return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO,request);
     }
 
     @PutMapping("/contacts-change")
-    public ResponseEntity<?> updateChangeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO) {
-        return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO);
+    public ResponseEntity<?> updateChangeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO,HttpServletRequest request) {
+        return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO,request);
     }
 
 }

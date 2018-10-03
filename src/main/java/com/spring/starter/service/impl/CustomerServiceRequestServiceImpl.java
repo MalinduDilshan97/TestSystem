@@ -1,24 +1,24 @@
 package com.spring.starter.service.impl;
 
-import com.spring.starter.DTO.ContactDetailsDTO;
-import com.spring.starter.DTO.IdentificationFormDTO;
 import com.spring.starter.Repository.ChangeIdentificationFormRepository;
-import com.spring.starter.Repository.ContactDetailsRepository;
 import com.spring.starter.Repository.CustomerServiceRequestRepository;
-import com.spring.starter.configuration.ServiceRequestIdConfig;
-import com.spring.starter.model.ContactDetails;
-import com.spring.starter.model.CustomerServiceRequest;
-import com.spring.starter.model.IdentificationForm;
-import com.spring.starter.model.ResponseModel;
+import com.spring.starter.service.ServiceRequestCustomerLogService;
 import com.spring.starter.service.CustomerServiceRequestService;
-import com.spring.starter.util.FileStorage;
+import com.spring.starter.configuration.ServiceRequestIdConfig;
+import com.spring.starter.service.ServiceRequestFormLogService;
+import com.spring.starter.Repository.ContactDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.spring.starter.DTO.IdentificationFormDTO;
+import com.spring.starter.DTO.ContactDetailsDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import javax.servlet.http.HttpServletRequest;
+import com.spring.starter.util.FileStorage;
+import org.springframework.http.HttpStatus;
 import javax.transaction.Transactional;
+import com.spring.starter.model.*;
 import java.util.Optional;
+
 
 @Transactional
 @Service
@@ -31,11 +31,18 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
     @Autowired
     private ContactDetailsRepository contactDetailsRepository;
     @Autowired
+    private ServiceRequestCustomerLogService serviceRequestCustomerLogService;
+    @Autowired
+    private ServiceRequestFormLogService serviceRequestFormLogService;
+    @Autowired
     private FileStorage fileStorage;
+
     private ResponseModel res = new ResponseModel();
+    private ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
+    private ServiceRequestFormLog serviceRequestFormLog = new ServiceRequestFormLog();
 
     @Override
-    public ResponseEntity<?> changeIdentificationDetails(IdentificationFormDTO identificationFormDTO) {
+    public ResponseEntity<?> changeIdentificationDetails(IdentificationFormDTO identificationFormDTO, HttpServletRequest request) {
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(identificationFormDTO.getCustomerServiceRequestId());
 
@@ -47,7 +54,7 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
         }
         int serviceRequestId = serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
         if (serviceRequestId != ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
-            responsemodel.setMessage("Invalied Request");
+            responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         } else {
@@ -68,8 +75,8 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
                 IdentificationForm identificationForm = new IdentificationForm();
 
-                Optional<IdentificationForm> request = changeIdentificationFormRepository.getFormFromCSR(identificationFormDTO.getCustomerServiceRequestId());
-                if (request.isPresent()) {
+                Optional<IdentificationForm> optionalForm = changeIdentificationFormRepository.getFormFromCSR(identificationFormDTO.getCustomerServiceRequestId());
+                if (optionalForm.isPresent()) {
                     identificationForm.setChangeIdentificationFormId(identificationFormDTO.getCustomerServiceRequestId());
                 }
 
@@ -78,10 +85,46 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
                 identificationForm.setCustomerServiceRequest(customerServiceRequest);
 
                 if (changeIdentificationFormRepository.save(identificationForm) != null) {
+
+                    serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                    serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                    serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                    boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                    if (result) {
+                        serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                        serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                        serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                        serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                        serviceRequestFormLog.setIp(request.getRemoteAddr());
+                        serviceRequestFormLog.setStatus(true);
+                        serviceRequestFormLog.setMessage(" Request Form Successfully Saved To The  System");
+                        serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                    }
+
                     res.setMessage(" Request Form Successfully Saved To The System");
                     res.setStatus(true);
                     return new ResponseEntity<>(res, HttpStatus.CREATED);
                 } else {
+
+                    serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                    serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                    serviceRequestCustomerLog.setMessage("Failed TO Save The Request... Operation Unsuccessful");
+                    boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                    if (result) {
+                        serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                        serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                        serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                        serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                        serviceRequestFormLog.setIp(request.getRemoteAddr());
+                        serviceRequestFormLog.setStatus(true);
+                        serviceRequestFormLog.setMessage("  Failed TO Save The  Request... Operation Unsuccessful");
+                        serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                    }
+
                     res.setMessage(" Failed TO Save The Request Form... Operation Unsuccessful");
                     res.setStatus(false);
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -93,7 +136,7 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
     }
 
     @Override
-    public ResponseEntity<?> UpdateContactDetails(ContactDetailsDTO contactDetailsDTO) {
+    public ResponseEntity<?> UpdateContactDetails(ContactDetailsDTO contactDetailsDTO, HttpServletRequest request) {
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(contactDetailsDTO.getCustomerServiceRequestId());
         if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
@@ -109,8 +152,8 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
             CustomerServiceRequest customerServiceRequest = optional.get();
             ContactDetails contactDetails = new ContactDetails();
-            Optional<ContactDetails> request = contactDetailsRepository.getFormFromCSR(contactDetailsDTO.getCustomerServiceRequestId());
-            if (request.isPresent()) {
+            Optional<ContactDetails> details = contactDetailsRepository.getFormFromCSR(contactDetailsDTO.getCustomerServiceRequestId());
+            if (details.isPresent()) {
                 contactDetails.setContactDetailsId(contactDetailsDTO.getCustomerServiceRequestId());
             }
 
@@ -121,10 +164,46 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
             contactDetails.setCustomerServiceRequest(customerServiceRequest);
 
             if (contactDetailsRepository.save(contactDetails) != null) {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Request Form Successfully Saved To The  System ");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Request Form Successfully Saved To The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
             } else {
+
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Failed TO Save The Request... Operation Unsuccessful");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Failed TO Save The  Request... Operation Unsuccessful ");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Failed TO Save The Request Form");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);

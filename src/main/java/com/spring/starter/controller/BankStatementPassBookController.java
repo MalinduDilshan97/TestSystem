@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/bankStatementPassBook")
 @CrossOrigin
@@ -18,23 +20,23 @@ public class BankStatementPassBookController {
     private BankStatementPassBookService bankStatementPassBookService;
 
     @PostMapping("/duplicatePassbook")
-    public ResponseEntity<?> duplicatePassBookRequest(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO) {
-        return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO);
+    public ResponseEntity<?> duplicatePassBookRequest(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO, HttpServletRequest request) {
+        return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO,request);
     }
 
     @PutMapping("/duplicatePassbook")
-    public ResponseEntity<?> duplicatePassBookRequestUpdate(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO) {
-        return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO);
+    public ResponseEntity<?> duplicatePassBookRequestUpdate(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO,HttpServletRequest request) {
+        return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO,request);
     }
 
     @PostMapping("/AccountStatement")
-    public ResponseEntity<?> AccountStatementRequest(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO) {
-        return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
+    public ResponseEntity<?> AccountStatementRequest(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO,HttpServletRequest request) {
+        return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO,request);
     }
 
     @PutMapping("/AccountStatement")
-    public ResponseEntity<?> AccountStatementRequestUpdate(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO) {
-        return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
+    public ResponseEntity<?> AccountStatementRequestUpdate(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO,HttpServletRequest request) {
+        return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO,request);
     }
 
     @PostMapping("/e-statement")

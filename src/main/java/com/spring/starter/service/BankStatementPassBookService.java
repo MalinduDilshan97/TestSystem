@@ -6,14 +6,16 @@ import com.spring.starter.DTO.DuplicatePassBookRequestDTO;
 import com.spring.starter.model.StatementFrequency;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface BankStatementPassBookService {
 
     public ResponseEntity<?> estatementService(BankStatementAccountDTO bankStatementAccountDTO, int customerServiceRequistId);
 
     public ResponseEntity<?> statementFrequencyService(StatementFrequency statementFrequency, int customerServiceRequistId);
 
-    public ResponseEntity<?> duplicatePassBookRequest(DuplicatePassBookRequestDTO duplicatePassBookRequestDTO);
+    public ResponseEntity<?> duplicatePassBookRequest(DuplicatePassBookRequestDTO duplicatePassBookRequestDTO, HttpServletRequest request);
 
-    public ResponseEntity<?> AccountStatement(AccountStatementIssueRequestDTO accountStatementIssueRequestDTO);
+    public ResponseEntity<?> AccountStatement(AccountStatementIssueRequestDTO accountStatementIssueRequestDTO, HttpServletRequest request);
 
 }

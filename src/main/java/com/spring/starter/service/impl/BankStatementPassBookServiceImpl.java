@@ -8,12 +8,15 @@ import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.service.BankStatementPassBookService;
+import com.spring.starter.service.ServiceRequestCustomerLogService;
+import com.spring.starter.service.ServiceRequestFormLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,24 +32,25 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
 
     @Autowired
     private CustomerServiceRequestRepository customerServiceRequestRepository;
-
     @Autowired
     EstatementFacilityRepository estatementFacilityRepository;
-
     @Autowired
     BankStatementAccountNoRepository bankStatementAccountNoRepository;
-
     @Autowired
     StatementFrequencyRepository statementFrequencyRepository;
-
     @Autowired
     private DuplicatePassBookRequestRepository duplicatePassBookRequestRepository;
-
     @Autowired
     private AccountStatementIssueRequestRepository accountStatementIssueRequestRepository;
+    @Autowired
+    private ServiceRequestCustomerLogService serviceRequestCustomerLogService;
+    @Autowired
+    private ServiceRequestFormLogService serviceRequestFormLogService;
 
     private ResponseModel res = new ResponseModel();
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
+    private ServiceRequestFormLog serviceRequestFormLog = new ServiceRequestFormLog();
 
     @Override
     public ResponseEntity<?> estatementService(BankStatementAccountDTO bankStatementAccountDTO, int customerServiceRequistId) {
@@ -60,7 +64,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
         if (serviceRequestId != ServiceRequestIdConfig.PI_ACTIVE_CACEL_ESTATEMENT_FACILITY_FOR_ACCOUNTS) {
-            responsemodel.setMessage("Invalied Request");
+            responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
@@ -99,7 +103,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
     }
 
     @Override
-    public ResponseEntity<?> duplicatePassBookRequest(DuplicatePassBookRequestDTO duplicatePassBookRequestDTO) {
+    public ResponseEntity<?> duplicatePassBookRequest(DuplicatePassBookRequestDTO duplicatePassBookRequestDTO, HttpServletRequest request) {
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(duplicatePassBookRequestDTO.getCustomerServiceRequestId());
         if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
@@ -125,10 +129,44 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
             duplicatePassBookRequest.setCustomerServiceRequest(customerServiceRequest);
 
             if (duplicatePassBookRequestRepository.save(duplicatePassBookRequest) != null) {
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage("Request Form  Successfully Saved To The  System");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Request Successfully Created In The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
             } else {
+                serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                serviceRequestCustomerLog.setMessage("Failed TO Save The Request...  Operation Unsuccessful");
+                boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                if (result) {
+                    serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                    serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                    serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                    serviceRequestFormLog.setIp(request.getRemoteAddr());
+                    serviceRequestFormLog.setStatus(true);
+                    serviceRequestFormLog.setMessage(" Failed TO Save The  Request... Operation  Unsuccessful");
+                    serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                }
+
                 res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
@@ -180,7 +218,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
     }
 
 
-    public ResponseEntity<?> AccountStatement(AccountStatementIssueRequestDTO accountStatementIssueRequestDTO) {
+    public ResponseEntity<?> AccountStatement(AccountStatementIssueRequestDTO accountStatementIssueRequestDTO, HttpServletRequest request) {
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(accountStatementIssueRequestDTO.getCustomerServiceRequestId());
         if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
@@ -203,9 +241,9 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
                 }
 
-                Optional<AccountStatementIssueRequest> request = accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
-                if (request.isPresent()) {
-                    accountStatementIssueRequest.setAccountStatementIssueRequestId(request.get().getAccountStatementIssueRequestId());
+                Optional<AccountStatementIssueRequest> issueRequest = accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
+                if (issueRequest.isPresent()) {
+                    accountStatementIssueRequest.setAccountStatementIssueRequestId(issueRequest.get().getAccountStatementIssueRequestId());
                 }
 
                 accountStatementIssueRequest.setAccountNo(accountStatementIssueRequestDTO.getAccountNo());
@@ -219,6 +257,23 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                     res.setStatus(true);
                     return new ResponseEntity<>(res, HttpStatus.CREATED);
                 } else {
+                    serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+                    serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
+                    serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+                    serviceRequestCustomerLog.setMessage("Failed TO Save The  Request... Operation Unsuccessful");
+                    boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+
+                    if (result) {
+                        serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
+                        serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
+                        serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
+                        serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
+                        serviceRequestFormLog.setIp(request.getRemoteAddr());
+                        serviceRequestFormLog.setStatus(true);
+                        serviceRequestFormLog.setMessage(" Failed  TO Save The  Request... Operation Unsuccessful");
+                        serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+                    }
+
                     res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                     res.setStatus(false);
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);

@@ -114,7 +114,6 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
                 serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
             }
 
-
             res.setMessage(" Request Form Successfully Saved To The System");
             res.setStatus(true);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
