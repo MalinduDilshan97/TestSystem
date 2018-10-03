@@ -52,14 +52,16 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
-
-        CustomerServiceRequest customerServiceRequest=optional.get();
-        CustomerAccountNo customerAccountNo=customerAccountNoOptional.get();
-
         EffectOrRevokePayment effectOrRevokePayment= new EffectOrRevokePayment();
-        effectOrRevokePayment.setEffectOrRevokePaymentId(effectOrRevokePaymentDTO.getEffectOrRevokePaymentId());
+        Optional<EffectOrRevokePayment> request=effectOrRevokePaymentRepository.getFormFromCSR(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
+        if (request.isPresent()){
+            effectOrRevokePayment.setEffectOrRevokePaymentId(request.get().getEffectOrRevokePaymentId());
+        }
+
+
+        CustomerAccountNo customerAccountNo=customerAccountNoOptional.get();
         effectOrRevokePayment.setCustomerAccountNo(customerAccountNo);
-        effectOrRevokePayment.setCustomerServiceRequest(customerServiceRequest);
+        effectOrRevokePayment.setCustomerServiceRequest(optional.get());
 
         EffectOrRevokePayment payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
 

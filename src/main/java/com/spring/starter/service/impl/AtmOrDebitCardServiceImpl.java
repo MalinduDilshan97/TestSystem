@@ -33,6 +33,8 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
     private LinkedAccountRepository linkedAccountRepository;
     @Autowired
     private ChangePrimaryAccountRepository changePrimaryAccountRepository;
+    @Autowired
+    private NDBBranchRepository ndbBranchRepository;
 
     private ResponseModel res = new ResponseModel();
 
@@ -96,8 +98,31 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         if (request.isPresent()){
             reIssuePinRequest.setReIssuePinRequestId(request.get().getReIssuePinRequestId());
         }
+        if(reIssuePinRequestDTO.isAvAddress()){
+            if(reIssuePinRequestDTO.getAddress() == null){
+                res.setMessage("Complete Address details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+        }
+        if(reIssuePinRequestDTO.isAvBranch()){
+            if(reIssuePinRequestDTO.getBranch() == 0){
+                res.setMessage("Complete Branch Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+            Optional<NDBBranch> ndbBranchOpt = ndbBranchRepository.findById(reIssuePinRequestDTO.getBranch());
+            if(!ndbBranchOpt.isPresent()){
+                res.setMessage("Invalied Branch Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+            reIssuePinRequest.setNdbBranch(ndbBranchOpt.get());
+        }
 
-            reIssuePinRequest.setBranch(reIssuePinRequestDTO.getBranch());
+            reIssuePinRequest.setCurrespondingAddress(reIssuePinRequestDTO.isAvCurrespondingAddress());
+            reIssuePinRequest.setAddress(reIssuePinRequestDTO.isAvAddress());
+            reIssuePinRequest.setBranch(reIssuePinRequestDTO.isAvBranch());
             reIssuePinRequest.setAddress(reIssuePinRequestDTO.getAddress());
             reIssuePinRequest.setCustomerServiceRequest(customerServiceRequest);
 

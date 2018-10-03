@@ -2,26 +2,26 @@ package com.spring.starter.DTO;
 
 import java.io.Serializable;
 
-public class ReIssuePinRequestDTO implements Serializable {
+public class ReIssuePinRequestDTO {
 
     private int reIssuePinRequestId;
-    private String branch;
+    private int branch;
     private String address;
+    private boolean avBranch= false;
+    private boolean avAddress= false;
+    private boolean avCurrespondingAddress = false;
     private int customerServiceRequestId;
 
     public ReIssuePinRequestDTO() {
     }
 
-    public ReIssuePinRequestDTO(String branch, String address, int customerServiceRequestId) {
-        this.branch = branch;
-        this.address = address;
-        this.customerServiceRequestId = customerServiceRequestId;
-    }
-
-    public ReIssuePinRequestDTO(int reIssuePinRequestId, String branch, String address, int customerServiceRequestId) {
+    public ReIssuePinRequestDTO(int reIssuePinRequestId, int branch, String address, boolean avBranch, boolean avAddress, boolean avCurrespondingAddress, int customerServiceRequestId) {
         this.reIssuePinRequestId = reIssuePinRequestId;
         this.branch = branch;
         this.address = address;
+        this.avBranch = avBranch;
+        this.avAddress = avAddress;
+        this.avCurrespondingAddress = avCurrespondingAddress;
         this.customerServiceRequestId = customerServiceRequestId;
     }
 
@@ -33,11 +33,11 @@ public class ReIssuePinRequestDTO implements Serializable {
         this.reIssuePinRequestId = reIssuePinRequestId;
     }
 
-    public String getBranch() {
+    public int getBranch() {
         return branch;
     }
 
-    public void setBranch(String branch) {
+    public void setBranch(int branch) {
         this.branch = branch;
     }
 
@@ -47,6 +47,30 @@ public class ReIssuePinRequestDTO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isAvBranch() {
+        return avBranch;
+    }
+
+    public void setAvBranch(boolean avBranch) {
+        this.avBranch = avBranch;
+    }
+
+    public boolean isAvAddress() {
+        return avAddress;
+    }
+
+    public void setAvAddress(boolean avAddress) {
+        this.avAddress = avAddress;
+    }
+
+    public boolean isAvCurrespondingAddress() {
+        return avCurrespondingAddress;
+    }
+
+    public void setAvCurrespondingAddress(boolean avCurrespondingAddress) {
+        this.avCurrespondingAddress = avCurrespondingAddress;
     }
 
     public int getCustomerServiceRequestId() {

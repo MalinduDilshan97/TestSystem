@@ -3,6 +3,7 @@ package com.spring.starter.controller;
 import java.security.Principal;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.spring.starter.DTO.SignatureDTO;
@@ -17,6 +18,8 @@ import com.spring.starter.model.ChangePermanentMail;
 import com.spring.starter.model.Customer;
 import com.spring.starter.model.ServiceRequest;
 import com.spring.starter.service.ServiceRequestService;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -38,7 +41,8 @@ public class ServiceRequestController {
 
     @PostMapping("/addNewCustomer")
     public ResponseEntity<?> addANewCustomer(@RequestBody @Valid CustomerDTO customerDTO) {
-        return serviceRequestService.addNewCustomer(customerDTO);
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return serviceRequestService.addNewCustomer(customerDTO,request);
     }
 
     @PostMapping("/addNewServiceToACustomer")

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import com.spring.starter.DTO.SignatureDTO;
@@ -135,7 +136,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     }
 
     @Override
-    public ResponseEntity<?> addNewCustomer(CustomerDTO customerDTO) {
+    public ResponseEntity<?> addNewCustomer(CustomerDTO customerDTO,HttpServletRequest request) {
         ResponseModel responsemodel = new ResponseModel();
 
         List<String> accNo = customerDTO.getAccountNos();
@@ -168,7 +169,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         }
         responsemodel.setMessage("Customer Saved Successfully");
         responsemodel.setStatus(true);
-        return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        return new ResponseEntity<>(customer_new, HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> addAServiceToACustomer(int customerId, int serviceRequestId) {
@@ -193,7 +194,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
         responsemodel.setMessage("Service Created Successfully");
         responsemodel.setStatus(true);
-        return new ResponseEntity<>(responsemodel, HttpStatus.OK);
+        return new ResponseEntity<>(customerServiceRequest, HttpStatus.OK);
     }
 
     public ResponseEntity<?> getAllServiceRequests(int customerId, String date) {
@@ -311,6 +312,11 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         }
 
         Optional<StaffUser> staffUser = staffUserRepository.findById(Integer.parseInt(principal.getName()));
+        if(!staffUser.isPresent()){
+            responsemodel.setMessage("Unauthorized user");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.UNAUTHORIZED);
+        }
         staffHandled.add(staffUser.get());
         customerServiceRequest.setStaffUser(staffHandled);
         CustomerServiceRequest save = customerServiceRequestRepository.save(customerServiceRequest);
@@ -328,7 +334,12 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     public ResponseEntity<?> completeAllCustomerRequests(Principal principal, int customerId) {
         ResponseModel responsemodel = new ResponseModel();
         List<CustomerServiceRequest> allCustomers = customerServiceRequestRepository.getAllCustomerRequest(customerId);
-
+        Optional<StaffUser> staffUser = staffUserRepository.findById(Integer.parseInt(principal.getName()));
+        if(!staffUser.isPresent()){
+            responsemodel.setMessage("Unauthorized user");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.UNAUTHORIZED);
+        }
 
         for (CustomerServiceRequest customerServiceRequest : allCustomers) {
             List<StaffUser> staffHandled;
@@ -339,6 +350,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             } else {
                 staffHandled = customerServiceRequest.getStaffUser();
             }
+            staffHandled.add(staffUser.get());
             request.setStaffUser(staffHandled);
             try {
                 customerServiceRequestRepository.save(request);
@@ -519,7 +531,12 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             }
 
         } else if(serviceRequestId == ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
-                /****************** fill this ******************/
+            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(serviceRequestId);
+            if (request.isPresent()){
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(contactDetailsRepository,HttpStatus.OK);
+            }
         } else if (serviceRequestId == ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD){
             Optional<AccountStatementIssueRequest> accountStatementIssueRequestOpt=accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
             if (!accountStatementIssueRequestOpt.isPresent()){
@@ -585,7 +602,6 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             return new ResponseEntity<>(responsemodel, HttpStatus.OK);
 
     }
-
 
     @Override
     public ResponseEntity<?> saveSignature(SignatureDTO signatureDTO) {

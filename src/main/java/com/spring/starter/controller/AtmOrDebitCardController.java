@@ -2,12 +2,10 @@ package com.spring.starter.controller;
 
 import com.spring.starter.DTO.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.spring.starter.service.AtmOrDebitCardService;
 
@@ -30,7 +28,7 @@ public class AtmOrDebitCardController {
 
     @PostMapping("/reIssuePin")
     public ResponseEntity<?> reIssueAPin(@RequestBody ReIssuePinRequestDTO reIssuePinRequestDTO) {
-        return atmOrDebitCardService.reIssueAPin(reIssuePinRequestDTO);
+       return atmOrDebitCardService.reIssueAPin(reIssuePinRequestDTO);
     }
 
     @PutMapping("/reIssuePin")
@@ -78,4 +76,12 @@ public class AtmOrDebitCardController {
         return atmOrDebitCardService.changePrimaryAccount(changePrimaryAccountDTO);
     }
 
+    @GetMapping
+    public ResponseEntity<?> test(){
+        ReIssuePinRequestDTO reIssuePinRequestDTO = new ReIssuePinRequestDTO();
+        reIssuePinRequestDTO.setBranch(1);
+        reIssuePinRequestDTO.setAvAddress(true);
+        reIssuePinRequestDTO.setCustomerServiceRequestId(1);
+        return new ResponseEntity<>(reIssuePinRequestDTO,HttpStatus.OK);
+    }
 }
