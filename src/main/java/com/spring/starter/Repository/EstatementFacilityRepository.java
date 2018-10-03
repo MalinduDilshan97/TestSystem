@@ -1,6 +1,5 @@
 package com.spring.starter.Repository;
 
-import com.spring.starter.model.AtmOrDebit;
 import com.spring.starter.model.EstatementFacility;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
