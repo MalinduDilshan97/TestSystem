@@ -9,7 +9,7 @@ import com.spring.starter.model.ChangePermanentMail;
 
 public interface ChangePermanentMailRepository extends JpaRepository<ChangePermanentMail, Integer> {
 
-    @Query("SELECT cpm FROM ChangePermanentMail cpm WHERE cpm.customerServiceRequest.customerServiceRequestId=?1")
-    Optional<ChangePermanentMail> getFormFromCSR(int customerServiceRequestId);
-
+	@Query("SELECT cpm FROM ChangePermanentMail cpm WHERE cpm.customerServiceRequest.customerServiceRequestId=?1")
+	Optional<ChangePermanentMail> getFormFromCSR(int customerServiceRequestId);
+	
 }

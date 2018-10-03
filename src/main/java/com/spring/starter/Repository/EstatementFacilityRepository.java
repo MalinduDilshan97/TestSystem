@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface EstatementFacilityRepository extends JpaRepository<EstatementFacility, Integer> {
+public interface EstatementFacilityRepository extends JpaRepository<EstatementFacility,Integer> {
 
     @Query("SELECT ef FROM EstatementFacility ef WHERE ef.customerServiceRequest.customerServiceRequestId=?1")
     Optional<EstatementFacility> getFormFromCSR(int customerServiceRequestId);

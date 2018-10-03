@@ -10,9 +10,9 @@ import com.spring.starter.model.QueueService;
 
 public interface QueueServiceDef {
 
-    public ResponseEntity<?> addANewQueueNumber(QueueDTO queueDTO);
-
-    public ResponseEntity<?> addNewServiceToExistingQueueNumber(NewServiceDTO newServiceDTO, int queueNumber);
-
-    public Optional<QueueService> getAllmagulak();
+	public ResponseEntity<?> addANewQueueNumber(QueueDTO queueDTO);
+	
+	public ResponseEntity<?> addNewServiceToExistingQueueNumber(NewServiceDTO newServiceDTO , int queueNumber);
+	
+	public Optional<QueueService> getAllmagulak();
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "bank_statement_accountno")
+@Table(name="bank_statement_accountno")
 public class BankStatementAccountNo {
 
     @Id

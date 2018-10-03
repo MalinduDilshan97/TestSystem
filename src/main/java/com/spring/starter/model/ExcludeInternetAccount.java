@@ -18,78 +18,81 @@ import javax.validation.constraints.NotNull;
 @Table(name = "exclude_internet_account")
 public class ExcludeInternetAccount {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int excludeInternetAccountId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int excludeInternetAccountId;
+	
+	@NotEmpty
+	@NotEmpty
+	private String existingBankingUserId;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="internetBankingId")
+	@NotEmpty
+	@NotNull
+	private List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="csrId")
+	private CustomerServiceRequest customerServiceRequest;
 
-    @NotEmpty
-    @NotEmpty
-    private String existingBankingUserId;
+	public ExcludeInternetAccount() {
+		super();
+	}
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "internetBankingId")
-    @NotEmpty
-    @NotNull
-    private List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "csrId")
-    private CustomerServiceRequest customerServiceRequest;
-
-    public ExcludeInternetAccount() {
-        super();
-    }
-
-    public ExcludeInternetAccount(int excludeInternetAccountId, @NotEmpty @NotEmpty String existingBankingUserId,
-                                  @NotEmpty @NotNull List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers,
-                                  CustomerServiceRequest customerServiceRequest) {
-        super();
-        this.excludeInternetAccountId = excludeInternetAccountId;
-        this.existingBankingUserId = existingBankingUserId;
-        this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
-        this.customerServiceRequest = customerServiceRequest;
-    }
-
-
-    public CustomerServiceRequest getCustomerServiceRequest() {
-        return customerServiceRequest;
-    }
+	public ExcludeInternetAccount(int excludeInternetAccountId, @NotEmpty @NotEmpty String existingBankingUserId,
+			@NotEmpty @NotNull List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers,
+			CustomerServiceRequest customerServiceRequest) {
+		super();
+		this.excludeInternetAccountId = excludeInternetAccountId;
+		this.existingBankingUserId = existingBankingUserId;
+		this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
 
-    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-        this.customerServiceRequest = customerServiceRequest;
-    }
+
+	public CustomerServiceRequest getCustomerServiceRequest() {
+		return customerServiceRequest;
+	}
 
 
-    public ExcludeInternetAccount(int excludeInternetAccountId, @NotEmpty @NotEmpty String existingBankingUserId,
-                                  @NotEmpty @NotNull List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers) {
-        super();
-        this.excludeInternetAccountId = excludeInternetAccountId;
-        this.existingBankingUserId = existingBankingUserId;
-        this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
-    }
 
-    public int getExcludeInternetAccountId() {
-        return excludeInternetAccountId;
-    }
+	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
-    public void setExcludeInternetAccountId(int excludeInternetAccountId) {
-        this.excludeInternetAccountId = excludeInternetAccountId;
-    }
 
-    public String getExistingBankingUserId() {
-        return existingBankingUserId;
-    }
 
-    public void setExistingBankingUserId(String existingBankingUserId) {
-        this.existingBankingUserId = existingBankingUserId;
-    }
+	public ExcludeInternetAccount(int excludeInternetAccountId, @NotEmpty @NotEmpty String existingBankingUserId,
+			@NotEmpty @NotNull List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers) {
+		super();
+		this.excludeInternetAccountId = excludeInternetAccountId;
+		this.existingBankingUserId = existingBankingUserId;
+		this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
+	}
 
-    public List<InternetBankingExcludeAccountNumbers> getBankingExcludeAccountNumbers() {
-        return bankingExcludeAccountNumbers;
-    }
+	public int getExcludeInternetAccountId() {
+		return excludeInternetAccountId;
+	}
 
-    public void setBankingExcludeAccountNumbers(List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers) {
-        this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
-    }
+	public void setExcludeInternetAccountId(int excludeInternetAccountId) {
+		this.excludeInternetAccountId = excludeInternetAccountId;
+	}
+
+	public String getExistingBankingUserId() {
+		return existingBankingUserId;
+	}
+
+	public void setExistingBankingUserId(String existingBankingUserId) {
+		this.existingBankingUserId = existingBankingUserId;
+	}
+
+	public List<InternetBankingExcludeAccountNumbers> getBankingExcludeAccountNumbers() {
+		return bankingExcludeAccountNumbers;
+	}
+
+	public void setBankingExcludeAccountNumbers(List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers) {
+		this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
+	}
 }

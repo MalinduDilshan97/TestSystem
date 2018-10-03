@@ -6,125 +6,126 @@ import javax.validation.constraints.NotNull;
 
 
 @Entity
-@Table(name = "reissue_login_password_model")
+@Table(name="reissue_login_password_model")
 public class ReissueLoginPasswordModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reissueLoginPasswordModelId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int reissueLoginPasswordModelId;
+	
+	@NotNull
+	@NotEmpty
+	private String bankingUserId;
+	
+	private boolean atBranch = false;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="branchId")
+	private NDBBranch branch;
+	
+	private boolean postToCorrespondenceAddress = false;
+	
+	private boolean postToAddress = false;
+	
+	private String addresss;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="csrId")
+	private CustomerServiceRequest customerServiceRequest;
 
-    @NotNull
-    @NotEmpty
-    private String bankingUserId;
+	public ReissueLoginPasswordModel() {
+		super();
+	}
 
-    private boolean atBranch = false;
+	public ReissueLoginPasswordModel(int reissueLoginPasswordModelId, @NotNull @NotEmpty String bankingUserId,
+			boolean atBranch, NDBBranch branch, boolean postToCorrespondenceAddress, boolean postToAddress,
+			String addresss, CustomerServiceRequest customerServiceRequest) {
+		super();
+		this.reissueLoginPasswordModelId = reissueLoginPasswordModelId;
+		this.bankingUserId = bankingUserId;
+		this.atBranch = atBranch;
+		this.branch = branch;
+		this.postToCorrespondenceAddress = postToCorrespondenceAddress;
+		this.postToAddress = postToAddress;
+		this.addresss = addresss;
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branchId")
-    private NDBBranch branch;
+	public ReissueLoginPasswordModel(int reissueLoginPasswordModelId, @NotNull @NotEmpty String bankingUserId,
+			boolean atBranch, NDBBranch branch, boolean postToCorrespondenceAddress, String addresss) {
+		super();
+		this.reissueLoginPasswordModelId = reissueLoginPasswordModelId;
+		this.bankingUserId = bankingUserId;
+		this.atBranch = atBranch;
+		this.branch = branch;
+		this.postToCorrespondenceAddress = postToCorrespondenceAddress;
+		this.addresss = addresss;
+	}
 
-    private boolean postToCorrespondenceAddress = false;
+	public void setBranch(NDBBranch branch) {
+		this.branch = branch;
+	}
 
-    private boolean postToAddress = false;
+	public int getReissueLoginPasswordModelId() {
+		return reissueLoginPasswordModelId;
+	}
 
-    private String addresss;
+	public void setReissueLoginPasswordModelId(int reissueLoginPasswordModelId) {
+		this.reissueLoginPasswordModelId = reissueLoginPasswordModelId;
+	}
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "csrId")
-    private CustomerServiceRequest customerServiceRequest;
+	public String getBankingUserId() {
+		return bankingUserId;
+	}
 
-    public ReissueLoginPasswordModel() {
-        super();
-    }
+	public void setBankingUserId(String bankingUserId) {
+		this.bankingUserId = bankingUserId;
+	}
 
-    public ReissueLoginPasswordModel(int reissueLoginPasswordModelId, @NotNull @NotEmpty String bankingUserId,
-                                     boolean atBranch, NDBBranch branch, boolean postToCorrespondenceAddress, boolean postToAddress,
-                                     String addresss, CustomerServiceRequest customerServiceRequest) {
-        super();
-        this.reissueLoginPasswordModelId = reissueLoginPasswordModelId;
-        this.bankingUserId = bankingUserId;
-        this.atBranch = atBranch;
-        this.branch = branch;
-        this.postToCorrespondenceAddress = postToCorrespondenceAddress;
-        this.postToAddress = postToAddress;
-        this.addresss = addresss;
-        this.customerServiceRequest = customerServiceRequest;
-    }
+	public boolean isAtBranch() {
+		return atBranch;
+	}
 
-    public ReissueLoginPasswordModel(int reissueLoginPasswordModelId, @NotNull @NotEmpty String bankingUserId,
-                                     boolean atBranch, NDBBranch branch, boolean postToCorrespondenceAddress, String addresss) {
-        super();
-        this.reissueLoginPasswordModelId = reissueLoginPasswordModelId;
-        this.bankingUserId = bankingUserId;
-        this.atBranch = atBranch;
-        this.branch = branch;
-        this.postToCorrespondenceAddress = postToCorrespondenceAddress;
-        this.addresss = addresss;
-    }
+	public void setAtBranch(boolean atBranch) {
+		this.atBranch = atBranch;
+	}
 
-    public void setBranch(NDBBranch branch) {
-        this.branch = branch;
-    }
+	public boolean isPostToCorrespondenceAddress() {
+		return postToCorrespondenceAddress;
+	}
 
-    public int getReissueLoginPasswordModelId() {
-        return reissueLoginPasswordModelId;
-    }
+	public void setPostToCorrespondenceAddress(boolean postToCorrespondenceAddress) {
+		this.postToCorrespondenceAddress = postToCorrespondenceAddress;
+	}
 
-    public void setReissueLoginPasswordModelId(int reissueLoginPasswordModelId) {
-        this.reissueLoginPasswordModelId = reissueLoginPasswordModelId;
-    }
+	public String getAddresss() {
+		return addresss;
+	}
 
-    public String getBankingUserId() {
-        return bankingUserId;
-    }
+	public void setAddresss(String addresss) {
+		this.addresss = addresss;
+	}
 
-    public void setBankingUserId(String bankingUserId) {
-        this.bankingUserId = bankingUserId;
-    }
+	public CustomerServiceRequest getCustomerServiceRequest() {
+		return customerServiceRequest;
+	}
 
-    public boolean isAtBranch() {
-        return atBranch;
-    }
+	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
-    public void setAtBranch(boolean atBranch) {
-        this.atBranch = atBranch;
-    }
+	public NDBBranch getBranch() {
+		return branch;
+	}
 
-    public boolean isPostToCorrespondenceAddress() {
-        return postToCorrespondenceAddress;
-    }
+	public boolean isPostToAddress() {
+		return postToAddress;
+	}
 
-    public void setPostToCorrespondenceAddress(boolean postToCorrespondenceAddress) {
-        this.postToCorrespondenceAddress = postToCorrespondenceAddress;
-    }
-
-    public String getAddresss() {
-        return addresss;
-    }
-
-    public void setAddresss(String addresss) {
-        this.addresss = addresss;
-    }
-
-    public CustomerServiceRequest getCustomerServiceRequest() {
-        return customerServiceRequest;
-    }
-
-    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-        this.customerServiceRequest = customerServiceRequest;
-    }
-
-    public NDBBranch getBranch() {
-        return branch;
-    }
-
-    public boolean isPostToAddress() {
-        return postToAddress;
-    }
-
-    public void setPostToAddress(boolean postToAddress) {
-        this.postToAddress = postToAddress;
-    }
-
-
+	public void setPostToAddress(boolean postToAddress) {
+		this.postToAddress = postToAddress;
+	} 
+	
+	
+	
 }

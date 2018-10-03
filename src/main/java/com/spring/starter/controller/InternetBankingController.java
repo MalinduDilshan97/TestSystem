@@ -16,59 +16,59 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/serviceRequest/internet-banking")
 public class InternetBankingController {
+	
+	@Autowired
+	private InternetBankingService internetBankingService;
+	
+	@PostMapping("/reissue-password")
+	public ResponseEntity<?> reissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
+		return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
+	}
 
-    @Autowired
-    private InternetBankingService internetBankingService;
+	@PutMapping("/reissue-password")
+	public ResponseEntity<?> updateReissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
+		return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
+	}
+	
+	@PostMapping("/link-JointAccounts")
+	public ResponseEntity<?> linkJointAccounts(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+		return internetBankingService.linkJointAccounts(accountDTO, requestId);
+	}
 
-    @PostMapping("/reissue-password")
-    public ResponseEntity<?> reissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel, @RequestParam(name = "requestId") int requestId) {
-        //return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
-        return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
-    }
+	@PutMapping("/link-JointAccounts")
+	public ResponseEntity<?> updateLinkJointAccounts(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+		return internetBankingService.linkJointAccounts(accountDTO, requestId);
+	}
+	
+	@PostMapping("/exclude-accounts")
+	public ResponseEntity<?> excludeAccountNo(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+		return internetBankingService.excludeAccountNo(accountDTO, requestId);
+	}
+	
+	@PostMapping("/other-service")
+	public ResponseEntity<?> otherServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(internetBanking,HttpStatus.OK);
 
-    @PutMapping("/reissue-password")
-    public ResponseEntity<?> updateReissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel, @RequestParam(name = "requestId") int requestId) {
-        //return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
-        return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
-    }
+		return internetBankingService.internetOtherService(internetBanking, requestId);
+	}
 
-    @PostMapping("/link-JointAccounts")
-    public ResponseEntity<?> linkJointAccounts(@RequestBody LinkAccountDTO accountDTO, @RequestParam(name = "requestId") int requestId) {
-        return internetBankingService.linkJointAccounts(accountDTO, requestId);
-    }
+	@PutMapping("/other-service")
+	public ResponseEntity<?> updateServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name="requestId") int requestId){
+		//return new ResponseEntity<>(internetBanking,HttpStatus.OK);
 
-    @PutMapping("/link-JointAccounts")
-    public ResponseEntity<?> updateLinkJointAccounts(@RequestBody LinkAccountDTO accountDTO, @RequestParam(name = "requestId") int requestId) {
-        return internetBankingService.linkJointAccounts(accountDTO, requestId);
-    }
-
-    @PostMapping("/exclude-accounts")
-    public ResponseEntity<?> excludeAccountNo(@RequestBody LinkAccountDTO accountDTO, @RequestParam(name = "requestId") int requestId) {
-        return internetBankingService.excludeAccountNo(accountDTO, requestId);
-    }
-
-    @PostMapping("/other-service")
-    public ResponseEntity<?> otherServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name = "requestId") int requestId) {
-        //return new ResponseEntity<>(internetBanking,HttpStatus.OK);
-
-        return internetBankingService.internetOtherService(internetBanking, requestId);
-    }
-
-    @PutMapping("/other-service")
-    public ResponseEntity<?> updateServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name = "requestId") int requestId) {
-        //return new ResponseEntity<>(internetBanking,HttpStatus.OK);
-
-        return internetBankingService.internetOtherService(internetBanking, requestId);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> test() {
-
-        InternetBanking banking = new InternetBanking();
-        banking.setInternetBankingUserId("lakithMuthugala");
-        banking.setInactiveUser(true);
-        banking.setActiveUser(true);
-
-        return new ResponseEntity<>(banking, HttpStatus.OK);
-    }
+		return internetBankingService.internetOtherService(internetBanking, requestId);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> test(){
+	
+		InternetBanking banking = new InternetBanking();
+		banking.setInternetBankingUserId("lakithMuthugala");
+		banking.setInactiveUser(true);
+		banking.setActiveUser(true);
+		
+		return new ResponseEntity<>(banking,HttpStatus.OK);
+	}
 }

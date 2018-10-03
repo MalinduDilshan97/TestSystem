@@ -8,55 +8,55 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.lang.NonNull;
 
 public class QueueDTO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4007916497960366103L;
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 4007916497960366103L;
+	private String name;
 
-    private String name;
+	private String mobileNo;
+	
+	private int serviceRequestId;
 
-    private String mobileNo;
+	public QueueDTO() {
+		super();
+	}
 
-    private int serviceRequestId;
+	public QueueDTO(String name, String mobileNo, int serviceRequestId) {
+		super();
+		this.name = name;
+		this.mobileNo = mobileNo;
+		this.serviceRequestId = serviceRequestId;
+	}
 
-    public QueueDTO() {
-        super();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public QueueDTO(String name, String mobileNo, int serviceRequestId) {
-        super();
-        this.name = name;
-        this.mobileNo = mobileNo;
-        this.serviceRequestId = serviceRequestId;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getMobileNo() {
+		return mobileNo;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
 
-    public String getMobileNo() {
-        return mobileNo;
-    }
+	public int getServiceRequestId() {
+		return serviceRequestId;
+	}
 
-    public void setMobileNo(String mobileNo) {
-        this.mobileNo = mobileNo;
-    }
+	public void setServiceRequestId(int serviceRequestId) {
+		this.serviceRequestId = serviceRequestId;
+	}
 
-    public int getServiceRequestId() {
-        return serviceRequestId;
-    }
-
-    public void setServiceRequestId(int serviceRequestId) {
-        this.serviceRequestId = serviceRequestId;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
-
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 }

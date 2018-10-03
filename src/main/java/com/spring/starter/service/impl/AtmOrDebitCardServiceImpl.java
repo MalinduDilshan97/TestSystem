@@ -6,7 +6,6 @@ import javax.transaction.Transactional;
 import com.spring.starter.DTO.*;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.ServiceRequestIdConfig;
-import com.spring.starter.enums.CardRequests;
 import com.spring.starter.model.*;
 import com.spring.starter.service.ServiceRequestCustomerLogService;
 import com.spring.starter.service.ServiceRequestFormLogService;
@@ -38,6 +37,8 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
     @Autowired
     private ChangePrimaryAccountRepository changePrimaryAccountRepository;
     @Autowired
+    private NDBBranchRepository ndbBranchRepository;
+    @Autowired
     private ServiceRequestCustomerLogService serviceRequestCustomerLogService;
     @Autowired
     private ServiceRequestFormLogService serviceRequestFormLogService;
@@ -49,34 +50,28 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
     @Override
     public ResponseEntity<?> atmOrDebitCardRequest(AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
 
-        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
-        if (!optional.isPresent()) {
+        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()){
             res.setMessage("No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
-        CustomerServiceRequest customerServiceRequest = optional.get();
-        AtmOrDebitCardRequest atmOrDebitCardRequest = new AtmOrDebitCardRequest();
+        CustomerServiceRequest customerServiceRequest=optional.get();
+        AtmOrDebitCardRequest atmOrDebitCardRequest=new AtmOrDebitCardRequest();
 
         int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-        if (serviceRequestId != ServiceRequestIdConfig.CARD_REQUEST) {
+        if(serviceRequestId != ServiceRequestIdConfig.CARD_REQUEST) {
             res.setMessage("Invalid Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
-        Optional<AtmOrDebitCardRequest> optionalRequest = atmOrDebitCardRequestRepository.getFormFromCSR(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
-        if (optionalRequest.isPresent()) {
+        Optional<AtmOrDebitCardRequest> optionalRequest=atmOrDebitCardRequestRepository.getFormFromCSR(atmOrDebitCardRequestDTO.getCustomerServiceRequestId());
+        if (optionalRequest.isPresent()){
             atmOrDebitCardRequest.setAtmOrDebitRequestId(optionalRequest.get().getAtmOrDebitRequestId());
         }
-        if (atmOrDebitCardRequestDTO.getRequestType() == 123) {
-            atmOrDebitCardRequest.setRequestType(CardRequests.SUSPEND_DEBIT_CARD.toString());
-        } else if (atmOrDebitCardRequestDTO.getRequestType() == 124) {
-            atmOrDebitCardRequest.setRequestType(CardRequests.REACTIVE_DEBIT_CARD.toString());
-        } else {
-            atmOrDebitCardRequest.setRequestType(CardRequests.CANCEL_CARDS.toString());
-        }
-        atmOrDebitCardRequest.setCardNumber(atmOrDebitCardRequestDTO.getCardNumber());
-        atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
+            atmOrDebitCardRequest.setRequestType(atmOrDebitCardRequestDTO.getRequestType());
+            atmOrDebitCardRequest.setCardNumber(atmOrDebitCardRequestDTO.getCardNumber());
+            atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
 
         if (atmOrDebitCardRequestRepository.save(atmOrDebitCardRequest) != null) {
 
@@ -127,78 +122,64 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
 
     @Override
     public ResponseEntity<?> reIssueAPin(ReIssuePinRequestDTO reIssuePinRequestDTO, HttpServletRequest request) {
-
-        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(reIssuePinRequestDTO.getCustomerServiceRequestId());
-        if (!optional.isPresent()) {
+        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(reIssuePinRequestDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()){
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
 
-        ReIssuePinRequest reIssuePinRequest = new ReIssuePinRequest();
-        CustomerServiceRequest customerServiceRequest = optional.get();
+            ReIssuePinRequest reIssuePinRequest= new ReIssuePinRequest();
+            CustomerServiceRequest customerServiceRequest=optional.get();
 
         int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-        if (serviceRequestId != ServiceRequestIdConfig.RE_ISSUE_A_PIN) {
+        if(serviceRequestId != ServiceRequestIdConfig.RE_ISSUE_A_PIN) {
             res.setMessage("Invalid Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
 
-        Optional<ReIssuePinRequest> pinRequest = reIssuePinRequestRepository.getFormFromCSR(reIssuePinRequestDTO.getCustomerServiceRequestId());
-        if (pinRequest.isPresent()) {
+        Optional<ReIssuePinRequest> pinRequest=reIssuePinRequestRepository.getFormFromCSR(reIssuePinRequestDTO.getCustomerServiceRequestId());
+        if (pinRequest.isPresent()){
             reIssuePinRequest.setReIssuePinRequestId(pinRequest.get().getReIssuePinRequestId());
         }
-
-        reIssuePinRequest.setBranch(reIssuePinRequestDTO.getBranch());
-        reIssuePinRequest.setAddress(reIssuePinRequestDTO.getAddress());
-        reIssuePinRequest.setCustomerServiceRequest(customerServiceRequest);
-
-        if (reIssuePinRequestRepository.save(reIssuePinRequest) != null) {
-
-            serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
-            serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
-            serviceRequestCustomerLog.setIp(request.getRemoteAddr());
-            serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
-            boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
-
-            if (result) {
-                serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
-                serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
-                serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
-                serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
-                serviceRequestFormLog.setIp(request.getRemoteAddr());
-                serviceRequestFormLog.setStatus(true);
-                serviceRequestFormLog.setMessage("Request Form Successfully Saved To The System ");
-                serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
+        if(reIssuePinRequestDTO.isAvAddress()){
+            if(reIssuePinRequestDTO.getAddress() == null){
+                res.setMessage("Complete Address details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
-
-            res.setMessage("Request Successfully Saved To The System");
-            res.setStatus(true);
-            return new ResponseEntity<>(res, HttpStatus.CREATED);
-        } else {
-
-            serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
-            serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
-            serviceRequestCustomerLog.setIp(request.getRemoteAddr());
-            serviceRequestCustomerLog.setMessage("Failed TO Save The Request...  Operation Unsuccessful");
-            boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
-
-            if (result) {
-                serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
-                serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
-                serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
-                serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
-                serviceRequestFormLog.setIp(request.getRemoteAddr());
-                serviceRequestFormLog.setStatus(true);
-                serviceRequestFormLog.setMessage(" Failed TO Save The Request...  Operation Unsuccessful");
-                serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
-            }
-
-            res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
-            res.setStatus(false);
-            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
+        if(reIssuePinRequestDTO.isAvBranch()){
+            if(reIssuePinRequestDTO.getBranch() == 0){
+                res.setMessage("Complete Branch Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+            Optional<NDBBranch> ndbBranchOpt = ndbBranchRepository.findById(reIssuePinRequestDTO.getBranch());
+            if(!ndbBranchOpt.isPresent()){
+                res.setMessage("Invalied Branch Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+            reIssuePinRequest.setNdbBranch(ndbBranchOpt.get());
+        }
+
+            reIssuePinRequest.setCurrespondingAddress(reIssuePinRequestDTO.isAvCurrespondingAddress());
+            reIssuePinRequest.setAddress(reIssuePinRequestDTO.isAvAddress());
+            reIssuePinRequest.setBranch(reIssuePinRequestDTO.isAvBranch());
+            reIssuePinRequest.setAddress(reIssuePinRequestDTO.getAddress());
+            reIssuePinRequest.setCustomerServiceRequest(customerServiceRequest);
+
+            if (reIssuePinRequestRepository.save(reIssuePinRequest)!=null){
+                res.setMessage("Request Successfully Saved To The System");
+                res.setStatus(true);
+                return new ResponseEntity<>(res, HttpStatus.CREATED);
+            }else{
+                res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
     }
 
     @Override
@@ -214,14 +195,14 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             SmsSubscription smsSubscription = new SmsSubscription();
 
             int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-            if (serviceRequestId != ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS) {
+            if(serviceRequestId != ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS) {
                 res.setMessage("Invalid Request");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<SmsSubscription> subscription = smsSubscriptionRepository.getFormFromCSR(serviceRequestId);
-            if (subscription.isPresent()) {
+            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(serviceRequestId);
+            if (optional.isPresent()){
                 smsSubscription.setSubscriptionId(subscription.get().getSubscriptionId());
             }
 
@@ -284,26 +265,26 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
     @Override
     public ResponseEntity<?> increasePosLimit(PosLimitDTO posLimitDTO, HttpServletRequest request) {
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(posLimitDTO.getCustomerServiceRequestId());
-        if (!optional.isPresent()) {
-            res.setMessage(" No Data Found To Complete The Request");
-            res.setStatus(false);
-            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-        } else {
-
-            CustomerServiceRequest customerServiceRequest = optional.get();
-            PosLimit posLimit = new PosLimit();
-
-            int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-            if (serviceRequestId != ServiceRequestIdConfig.INCREASE_POS_LIMIT_OF_DEBIT_CARD) {
-                res.setMessage("Invalid Request");
+            if (!optional.isPresent()) {
+                res.setMessage(" No Data Found To Complete The Request");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-            }
+            } else {
 
-            Optional<PosLimit> pos = posLimitRepository.getFormFromCSR(serviceRequestId);
-            if (pos.isPresent()) {
-                posLimit.setPosLimitId(pos.get().getPosLimitId());
-            }
+                CustomerServiceRequest customerServiceRequest = optional.get();
+                PosLimit posLimit= new PosLimit();
+
+                int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
+                if(serviceRequestId != ServiceRequestIdConfig.INCREASE_POS_LIMIT_OF_DEBIT_CARD) {
+                    res.setMessage("Invalid Request");
+                    res.setStatus(false);
+                    return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+                }
+
+                Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(serviceRequestId);
+                if (pos.isPresent()){
+                    posLimit.setPosLimitId(pos.get().getPosLimitId());
+                }
 
             posLimit.setPosLimitId(posLimitDTO.getPosLimitId());
             posLimit.setCardNumber(posLimitDTO.getCardNumber());
@@ -369,17 +350,17 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         } else {
 
             CustomerServiceRequest customerServiceRequest = optional.get();
-            LinkedAccount linkedAccount = new LinkedAccount();
+            LinkedAccount linkedAccount= new LinkedAccount();
 
             int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-            if (serviceRequestId != ServiceRequestIdConfig.LINK_NEW_ACCAUNTS_TO_D13EBIT_ATM_CARD) {
+            if(serviceRequestId != ServiceRequestIdConfig.LINK_NEW_ACCAUNTS_TO_D13EBIT_ATM_CARD) {
                 res.setMessage("Invalid Request");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<LinkedAccount> account = linkedAccountRepository.getFormFromCSR(serviceRequestId);
-            if (account.isPresent()) {
+            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(serviceRequestId);
+            if (account.isPresent()){
                 linkedAccount.setLinkedAccountId(account.get().getLinkedAccountId());
             }
 
@@ -446,17 +427,17 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         } else {
 
             CustomerServiceRequest customerServiceRequest = optional.get();
-            ChangePrimaryAccount changePrimaryAccount = new ChangePrimaryAccount();
+            ChangePrimaryAccount changePrimaryAccount= new ChangePrimaryAccount();
 
             int serviceRequestId = customerServiceRequest.getServiceRequest().getDigiFormId();
-            if (serviceRequestId != ServiceRequestIdConfig.CHANGE_PRIMARY_ACCOUNT) {
+            if(serviceRequestId != ServiceRequestIdConfig.CHANGE_PRIMARY_ACCOUNT) {
                 res.setMessage("Invalid Request");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<ChangePrimaryAccount> primaryAccount = changePrimaryAccountRepository.getFormFromCSR(serviceRequestId);
-            if (primaryAccount.isPresent()) {
+            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(serviceRequestId);
+            if (primaryAccount.isPresent()){
                 changePrimaryAccount.setChangePrimaryAccountId(primaryAccount.get().getChangePrimaryAccountId());
             }
 

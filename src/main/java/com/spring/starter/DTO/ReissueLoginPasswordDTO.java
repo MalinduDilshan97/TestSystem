@@ -12,107 +12,108 @@ import com.spring.starter.model.CustomerServiceRequest;
 
 public class ReissueLoginPasswordDTO {
 
-    @NotNull
-    @NotEmpty
-    private String bankingUserId;
+	@NotNull
+	@NotEmpty
+	private String bankingUserId;
+	
+	private boolean atBranch = false;
+	
+	private int branchId;
+	
+	private boolean postToCorrespondenceAddress = false;
+	
+	private boolean postToAddress = false;
+	
+	private String addresss;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="csrId")
+	private CustomerServiceRequest customerServiceRequest;
 
-    private boolean atBranch = false;
+	public ReissueLoginPasswordDTO() {
+		super();
+	}
 
-    private int branchId;
-
-    private boolean postToCorrespondenceAddress = false;
-
-    private boolean postToAddress = false;
-
-    private String addresss;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "csrId")
-    private CustomerServiceRequest customerServiceRequest;
-
-    public ReissueLoginPasswordDTO() {
-        super();
-    }
-
-    public ReissueLoginPasswordDTO(@NotNull @NotEmpty String bankingUserId, boolean atBranch, int branchId,
-                                   boolean postToCorrespondenceAddress, boolean postToAddress, String addresss,
-                                   CustomerServiceRequest customerServiceRequest) {
-        super();
-        this.bankingUserId = bankingUserId;
-        this.atBranch = atBranch;
-        this.branchId = branchId;
-        this.postToCorrespondenceAddress = postToCorrespondenceAddress;
-        this.postToAddress = postToAddress;
-        this.addresss = addresss;
-        this.customerServiceRequest = customerServiceRequest;
-    }
+	public ReissueLoginPasswordDTO(@NotNull @NotEmpty String bankingUserId, boolean atBranch, int branchId,
+			boolean postToCorrespondenceAddress, boolean postToAddress, String addresss,
+			CustomerServiceRequest customerServiceRequest) {
+		super();
+		this.bankingUserId = bankingUserId;
+		this.atBranch = atBranch;
+		this.branchId = branchId;
+		this.postToCorrespondenceAddress = postToCorrespondenceAddress;
+		this.postToAddress = postToAddress;
+		this.addresss = addresss;
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
 
-    public ReissueLoginPasswordDTO(@NotNull @NotEmpty String bankingUserId, boolean atBranch, int branchId,
-                                   boolean postToCorrespondenceAddress, String addresss, CustomerServiceRequest customerServiceRequest) {
-        super();
-        this.bankingUserId = bankingUserId;
-        this.atBranch = atBranch;
-        this.branchId = branchId;
-        this.postToCorrespondenceAddress = postToCorrespondenceAddress;
-        this.addresss = addresss;
-        this.customerServiceRequest = customerServiceRequest;
-    }
 
-    public String getBankingUserId() {
-        return bankingUserId;
-    }
+	public ReissueLoginPasswordDTO(@NotNull @NotEmpty String bankingUserId, boolean atBranch, int branchId,
+			boolean postToCorrespondenceAddress, String addresss, CustomerServiceRequest customerServiceRequest) {
+		super();
+		this.bankingUserId = bankingUserId;
+		this.atBranch = atBranch;
+		this.branchId = branchId;
+		this.postToCorrespondenceAddress = postToCorrespondenceAddress;
+		this.addresss = addresss;
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
-    public void setBankingUserId(String bankingUserId) {
-        this.bankingUserId = bankingUserId;
-    }
+	public String getBankingUserId() {
+		return bankingUserId;
+	}
 
-    public boolean isAtBranch() {
-        return atBranch;
-    }
+	public void setBankingUserId(String bankingUserId) {
+		this.bankingUserId = bankingUserId;
+	}
 
-    public void setAtBranch(boolean atBranch) {
-        this.atBranch = atBranch;
-    }
+	public boolean isAtBranch() {
+		return atBranch;
+	}
 
-    public int getBranchId() {
-        return branchId;
-    }
+	public void setAtBranch(boolean atBranch) {
+		this.atBranch = atBranch;
+	}
 
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
+	public int getBranchId() {
+		return branchId;
+	}
 
-    public boolean isPostToCorrespondenceAddress() {
-        return postToCorrespondenceAddress;
-    }
+	public void setBranchId(int branchId) {
+		this.branchId = branchId;
+	}
 
-    public void setPostToCorrespondenceAddress(boolean postToCorrespondenceAddress) {
-        this.postToCorrespondenceAddress = postToCorrespondenceAddress;
-    }
+	public boolean isPostToCorrespondenceAddress() {
+		return postToCorrespondenceAddress;
+	}
 
-    public String getAddresss() {
-        return addresss;
-    }
+	public void setPostToCorrespondenceAddress(boolean postToCorrespondenceAddress) {
+		this.postToCorrespondenceAddress = postToCorrespondenceAddress;
+	}
 
-    public void setAddresss(String addresss) {
-        this.addresss = addresss;
-    }
+	public String getAddresss() {
+		return addresss;
+	}
 
-    public CustomerServiceRequest getCustomerServiceRequest() {
-        return customerServiceRequest;
-    }
+	public void setAddresss(String addresss) {
+		this.addresss = addresss;
+	}
 
-    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-        this.customerServiceRequest = customerServiceRequest;
-    }
+	public CustomerServiceRequest getCustomerServiceRequest() {
+		return customerServiceRequest;
+	}
 
-    public boolean isPostToAddress() {
-        return postToAddress;
-    }
+	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
-    public void setPostToAddress(boolean postToAddress) {
-        this.postToAddress = postToAddress;
-    }
+	public boolean isPostToAddress() {
+		return postToAddress;
+	}
 
+	public void setPostToAddress(boolean postToAddress) {
+		this.postToAddress = postToAddress;
+	}
+	
 }

@@ -10,13 +10,15 @@ import com.spring.starter.DTO.CustomerDTO;
 import com.spring.starter.model.Customer;
 import com.spring.starter.model.ServiceRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface ServiceRequestService {
 
     public ResponseEntity<?> addNewServiceRequest(ServiceRequest serviceRequest);
 
     public ResponseEntity<?> getBankServices();
 
-    public ResponseEntity<?> addNewCustomer(CustomerDTO customerDTO);
+    public ResponseEntity<?> addNewCustomer(CustomerDTO customerDTO,HttpServletRequest request);
 
     public ResponseEntity<?> addAServiceToACustomer(int customerId, int serviceRequestId);
 

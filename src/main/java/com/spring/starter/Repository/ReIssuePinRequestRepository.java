@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface ReIssuePinRequestRepository extends JpaRepository<ReIssuePinRequest, Integer> {
+public interface ReIssuePinRequestRepository extends JpaRepository<ReIssuePinRequest,Integer> {
 
 //    @Query("SELECT r FROM ReIssuePinRequest r WHERE r.customerServiceRequest.customerServiceRequestId=?1")
 //    Optional<ReIssuePinRequest> getFormFromCSR(int customerServiceRequestId);

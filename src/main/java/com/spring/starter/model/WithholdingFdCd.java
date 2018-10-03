@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "withholding_fd_cd")
+@Table(name="withholding_fd_cd")
 public class WithholdingFdCd {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int withholdingFdId;
+    private int  withholdingFdId;
     private Date maturityDate;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -18,7 +18,7 @@ public class WithholdingFdCd {
 
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "csrId")
+    @JoinColumn(name="csrId")
     private CustomerServiceRequest customerServiceRequest;
 
     public WithholdingFdCd() {

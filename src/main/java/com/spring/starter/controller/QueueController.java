@@ -22,22 +22,25 @@ import com.spring.starter.service.QueueServiceDef;
 @CrossOrigin
 public class QueueController {
 
-    @Autowired
-    QueueServiceDef queueServiceDef;
-
-    @PostMapping("/addANewNumber")
-    public ResponseEntity<?> addANewQueueNumber(@RequestBody QueueDTO queueDTO) {
-        //return new ResponseEntity<>(queueDTO,HttpStatus.OK);
-        return queueServiceDef.addANewQueueNumber(queueDTO);
-    }
-
-    @PostMapping("/addNewServiceToQueue/{queueNumber}")
-    public ResponseEntity<?> addNewServiceToAnExistingQueue(@RequestBody NewServiceDTO serviceDTO, @PathVariable int queueNumber) {
-        return queueServiceDef.addNewServiceToExistingQueueNumber(serviceDTO, queueNumber);
-    }
-
-    @GetMapping
-    public Optional<QueueService> testing() {
-        return queueServiceDef.getAllmagulak();
-    }
+	@Autowired
+	QueueServiceDef queueServiceDef;
+	
+	@PostMapping("/addANewNumber")
+	public ResponseEntity<?> addANewQueueNumber(@RequestBody QueueDTO queueDTO)
+	{
+		//return new ResponseEntity<>(queueDTO,HttpStatus.OK);
+		return queueServiceDef.addANewQueueNumber(queueDTO);
+	}
+	
+	@PostMapping("/addNewServiceToQueue/{queueNumber}")
+	public ResponseEntity<?> addNewServiceToAnExistingQueue(@RequestBody NewServiceDTO serviceDTO,@PathVariable int queueNumber)
+	{
+		return queueServiceDef.addNewServiceToExistingQueueNumber(serviceDTO, queueNumber);
+	}
+	
+	@GetMapping
+	public Optional<QueueService> testing()
+	{
+		return queueServiceDef.getAllmagulak();
+	}
 }

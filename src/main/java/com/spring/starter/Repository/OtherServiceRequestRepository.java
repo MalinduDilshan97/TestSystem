@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface OtherServiceRequestRepository extends JpaRepository<OtherServiceRequest, Integer> {
+public interface OtherServiceRequestRepository extends JpaRepository<OtherServiceRequest,Integer> {
 
     @Query("select c from OtherServiceRequest  c where c.customerServiceRequest.customerServiceRequestId=?1")
     Optional<OtherServiceRequest> findByRequestId(int requestId);

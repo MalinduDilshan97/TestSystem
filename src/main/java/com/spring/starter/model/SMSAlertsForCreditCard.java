@@ -18,64 +18,64 @@ import javax.validation.constraints.NotNull;
 @Table(name = "sms_alerts_for_credit_card")
 public class SMSAlertsForCreditCard {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int SMSAlertsForCreditCardId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int SMSAlertsForCreditCardId;
+	
+	@NotNull
+	private String mobileNumber;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="SMSAlertsForCreditCardId")
+	private List<SmsAlertsCreditCardNumbers> SMSAlertsForCreditCard;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="csrId")
+	private CustomerServiceRequest customerServiceRequest;
 
-    @NotNull
-    private String mobileNumber;
+	public SMSAlertsForCreditCard() {
+		super();
+	}
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SMSAlertsForCreditCardId")
-    private List<SmsAlertsCreditCardNumbers> SMSAlertsForCreditCard;
+	public SMSAlertsForCreditCard(int sMSAlertsForCreditCardId, @NotNull String mobileNumber,
+			List<SmsAlertsCreditCardNumbers> sMSAlertsForCreditCard, CustomerServiceRequest customerServiceRequest) {
+		super();
+		SMSAlertsForCreditCardId = sMSAlertsForCreditCardId;
+		this.mobileNumber = mobileNumber;
+		SMSAlertsForCreditCard = sMSAlertsForCreditCard;
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "csrId")
-    private CustomerServiceRequest customerServiceRequest;
+	public int getSMSAlertsForCreditCardId() {
+		return SMSAlertsForCreditCardId;
+	}
 
-    public SMSAlertsForCreditCard() {
-        super();
-    }
+	public void setSMSAlertsForCreditCardId(int sMSAlertsForCreditCardId) {
+		SMSAlertsForCreditCardId = sMSAlertsForCreditCardId;
+	}
 
-    public SMSAlertsForCreditCard(int sMSAlertsForCreditCardId, @NotNull String mobileNumber,
-                                  List<SmsAlertsCreditCardNumbers> sMSAlertsForCreditCard, CustomerServiceRequest customerServiceRequest) {
-        super();
-        SMSAlertsForCreditCardId = sMSAlertsForCreditCardId;
-        this.mobileNumber = mobileNumber;
-        SMSAlertsForCreditCard = sMSAlertsForCreditCard;
-        this.customerServiceRequest = customerServiceRequest;
-    }
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
 
-    public int getSMSAlertsForCreditCardId() {
-        return SMSAlertsForCreditCardId;
-    }
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
 
-    public void setSMSAlertsForCreditCardId(int sMSAlertsForCreditCardId) {
-        SMSAlertsForCreditCardId = sMSAlertsForCreditCardId;
-    }
+	public List<SmsAlertsCreditCardNumbers> getSMSAlertsForCreditCard() {
+		return SMSAlertsForCreditCard;
+	}
 
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
+	public void setSMSAlertsForCreditCard(List<SmsAlertsCreditCardNumbers> sMSAlertsForCreditCard) {
+		SMSAlertsForCreditCard = sMSAlertsForCreditCard;
+	}
 
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
+	public CustomerServiceRequest getCustomerServiceRequest() {
+		return customerServiceRequest;
+	}
 
-    public List<SmsAlertsCreditCardNumbers> getSMSAlertsForCreditCard() {
-        return SMSAlertsForCreditCard;
-    }
-
-    public void setSMSAlertsForCreditCard(List<SmsAlertsCreditCardNumbers> sMSAlertsForCreditCard) {
-        SMSAlertsForCreditCard = sMSAlertsForCreditCard;
-    }
-
-    public CustomerServiceRequest getCustomerServiceRequest() {
-        return customerServiceRequest;
-    }
-
-    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-        this.customerServiceRequest = customerServiceRequest;
-    }
-
+	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+		this.customerServiceRequest = customerServiceRequest;
+	}
+	
 }

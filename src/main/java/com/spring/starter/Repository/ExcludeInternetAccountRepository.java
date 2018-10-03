@@ -9,7 +9,7 @@ import com.spring.starter.model.ExcludeInternetAccount;
 
 public interface ExcludeInternetAccountRepository extends JpaRepository<ExcludeInternetAccount, Integer> {
 
-    @Query("SELECT eia FROM ExcludeInternetAccount eia WHERE eia.customerServiceRequest.customerServiceRequestId=?1")
-    Optional<ExcludeInternetAccount> getFormFromCSR(int customerServiceRequestId);
-
+	@Query("SELECT eia FROM ExcludeInternetAccount eia WHERE eia.customerServiceRequest.customerServiceRequestId=?1")
+	Optional<ExcludeInternetAccount> getFormFromCSR(int customerServiceRequestId);
+	
 }

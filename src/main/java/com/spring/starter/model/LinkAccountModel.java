@@ -15,80 +15,81 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "link_account_model ")
+@Table(name="link_account_model ")
 public class LinkAccountModel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int linkAccountModelId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int linkAccountModelId;
+	
+	@NotNull
+	private String existingBankingUserId;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="internetBankingId")
+	@NotNull
+	@NotEmpty
+	private List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="csrId")
+	private CustomerServiceRequest customerServiceRequest;
 
-    @NotNull
-    private String existingBankingUserId;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "internetBankingId")
-    @NotNull
-    @NotEmpty
-    private List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "csrId")
-    private CustomerServiceRequest customerServiceRequest;
-
-    public LinkAccountModel() {
-        super();
-    }
-
-    public LinkAccountModel(int linkAccountModelId, @NotNull String existingBankingUserId,
-                            @NotNull @NotEmpty List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers,
-                            CustomerServiceRequest customerServiceRequest) {
-        super();
-        this.linkAccountModelId = linkAccountModelId;
-        this.existingBankingUserId = existingBankingUserId;
-        this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
-        this.customerServiceRequest = customerServiceRequest;
-    }
+	public LinkAccountModel() {
+		super();
+	}
+	
+	public LinkAccountModel(int linkAccountModelId, @NotNull String existingBankingUserId,
+			@NotNull @NotEmpty List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers,
+			CustomerServiceRequest customerServiceRequest) {
+		super();
+		this.linkAccountModelId = linkAccountModelId;
+		this.existingBankingUserId = existingBankingUserId;
+		this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
+		this.customerServiceRequest = customerServiceRequest;
+	}
 
 
-    public LinkAccountModel(int linkAccountModelId, @NotNull String existingBankingUserId,
-                            @NotNull @NotEmpty List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers) {
-        super();
-        this.linkAccountModelId = linkAccountModelId;
-        this.existingBankingUserId = existingBankingUserId;
-        this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
-    }
 
-    public int getLinkAccountModelId() {
-        return linkAccountModelId;
-    }
+	public LinkAccountModel(int linkAccountModelId, @NotNull String existingBankingUserId,
+			@NotNull @NotEmpty List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers) {
+		super();
+		this.linkAccountModelId = linkAccountModelId;
+		this.existingBankingUserId = existingBankingUserId;
+		this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
+	}
 
-    public void setLinkAccountModelId(int linkAccountModelId) {
-        this.linkAccountModelId = linkAccountModelId;
-    }
+	public int getLinkAccountModelId() {
+		return linkAccountModelId;
+	}
 
-    public String getExistingBankingUserId() {
-        return existingBankingUserId;
-    }
+	public void setLinkAccountModelId(int linkAccountModelId) {
+		this.linkAccountModelId = linkAccountModelId;
+	}
 
-    public void setExistingBankingUserId(String existingBankingUserId) {
-        this.existingBankingUserId = existingBankingUserId;
-    }
+	public String getExistingBankingUserId() {
+		return existingBankingUserId;
+	}
 
-    public List<InternetBankingLinkAccountNumbers> getInternetBankingLinkAccountNumbers() {
-        return internetBankingLinkAccountNumbers;
-    }
+	public void setExistingBankingUserId(String existingBankingUserId) {
+		this.existingBankingUserId = existingBankingUserId;
+	}
 
-    public void setInternetBankingLinkAccountNumbers(
-            List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers) {
-        this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
-    }
+	public List<InternetBankingLinkAccountNumbers> getInternetBankingLinkAccountNumbers() {
+		return internetBankingLinkAccountNumbers;
+	}
 
-    public CustomerServiceRequest getCustomerServiceRequest() {
-        return customerServiceRequest;
-    }
+	public void setInternetBankingLinkAccountNumbers(
+			List<InternetBankingLinkAccountNumbers> internetBankingLinkAccountNumbers) {
+		this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
+	}
 
-    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-        this.customerServiceRequest = customerServiceRequest;
-    }
+	public CustomerServiceRequest getCustomerServiceRequest() {
+		return customerServiceRequest;
+	}
 
+	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+		this.customerServiceRequest = customerServiceRequest;
+	}
+	
 }

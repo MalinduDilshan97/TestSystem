@@ -30,40 +30,42 @@ public class FdorCdServiceImpl implements FdorCdService {
     DuplicateFdCdCertRepository duplicateFdCdCertRepository;
 
 
+
     @Override
     public ResponseEntity<?> addWithHoldingTaxDC(WithholdingFdCdDTO fdCdNumbersDTO, int requestId) {
-        WithholdingFdCd withholdingFdCd = new WithholdingFdCd();
+        WithholdingFdCd withholdingFdCd=new WithholdingFdCd();
 
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(requestId);
-        if (!customerServiceRequest.isPresent()) {
+        if(!customerServiceRequest.isPresent()) {
             responsemodel.setMessage("There is No such service Available");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if (serviceRequestId != ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE) {
+        if(serviceRequestId != ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE)
+        {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
 
-        List<FdCdNumbers> numbersList1 = new ArrayList<>();
+        List<FdCdNumbers> numbersList1=new ArrayList<>();
 
-        Optional<WithholdingFdCd> fdCdNumbersOptional = withholdingFdCdRepository.findByRequestId(requestId);
-        if (fdCdNumbersOptional.isPresent()) {
+        Optional<WithholdingFdCd> fdCdNumbersOptional=withholdingFdCdRepository.findByRequestId(requestId);
+        if (fdCdNumbersOptional.isPresent()){
             withholdingFdCd.setWithholdingFdId(fdCdNumbersOptional.get().getWithholdingFdId());
-            numbersList1 = fdCdNumbersOptional.get().getFdCdNumbers();
-            for (FdCdNumbers delnums : numbersList1) {
+            numbersList1=fdCdNumbersOptional.get().getFdCdNumbers();
+            for (FdCdNumbers delnums:numbersList1){
                 fdCdNumbersRepository.delete(delnums);
             }
         }
 
-        List<FdCdNumbers> numbersList2 = new ArrayList<>();
-        for (String numbers : fdCdNumbersDTO.getFdCdNumbers()) {
-            FdCdNumbers num = new FdCdNumbers();
+        List<FdCdNumbers> numbersList2=new ArrayList<>();
+        for (String numbers:fdCdNumbersDTO.getFdCdNumbers()){
+            FdCdNumbers num=new FdCdNumbers();
             num.setFdCdNumber(numbers);
-            num = fdCdNumbersRepository.save(num);
+            num=fdCdNumbersRepository.save(num);
             numbersList2.add(num);
         }
 
@@ -73,36 +75,36 @@ public class FdorCdServiceImpl implements FdorCdService {
         withholdingFdCd.setCustomerServiceRequest(customerServiceRequest.get());
 
 
-        try {
+        try{
             withholdingFdCdRepository.save(withholdingFdCd);
             responsemodel.setMessage("With holding numbers added successfully!");
             responsemodel.setStatus(true);
-            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        } catch (Exception e) {
+            return new ResponseEntity<>(responsemodel,HttpStatus.CREATED);
+        }catch(Exception e){
             responsemodel.setMessage("With holding numbers added Failed!");
             responsemodel.setStatus(true);
-            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(responsemodel,HttpStatus.BAD_REQUEST);
         }
     }
-
     @Override
-    public ResponseEntity<?> addRelatedRequest(OtherFdCdRelatedRequest otherFdCdRelatedRequest, int requestId) {
+    public ResponseEntity<?> addRelatedRequest(OtherFdCdRelatedRequest otherFdCdRelatedRequest,int requestId){
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(requestId);
-        if (!customerServiceRequest.isPresent()) {
+        if(!customerServiceRequest.isPresent()) {
             responsemodel.setMessage("There is No such service Available");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if (serviceRequestId != ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS) {
+        if(serviceRequestId != ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS)
+        {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
 
-        Optional<OtherFdCdRelatedRequest> otherFdCdRelatedRequestOptional = otherFdCdRelatedRequestRepository.findByRequestId(requestId);
-        if (otherFdCdRelatedRequestOptional.isPresent()) {
+        Optional<OtherFdCdRelatedRequest> otherFdCdRelatedRequestOptional=otherFdCdRelatedRequestRepository.findByRequestId(requestId);
+        if (otherFdCdRelatedRequestOptional.isPresent()){
             otherFdCdRelatedRequest.setRelatedReqId(otherFdCdRelatedRequestOptional.get().getRelatedReqId());
         }
         TimeZone.setDefault(TimeZone.getTimeZone("UTC+5.30"));
@@ -114,7 +116,7 @@ public class FdorCdServiceImpl implements FdorCdService {
             responsemodel.setMessage("Successfully created");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        } catch (Exception e) {
+        }catch (Exception e){
             responsemodel.setMessage("Error  in creating requests");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
@@ -125,35 +127,36 @@ public class FdorCdServiceImpl implements FdorCdService {
     public ResponseEntity<?> addDuplicateFdCdCert(DuplicateFdCdCert duplicateFdCdCert, int requestId) {
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(requestId);
-        if (!customerServiceRequest.isPresent()) {
+        if(!customerServiceRequest.isPresent()) {
             responsemodel.setMessage("There is No such service Available");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if (serviceRequestId != ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE) {
+        if(serviceRequestId != ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE)
+        {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
 
-        Optional<DuplicateFdCdCert> duplicateFdCdCertOptional = duplicateFdCdCertRepository.findByRequestId(requestId);
-        if (duplicateFdCdCertOptional.isPresent()) {
+        Optional<DuplicateFdCdCert> duplicateFdCdCertOptional=duplicateFdCdCertRepository.findByRequestId(requestId);
+        if (duplicateFdCdCertOptional.isPresent()){
             duplicateFdCdCert.setDuplicateId(duplicateFdCdCertOptional.get().getDuplicateId());
         }
         TimeZone.setDefault(TimeZone.getTimeZone("UTC+5.30"));
         duplicateFdCdCert.setDate(new Date());
         duplicateFdCdCert.setCustomerServiceRequest(customerServiceRequest.get());
-        try {
+        try{
             duplicateFdCdCertRepository.save(duplicateFdCdCert);
             responsemodel.setMessage("Successfully added duplicate fd/cd");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        } catch (Exception e) {
-            responsemodel.setMessage("Error  in creating duplicate fd/cd");
-            responsemodel.setStatus(false);
-            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-        }
+        }catch (Exception e){
+        responsemodel.setMessage("Error  in creating duplicate fd/cd");
+        responsemodel.setStatus(false);
+        return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+    }
 
     }
 

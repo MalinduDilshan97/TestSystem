@@ -12,111 +12,111 @@ import javax.persistence.OneToMany;
 
 
 @Entity
-@Table(name = "customer")
+@Table(name="customer")
 public class Customer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int customerId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int customerId;
+	
+	@NonNull
+	private String name;
+	
+	@NonNull
+	@Column
+	private String identification;
+	
+	@NonNull
+	private String mobileNo;
 
-    @NonNull
-    private String name;
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="customerId")
+	private List<CustomerAccountNo> accountNo;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="customerServiceRequestsId")
+	private List<CustomerServiceRequest> customerServiceRequests;
 
-    @NonNull
-    @Column(unique = true)
-    private String identification;
+	public Customer() {
+		super();
+	}
 
-    @NonNull
-    private String mobileNo;
+	public int getCustomerId() {
+		return customerId;
+	}
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customerId")
-    private List<CustomerAccountNo> accountNo;
+	public Customer(int customerId, String name, String identification, String mobileNo,
+			List<CustomerAccountNo> accountNo, List<CustomerServiceRequest> customerServiceRequests) {
+		super();
+		this.customerId = customerId;
+		this.name = name;
+		this.identification = identification;
+		this.mobileNo = mobileNo;
+		this.accountNo = accountNo;
+		this.customerServiceRequests = customerServiceRequests;
+	}
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customerServiceRequestsId")
-    private List<CustomerServiceRequest> customerServiceRequests;
+	public Customer(int customerId, String name, String identification, String mobileNo,
+			List<CustomerAccountNo> accountNo) {
+		super();
+		this.customerId = customerId;
+		this.name = name;
+		this.identification = identification;
+		this.mobileNo = mobileNo;
+		this.accountNo = accountNo;
+	}
 
-    public Customer() {
-        super();
-    }
+	public Customer(int customerId, String name, String identification, List<CustomerAccountNo> accountNo) {
+		super();
+		this.customerId = customerId;
+		this.name = name;
+		this.identification = identification;
+		this.accountNo = accountNo;
+	}
 
-    public int getCustomerId() {
-        return customerId;
-    }
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
 
-    public Customer(int customerId, String name, String identification, String mobileNo,
-                    List<CustomerAccountNo> accountNo, List<CustomerServiceRequest> customerServiceRequests) {
-        super();
-        this.customerId = customerId;
-        this.name = name;
-        this.identification = identification;
-        this.mobileNo = mobileNo;
-        this.accountNo = accountNo;
-        this.customerServiceRequests = customerServiceRequests;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Customer(int customerId, String name, String identification, String mobileNo,
-                    List<CustomerAccountNo> accountNo) {
-        super();
-        this.customerId = customerId;
-        this.name = name;
-        this.identification = identification;
-        this.mobileNo = mobileNo;
-        this.accountNo = accountNo;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Customer(int customerId, String name, String identification, List<CustomerAccountNo> accountNo) {
-        super();
-        this.customerId = customerId;
-        this.name = name;
-        this.identification = identification;
-        this.accountNo = accountNo;
-    }
+	public String getIdentification() {
+		return identification;
+	}
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
+	public void setIdentification(String identificatin) {
+		this.identification = identificatin;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public List<CustomerAccountNo> getAccountNo() {
+		return accountNo;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setAccountNo(List<CustomerAccountNo> accountNo) {
+		this.accountNo = accountNo;
+	}
 
-    public String getIdentification() {
-        return identification;
-    }
+	public String getMobileNo() {
+		return mobileNo;
+	}
 
-    public void setIdentification(String identificatin) {
-        this.identification = identificatin;
-    }
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
 
-    public List<CustomerAccountNo> getAccountNo() {
-        return accountNo;
-    }
+	public List<CustomerServiceRequest> getCustomerServiceRequests() {
+		return customerServiceRequests;
+	}
 
-    public void setAccountNo(List<CustomerAccountNo> accountNo) {
-        this.accountNo = accountNo;
-    }
-
-    public String getMobileNo() {
-        return mobileNo;
-    }
-
-    public void setMobileNo(String mobileNo) {
-        this.mobileNo = mobileNo;
-    }
-
-    public List<CustomerServiceRequest> getCustomerServiceRequests() {
-        return customerServiceRequests;
-    }
-
-    public void setCustomerServiceRequests(List<CustomerServiceRequest> customerServiceRequests) {
-        this.customerServiceRequests = customerServiceRequests;
-    }
-
+	public void setCustomerServiceRequests(List<CustomerServiceRequest> customerServiceRequests) {
+		this.customerServiceRequests = customerServiceRequests;
+	}
+	
 
 }

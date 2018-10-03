@@ -40,13 +40,13 @@ public class BankStatementPassBookController {
     }
 
     @PostMapping("/e-statement")
-    public ResponseEntity<?> e_satementRequest(@RequestBody BankStatementAccountDTO bankStatementAccountDTO, @RequestParam(name = "requestId") int requestId) {
-        return bankStatementPassBookService.estatementService(bankStatementAccountDTO, requestId);
+    public ResponseEntity<?> e_satementRequest(@RequestBody BankStatementAccountDTO bankStatementAccountDTO, @RequestParam(name="requestId") int requestId){
+        return bankStatementPassBookService.estatementService(bankStatementAccountDTO,requestId);
     }
 
     @PostMapping("/statementFrequency")
-    public ResponseEntity<?> statementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name = "requestId") int requestId) {
-        return bankStatementPassBookService.statementFrequencyService(statementFrequency, requestId);
+    public ResponseEntity<?> statementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name="requestId") int requestId){
+        return bankStatementPassBookService.statementFrequencyService(statementFrequency,requestId);
     }
 
 

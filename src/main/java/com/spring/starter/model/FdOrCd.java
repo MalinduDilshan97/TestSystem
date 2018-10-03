@@ -9,11 +9,11 @@ import javax.persistence.*;
 @Table(name = "fd_or_cd")
 public class FdOrCd {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fdOrCdId;
-
-    private boolean withholdingTaxDeductionCertificate;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int fdOrCdId; 
+	
+	private boolean withholdingTaxDeductionCertificate;
 	
 /*	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fdCdNumbersId")

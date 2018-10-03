@@ -23,32 +23,35 @@ import com.spring.starter.service.MailingMailService;
 @CrossOrigin
 public class MailingMailController {
 
-    @Autowired
-    private MailingMailService mailingMailService;
-
-    @PostMapping
-    public ResponseEntity<?> addNewRequest(@RequestBody MailingMailDTO mailingMailDTO, @RequestParam(name = "requestId") int requestId) {
-        return mailingMailService.addchangeMailingMailRequest(mailingMailDTO, requestId);
-    }
-
-    @PutMapping
-    public ResponseEntity<?> updateNewRequest(@RequestBody MailingMailDTO mailingMailDTO, @RequestParam(name = "requestId") int requestId) {
-        return mailingMailService.addchangeMailingMailRequest(mailingMailDTO, requestId);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> test() {
-        List<String> accountNos = new ArrayList<String>();
-        accountNos.add("12313232123");
-        accountNos.add("12312323232");
-
-        MailingMailDTO mailingMailDTO = new MailingMailDTO();
-        mailingMailDTO.setNewMailingAddress("thilakavilla,Thuttiripitiya,Halthota,Bandaragama");
-        mailingMailDTO.setCity("bandaragama");
-        mailingMailDTO.setPostalCode("13213");
-        mailingMailDTO.setStateOrProvince("Western");
-        mailingMailDTO.setMailingMailAccountNo(accountNos);
-
-        return new ResponseEntity<>(mailingMailDTO, HttpStatus.OK);
-    }
+	@Autowired
+	private MailingMailService mailingMailService;
+	
+	@PostMapping
+	public ResponseEntity<?> addNewRequest(@RequestBody MailingMailDTO mailingMailDTO, @RequestParam(name="requestId") int requestId)
+	{
+		return mailingMailService.addchangeMailingMailRequest(mailingMailDTO, requestId);
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> updateNewRequest(@RequestBody MailingMailDTO mailingMailDTO, @RequestParam(name="requestId") int requestId)
+	{
+		return mailingMailService.addchangeMailingMailRequest(mailingMailDTO, requestId);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> test()
+	{
+		List<String> accountNos = new ArrayList<String>();
+		accountNos.add("12313232123");
+		accountNos.add("12312323232");
+		
+		MailingMailDTO mailingMailDTO= new MailingMailDTO();
+		mailingMailDTO.setNewMailingAddress("thilakavilla,Thuttiripitiya,Halthota,Bandaragama");
+		mailingMailDTO.setCity("bandaragama");
+		mailingMailDTO.setPostalCode("13213");
+		mailingMailDTO.setStateOrProvince("Western");
+		mailingMailDTO.setMailingMailAccountNo(accountNos);
+		
+		return new ResponseEntity<>(mailingMailDTO,HttpStatus.OK);
+	}
 }

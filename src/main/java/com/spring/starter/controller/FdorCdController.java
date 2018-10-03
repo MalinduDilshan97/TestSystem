@@ -17,17 +17,16 @@ public class FdorCdController {
     FdorCdService fdorCdService;
 
     @PostMapping("addWithHoldingTaxDC")
-    public ResponseEntity<?> addWithHoldingTaxDC(@RequestBody WithholdingFdCdDTO withholdingFdCd, @RequestParam(name = "requestId") int requestId) {
-        return fdorCdService.addWithHoldingTaxDC(withholdingFdCd, requestId);
+    public ResponseEntity<?> addWithHoldingTaxDC(@RequestBody WithholdingFdCdDTO withholdingFdCd, @RequestParam(name="requestId") int requestId){
+        return fdorCdService.addWithHoldingTaxDC(withholdingFdCd,requestId);
     }
-
     @PostMapping("addRelatedRequest")
-    public ResponseEntity<?> addRelatedRequest(@RequestBody OtherFdCdRelatedRequest otherFdCdRelatedRequest, @RequestParam(name = "requestId") int requestId) {
-        return fdorCdService.addRelatedRequest(otherFdCdRelatedRequest, requestId);
+    public ResponseEntity<?> addRelatedRequest(@RequestBody OtherFdCdRelatedRequest otherFdCdRelatedRequest, @RequestParam(name="requestId") int requestId){
+        return fdorCdService.addRelatedRequest(otherFdCdRelatedRequest,requestId);
     }
 
     @PostMapping("addDuplicateFdCdCert")
-    public ResponseEntity<?> addDuplicateFdCdCert(@RequestBody DuplicateFdCdCert duplicateFdCdCert, @RequestParam(name = "requestId") int requestId) {
-        return fdorCdService.addDuplicateFdCdCert(duplicateFdCdCert, requestId);
+    public ResponseEntity<?> addDuplicateFdCdCert(@RequestBody DuplicateFdCdCert duplicateFdCdCert,@RequestParam(name="requestId") int requestId){
+       return fdorCdService.addDuplicateFdCdCert(duplicateFdCdCert,requestId);
     }
 }

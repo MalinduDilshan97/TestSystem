@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface OtherFdCdRelatedRequestRepository extends JpaRepository<OtherFdCdRelatedRequest, Integer> {
+public interface OtherFdCdRelatedRequestRepository extends JpaRepository<OtherFdCdRelatedRequest,Integer> {
 
     @Query("select c from OtherFdCdRelatedRequest  c where c.customerServiceRequest.customerServiceRequestId=?1")
     Optional<OtherFdCdRelatedRequest> findByRequestId(int requestId);

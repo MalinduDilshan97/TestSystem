@@ -15,7 +15,7 @@ public class OtherRequestController {
     OtherServiceReqService otherServiceReqService;
 
     @PostMapping
-    public ResponseEntity<?> addOtherRequest(@RequestBody OtherServiceRequest otherServiceRequest, @RequestParam(name = "requestId") int requestId) {
-        return otherServiceReqService.addOtherRequest(otherServiceRequest, requestId);
+    public ResponseEntity<?> addOtherRequest(@RequestBody OtherServiceRequest otherServiceRequest, @RequestParam(name="requestId") int requestId){
+        return otherServiceReqService.addOtherRequest(otherServiceRequest,requestId);
     }
 }

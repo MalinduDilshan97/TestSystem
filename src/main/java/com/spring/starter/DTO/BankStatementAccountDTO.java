@@ -20,7 +20,7 @@ public class BankStatementAccountDTO {
     @NotNull
     @NotBlank
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message="Email Must be in Correct Format")
     private String email;
 
     public BankStatementAccountDTO() {

@@ -13,78 +13,78 @@ import javax.validation.constraints.NotNull;
 import org.springframework.lang.NonNull;
 
 @Entity
-@Table(name = "jwt_token_log")
+@Table(name="jwt_token_log")
 public class JwtTokenLog {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int tokenLogId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int tokenLogId;
+	
+	@NonNull
+	@NotEmpty
+	private String token;
+	
+	@NotNull
+	private int userId;
+	
+	@NotNull
+	private Date EnteredDate;
 
-    @NonNull
-    @NotEmpty
-    private String token;
+	@NotNull
+	private String ip;
 
-    @NotNull
-    private int userId;
+	public JwtTokenLog() {
+		super();
+	}
 
-    @NotNull
-    private Date EnteredDate;
+	public JwtTokenLog(int tokenLogId, @NotEmpty String token, @NotNull int userId, @NotNull Date enteredDate,
+			@NotNull String ip) {
+		super();
+		this.tokenLogId = tokenLogId;
+		this.token = token;
+		this.userId = userId;
+		EnteredDate = enteredDate;
+		this.ip = ip;
+	}
 
-    @NotNull
-    private String ip;
+	public int getTokenLogId() {
+		return tokenLogId;
+	}
 
-    public JwtTokenLog() {
-        super();
-    }
+	public void setTokenLogId(int tokenLogId) {
+		this.tokenLogId = tokenLogId;
+	}
 
-    public JwtTokenLog(int tokenLogId, @NotEmpty String token, @NotNull int userId, @NotNull Date enteredDate,
-                       @NotNull String ip) {
-        super();
-        this.tokenLogId = tokenLogId;
-        this.token = token;
-        this.userId = userId;
-        EnteredDate = enteredDate;
-        this.ip = ip;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public int getTokenLogId() {
-        return tokenLogId;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 
-    public void setTokenLogId(int tokenLogId) {
-        this.tokenLogId = tokenLogId;
-    }
+	public int getUserId() {
+		return userId;
+	}
 
-    public String getToken() {
-        return token;
-    }
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+	public Date getEnteredDate() {
+		return EnteredDate;
+	}
 
-    public int getUserId() {
-        return userId;
-    }
+	public void setEnteredDate(Date enteredDate) {
+		EnteredDate = enteredDate;
+	}
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+	public String getIp() {
+		return ip;
+	}
 
-    public Date getEnteredDate() {
-        return EnteredDate;
-    }
-
-    public void setEnteredDate(Date enteredDate) {
-        EnteredDate = enteredDate;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	
 }

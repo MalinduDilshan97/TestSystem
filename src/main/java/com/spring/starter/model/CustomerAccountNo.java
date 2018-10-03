@@ -6,54 +6,54 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.lang.NonNull;
 
 @Entity
-@Table(name = "customer_account_no")
+@Table(name="customer_account_no")
 public class CustomerAccountNo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int CustomerAccountNoId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int CustomerAccountNoId;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customerId")
-    private Customer customer;
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="customerId")
+	private Customer customer;
+	
+	@NonNull
+	private String accountNumber;
+	
+	public CustomerAccountNo() {
+		super();
+	}
 
-    @NonNull
-    private String accountNumber;
+	public CustomerAccountNo(int customerAccountNoId, Customer customer, String accountNumber) {
+		super();
+		CustomerAccountNoId = customerAccountNoId;
+		this.customer = customer;
+		this.accountNumber = accountNumber;
+	}
 
-    public CustomerAccountNo() {
-        super();
-    }
+	public int getCustomerAccountNoId() {
+		return CustomerAccountNoId;
+	}
 
-    public CustomerAccountNo(int customerAccountNoId, Customer customer, String accountNumber) {
-        super();
-        CustomerAccountNoId = customerAccountNoId;
-        this.customer = customer;
-        this.accountNumber = accountNumber;
-    }
+	public void setCustomerAccountNoId(int customerAccountNoId) {
+		CustomerAccountNoId = customerAccountNoId;
+	}
 
-    public int getCustomerAccountNoId() {
-        return CustomerAccountNoId;
-    }
+	public Customer getCustomer() {
+		return customer;
+	}
 
-    public void setCustomerAccountNoId(int customerAccountNoId) {
-        CustomerAccountNoId = customerAccountNoId;
-    }
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 
-    public Customer getCustomer() {
-        return customer;
-    }
+	public String getAccountNumber() {
+		return accountNumber;
+	}
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	
 }

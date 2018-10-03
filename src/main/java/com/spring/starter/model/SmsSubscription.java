@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "sms_subscription")
-public class SmsSubscription {
+public class SmsSubscription  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

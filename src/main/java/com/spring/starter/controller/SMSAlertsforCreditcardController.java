@@ -23,25 +23,27 @@ import com.spring.starter.service.SmsAlertForCreditCardService;
 @RequestMapping("/serviceRequest/SMSAlertsforCreditCard")
 @CrossOrigin
 public class SMSAlertsforCreditcardController {
-
-    @Autowired
-    SmsAlertForCreditCardService smsAlertForCreditCardService;
-
-    @PostMapping
-    public ResponseEntity<?> changePermenentMailRequest(@RequestBody @Valid SMSAlertsForCreditCardDTO smsAlertsForCreditCardDTO, @RequestParam(name = "requestId") int requestId) {
-        return smsAlertForCreditCardService.smsAlertForCreditCardRequest(smsAlertsForCreditCardDTO, requestId);
-    }
-
-    @GetMapping
-    public ResponseEntity<?> test() {
-        SMSAlertsForCreditCardDTO test = new SMSAlertsForCreditCardDTO();
-        List<String> ccNumbers = new ArrayList<String>();
-        ccNumbers.add("31213213213");
-        ccNumbers.add("12321324321");
-        test.setCreditCardNumbers(ccNumbers);
-        test.setMobileNumber("0342252011");
-        return new ResponseEntity<>(test, HttpStatus.OK);
-    }
-
-
+	
+	@Autowired
+	SmsAlertForCreditCardService smsAlertForCreditCardService;
+	
+	@PostMapping
+	public ResponseEntity<?> changePermenentMailRequest(@RequestBody @Valid SMSAlertsForCreditCardDTO smsAlertsForCreditCardDTO, @RequestParam(name="requestId") int requestId)
+	{
+		return smsAlertForCreditCardService.smsAlertForCreditCardRequest(smsAlertsForCreditCardDTO, requestId);
+	}
+	
+	@GetMapping
+	public ResponseEntity<?> test(){
+		SMSAlertsForCreditCardDTO test = new SMSAlertsForCreditCardDTO();
+		List<String> ccNumbers = new ArrayList<String>();
+		ccNumbers.add("31213213213");
+		ccNumbers.add("12321324321");
+		test.setCreditCardNumbers(ccNumbers);
+		test.setMobileNumber("0342252011");
+		return new ResponseEntity<>(test,HttpStatus.OK);
+	}
+	
+	
+	
 }

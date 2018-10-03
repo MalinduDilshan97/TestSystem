@@ -9,7 +9,7 @@ import com.spring.starter.model.InternetBanking;
 
 public interface InternetBankingRepository extends JpaRepository<InternetBanking, Integer> {
 
-    @Query("SELECT ib FROM InternetBanking ib WHERE ib.customerServiceRequest.customerServiceRequestId=?1")
-    Optional<InternetBanking> getFormFromCSR(int customerServiceRequestId);
-
+	@Query("SELECT ib FROM InternetBanking ib WHERE ib.customerServiceRequest.customerServiceRequestId=?1")
+	Optional<InternetBanking> getFormFromCSR(int customerServiceRequestId);
+	
 }

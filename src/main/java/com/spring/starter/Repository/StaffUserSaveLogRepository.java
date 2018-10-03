@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.spring.starter.model.StaffUserSaveLog;
 
-public interface StaffUserSaveLogRepository extends JpaRepository<StaffUserSaveLog, Integer> {
+public interface StaffUserSaveLogRepository extends JpaRepository<StaffUserSaveLog, Integer>{
 
 }

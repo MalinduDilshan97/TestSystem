@@ -18,16 +18,18 @@ import com.spring.starter.service.BranchService;
 @CrossOrigin
 public class BranchController {
 
-    @Autowired
-    BranchService branchService;
-
-    @PostMapping("/addNewBranch")
-    public ResponseEntity<?> addNewBranch(@RequestBody NDBBranch ndbBranch) {
-        return branchService.addNewBranch(ndbBranch);
-    }
-
-    @PutMapping("/updateBranch/{branchId}")
-    public ResponseEntity<?> updateBranch(@RequestBody NDBBranch ndbBranch, @PathVariable int branchId) {
-        return branchService.updateBranch(ndbBranch, branchId);
-    }
+	@Autowired
+	BranchService branchService;
+	
+	@PostMapping("/addNewBranch")
+	public ResponseEntity<?> addNewBranch(@RequestBody NDBBranch ndbBranch)
+	{
+		return branchService.addNewBranch(ndbBranch);
+	}
+	
+	@PutMapping("/updateBranch/{branchId}")
+	public ResponseEntity<?> updateBranch(@RequestBody NDBBranch ndbBranch,@PathVariable int branchId)
+	{
+		return branchService.updateBranch(ndbBranch, branchId);
+	}
 }

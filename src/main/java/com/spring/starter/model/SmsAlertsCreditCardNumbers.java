@@ -11,37 +11,37 @@ import javax.validation.constraints.NotNull;
 @Table(name = "sms_alerts_credit_card_numbers")
 public class SmsAlertsCreditCardNumbers {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int SmsAlertsCreditCardNumbers;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int SmsAlertsCreditCardNumbers;
+	
+	@NotNull
+	private String creditCardNumber;
 
-    @NotNull
-    private String creditCardNumber;
+	public SmsAlertsCreditCardNumbers() {
+		super();
+	}
 
-    public SmsAlertsCreditCardNumbers() {
-        super();
-    }
+	public SmsAlertsCreditCardNumbers(int smsAlertsCreditCardNumbers, @NotNull String creditCardNumber) {
+		super();
+		SmsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
+		this.creditCardNumber = creditCardNumber;
+	}
 
-    public SmsAlertsCreditCardNumbers(int smsAlertsCreditCardNumbers, @NotNull String creditCardNumber) {
-        super();
-        SmsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
-        this.creditCardNumber = creditCardNumber;
-    }
+	public int getSmsAlertsCreditCardNumbers() {
+		return SmsAlertsCreditCardNumbers;
+	}
 
-    public int getSmsAlertsCreditCardNumbers() {
-        return SmsAlertsCreditCardNumbers;
-    }
+	public void setSmsAlertsCreditCardNumbers(int smsAlertsCreditCardNumbers) {
+		SmsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
+	}
 
-    public void setSmsAlertsCreditCardNumbers(int smsAlertsCreditCardNumbers) {
-        SmsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
-    }
+	public String getCreditCardNumber() {
+		return creditCardNumber;
+	}
 
-    public String getCreditCardNumber() {
-        return creditCardNumber;
-    }
-
-    public void setCreditCardNumber(String creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
-    }
-
+	public void setCreditCardNumber(String creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
+	}
+		
 }
