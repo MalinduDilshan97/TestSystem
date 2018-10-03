@@ -21,125 +21,125 @@ import org.springframework.lang.NonNull;
 @Table(name = "change_mailing_mail")
 public class ChangeMailingMailModel {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int ChangeMailingMailId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int ChangeMailingMailId;
 
-	@NotNull
-	@NotEmpty
-	private String newMailingAddress;
+    @NotNull
+    @NotEmpty
+    private String newMailingAddress;
 
-	@NonNull
-	@NotEmpty
-	private String city;
+    @NonNull
+    @NotEmpty
+    private String city;
 
-	@NonNull
-	@NotEmpty
-	private String postalCode;
+    @NonNull
+    @NotEmpty
+    private String postalCode;
 
-	@NonNull
-	@NotEmpty
-	private String stateOrProvince;
+    @NonNull
+    @NotEmpty
+    private String stateOrProvince;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ChangeMailingMailId")
-	private List<MailingMailAccountNumbers> mailingMailAccountNo;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="csrId")
-	private CustomerServiceRequest customerServiceRequest;
-	
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ChangeMailingMailId")
+    private List<MailingMailAccountNumbers> mailingMailAccountNo;
 
-	public ChangeMailingMailModel() {
-		super();
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "csrId")
+    private CustomerServiceRequest customerServiceRequest;
 
-	public ChangeMailingMailModel(int changeMailingMailId, @NotNull @NotEmpty String newMailingAddress,
-			@NotEmpty String city, @NotEmpty String postalCode, @NotEmpty String stateOrProvince,
-			List<MailingMailAccountNumbers> mailingMailAccountNo, CustomerServiceRequest customerServiceRequest) {
-		super();
-		ChangeMailingMailId = changeMailingMailId;
-		this.newMailingAddress = newMailingAddress;
-		this.city = city;
-		this.postalCode = postalCode;
-		this.stateOrProvince = stateOrProvince;
-		this.mailingMailAccountNo = mailingMailAccountNo;
-		this.customerServiceRequest = customerServiceRequest;
-	}
 
-	public List<MailingMailAccountNumbers> getMailingMailAccountNo() {
-		return mailingMailAccountNo;
-	}
+    public ChangeMailingMailModel() {
+        super();
+    }
 
-	public void setMailingMailAccountNo(List<MailingMailAccountNumbers> mailingMailAccountNo) {
-		this.mailingMailAccountNo = mailingMailAccountNo;
-	}
+    public ChangeMailingMailModel(int changeMailingMailId, @NotNull @NotEmpty String newMailingAddress,
+                                  @NotEmpty String city, @NotEmpty String postalCode, @NotEmpty String stateOrProvince,
+                                  List<MailingMailAccountNumbers> mailingMailAccountNo, CustomerServiceRequest customerServiceRequest) {
+        super();
+        ChangeMailingMailId = changeMailingMailId;
+        this.newMailingAddress = newMailingAddress;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.stateOrProvince = stateOrProvince;
+        this.mailingMailAccountNo = mailingMailAccountNo;
+        this.customerServiceRequest = customerServiceRequest;
+    }
 
-	public ChangeMailingMailModel(@NotNull @NotEmpty String newMailingAddress, @NotEmpty String city,
-			@NotEmpty String postalCode, @NotEmpty String stateOrProvince) {
-		super();
-		this.newMailingAddress = newMailingAddress;
-		this.city = city;
-		this.postalCode = postalCode;
-		this.stateOrProvince = stateOrProvince;
-	}
+    public List<MailingMailAccountNumbers> getMailingMailAccountNo() {
+        return mailingMailAccountNo;
+    }
 
-	public ChangeMailingMailModel(int changeMailingMailId, @NotNull @NotEmpty String newMailingAddress,
-			@NotEmpty String city, @NotEmpty String postalCode, @NotEmpty String stateOrProvince) {
-		super();
-		ChangeMailingMailId = changeMailingMailId;
-		this.newMailingAddress = newMailingAddress;
-		this.city = city;
-		this.postalCode = postalCode;
-		this.stateOrProvince = stateOrProvince;
-	}
+    public void setMailingMailAccountNo(List<MailingMailAccountNumbers> mailingMailAccountNo) {
+        this.mailingMailAccountNo = mailingMailAccountNo;
+    }
 
-	public int getChangeMailingMailId() {
-		return ChangeMailingMailId;
-	}
+    public ChangeMailingMailModel(@NotNull @NotEmpty String newMailingAddress, @NotEmpty String city,
+                                  @NotEmpty String postalCode, @NotEmpty String stateOrProvince) {
+        super();
+        this.newMailingAddress = newMailingAddress;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.stateOrProvince = stateOrProvince;
+    }
 
-	public void setChangeMailingMailId(int changeMailingMailId) {
-		ChangeMailingMailId = changeMailingMailId;
-	}
+    public ChangeMailingMailModel(int changeMailingMailId, @NotNull @NotEmpty String newMailingAddress,
+                                  @NotEmpty String city, @NotEmpty String postalCode, @NotEmpty String stateOrProvince) {
+        super();
+        ChangeMailingMailId = changeMailingMailId;
+        this.newMailingAddress = newMailingAddress;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.stateOrProvince = stateOrProvince;
+    }
 
-	public String getNewMailingAddress() {
-		return newMailingAddress;
-	}
+    public int getChangeMailingMailId() {
+        return ChangeMailingMailId;
+    }
 
-	public void setNewMailingAddress(String newMailingAddress) {
-		this.newMailingAddress = newMailingAddress;
-	}
+    public void setChangeMailingMailId(int changeMailingMailId) {
+        ChangeMailingMailId = changeMailingMailId;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getNewMailingAddress() {
+        return newMailingAddress;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setNewMailingAddress(String newMailingAddress) {
+        this.newMailingAddress = newMailingAddress;
+    }
 
-	public String getPostalCode() {
-		return postalCode;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public String getStateOrProvince() {
-		return stateOrProvince;
-	}
+    public String getPostalCode() {
+        return postalCode;
+    }
 
-	public void setStateOrProvince(String stateOrProvince) {
-		this.stateOrProvince = stateOrProvince;
-	}
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
 
-	public CustomerServiceRequest getCustomerServiceRequest() {
-		return customerServiceRequest;
-	}
+    public String getStateOrProvince() {
+        return stateOrProvince;
+    }
 
-	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-		this.customerServiceRequest = customerServiceRequest;
-	}
+    public void setStateOrProvince(String stateOrProvince) {
+        this.stateOrProvince = stateOrProvince;
+    }
+
+    public CustomerServiceRequest getCustomerServiceRequest() {
+        return customerServiceRequest;
+    }
+
+    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+        this.customerServiceRequest = customerServiceRequest;
+    }
 
 }

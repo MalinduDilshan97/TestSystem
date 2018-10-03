@@ -8,40 +8,40 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="mailing_mail_account_numbers")
+@Table(name = "mailing_mail_account_numbers")
 public class MailingMailAccountNumbers {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int mailingMailAccountNumbersId;
-	
-	@NotNull
-	private String accountNo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int mailingMailAccountNumbersId;
 
-	public MailingMailAccountNumbers() {
-		super();
-	}
+    @NotNull
+    private String accountNo;
 
-	public MailingMailAccountNumbers(int mailingMailAccountNumbersId, @NotNull String accountNo) {
-		super();
-		this.mailingMailAccountNumbersId = mailingMailAccountNumbersId;
-		this.accountNo = accountNo;
-	}
+    public MailingMailAccountNumbers() {
+        super();
+    }
 
-	public int getMailingMailAccountNumbersId() {
-		return mailingMailAccountNumbersId;
-	}
+    public MailingMailAccountNumbers(int mailingMailAccountNumbersId, @NotNull String accountNo) {
+        super();
+        this.mailingMailAccountNumbersId = mailingMailAccountNumbersId;
+        this.accountNo = accountNo;
+    }
 
-	public void setMailingMailAccountNumbersId(int mailingMailAccountNumbersId) {
-		this.mailingMailAccountNumbersId = mailingMailAccountNumbersId;
-	}
+    public int getMailingMailAccountNumbersId() {
+        return mailingMailAccountNumbersId;
+    }
 
-	public String getAccountNo() {
-		return accountNo;
-	}
+    public void setMailingMailAccountNumbersId(int mailingMailAccountNumbersId) {
+        this.mailingMailAccountNumbersId = mailingMailAccountNumbersId;
+    }
 
-	public void setAccountNo(String accountNo) {
-		this.accountNo = accountNo;
-	}		
-	
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
 }

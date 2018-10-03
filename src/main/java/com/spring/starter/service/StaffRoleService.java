@@ -6,9 +6,9 @@ import com.spring.starter.model.StaffRole;
 
 public interface StaffRoleService {
 
-	public ResponseEntity<?> saveNewUserRole(StaffRole staffRole);
-	
-	public ResponseEntity<?> getAllUserRoles();
-	
-	
+    public ResponseEntity<?> saveNewUserRole(StaffRole staffRole);
+
+    public ResponseEntity<?> getAllUserRoles();
+
+
 }

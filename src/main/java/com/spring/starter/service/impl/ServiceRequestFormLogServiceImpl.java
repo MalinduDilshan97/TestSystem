@@ -17,6 +17,6 @@ public class ServiceRequestFormLogServiceImpl implements ServiceRequestFormLogSe
 
     @Override
     public boolean saveServiceRequestFormLog(ServiceRequestFormLog serviceRequestFormLog) {
-        return serviceRequestFormLogRepository.save(serviceRequestFormLog)!=null;
+        return serviceRequestFormLogRepository.save(serviceRequestFormLog) != null;
     }
 }

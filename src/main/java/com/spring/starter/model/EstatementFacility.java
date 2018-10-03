@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
-@Table(name="estatement_facility")
+@Table(name = "estatement_facility")
 public class EstatementFacility {
 
     @Id
@@ -22,15 +22,15 @@ public class EstatementFacility {
     @NotNull
     @NotBlank
     @NotEmpty
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message="Email Must be in Correct Format")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format")
     private String email;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="estatementFacilityID")
+    @JoinColumn(name = "estatementFacilityID")
     private List<BankStatementAccountNo> bankStatementAccountNo;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="csrId")
+    @JoinColumn(name = "csrId")
     private CustomerServiceRequest customerServiceRequest;
 
     public EstatementFacility() {

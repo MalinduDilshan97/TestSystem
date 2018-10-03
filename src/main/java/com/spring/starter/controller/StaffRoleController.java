@@ -19,20 +19,20 @@ import com.spring.starter.service.impl.StaffRoleServiceImpl;
 @CrossOrigin
 public class StaffRoleController {
 
-	private static final Logger logger = LoggerFactory.getLogger(StaffUserController.class);
-	
-	@Autowired
-	private StaffRoleServiceImpl staffRoleService; 
-	
-	@PostMapping
-	public ResponseEntity<?> saveNewUserRole(@RequestBody StaffRole staffRole) {
-		//logger.info("request - methodName | (URL - api-url) | uuid = {}, userUUID = {}");
-		return	staffRoleService.saveNewUserRole(staffRole);
-	}
-	
-	@GetMapping
-	public ResponseEntity<?> getAllUserRoles(){
-		return staffRoleService.getAllUserRoles();
-	}
-	
+    private static final Logger logger = LoggerFactory.getLogger(StaffUserController.class);
+
+    @Autowired
+    private StaffRoleServiceImpl staffRoleService;
+
+    @PostMapping
+    public ResponseEntity<?> saveNewUserRole(@RequestBody StaffRole staffRole) {
+        //logger.info("request - methodName | (URL - api-url) | uuid = {}, userUUID = {}");
+        return staffRoleService.saveNewUserRole(staffRole);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllUserRoles() {
+        return staffRoleService.getAllUserRoles();
+    }
+
 }

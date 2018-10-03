@@ -15,84 +15,84 @@ import org.springframework.lang.NonNull;
 @Entity
 public class QueueNum {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int queueNumId;
-	
-	@GeneratedValue
-	private int queueIssueNumber;
-	
-	private Date queueDate;
-	
-	@NonNull
-	@NotBlank
-	@NotEmpty
-	private String name;
-	
-	@NonNull
-	@NotBlank
-	@NotEmpty
-	private String mobileNo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int queueNumId;
 
-	public QueueNum(int queueNumId, int queueIssueNumber, Date queueDate, @NotBlank @NotEmpty String name,
-			@NotBlank @NotEmpty String mobileNo) {
-		super();
-		this.queueNumId = queueNumId;
-		this.queueIssueNumber = queueIssueNumber;
-		this.queueDate = queueDate;
-		this.name = name;
-		this.mobileNo = mobileNo;
-	}
+    @GeneratedValue
+    private int queueIssueNumber;
 
-	public int getQueueNumId() {
-		return queueNumId;
-	}
+    private Date queueDate;
 
-	public void setQueueNumId(int queueNumId) {
-		this.queueNumId = queueNumId;
-	}
+    @NonNull
+    @NotBlank
+    @NotEmpty
+    private String name;
 
-	public String getName() {
-		return name;
-	}
+    @NonNull
+    @NotBlank
+    @NotEmpty
+    private String mobileNo;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public QueueNum(int queueNumId, int queueIssueNumber, Date queueDate, @NotBlank @NotEmpty String name,
+                    @NotBlank @NotEmpty String mobileNo) {
+        super();
+        this.queueNumId = queueNumId;
+        this.queueIssueNumber = queueIssueNumber;
+        this.queueDate = queueDate;
+        this.name = name;
+        this.mobileNo = mobileNo;
+    }
 
-	public String getMobileNo() {
-		return mobileNo;
-	}
+    public int getQueueNumId() {
+        return queueNumId;
+    }
 
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
+    public void setQueueNumId(int queueNumId) {
+        this.queueNumId = queueNumId;
+    }
 
-	public QueueNum(int queueNumId, @NotBlank @NotEmpty String name, @NotBlank @NotEmpty String mobileNo) {
-		super();
-		this.queueNumId = queueNumId;
-		this.name = name;
-		this.mobileNo = mobileNo;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public QueueNum() {
-		super();
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getQueueIssueNumber() {
-		return queueIssueNumber;
-	}
+    public String getMobileNo() {
+        return mobileNo;
+    }
 
-	public void setQueueIssueNumber(int queueIssueNumber) {
-		this.queueIssueNumber = queueIssueNumber;
-	}
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
 
-	public Date getQueueDate() {
-		return queueDate;
-	}
+    public QueueNum(int queueNumId, @NotBlank @NotEmpty String name, @NotBlank @NotEmpty String mobileNo) {
+        super();
+        this.queueNumId = queueNumId;
+        this.name = name;
+        this.mobileNo = mobileNo;
+    }
 
-	public void setQueueDate(Date queueDate) {
-		this.queueDate = queueDate;
-	}
-	
+    public QueueNum() {
+        super();
+    }
+
+    public int getQueueIssueNumber() {
+        return queueIssueNumber;
+    }
+
+    public void setQueueIssueNumber(int queueIssueNumber) {
+        this.queueIssueNumber = queueIssueNumber;
+    }
+
+    public Date getQueueDate() {
+        return queueDate;
+    }
+
+    public void setQueueDate(Date queueDate) {
+        this.queueDate = queueDate;
+    }
+
 }

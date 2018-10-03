@@ -8,70 +8,70 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class CustomerDTO {
-	
-	@NotNull
-	@NotEmpty
-	@Size(min = 2)
-	@Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
-	private String name;
-	
-	@NotNull
-	@NotEmpty
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 2)
+    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
+    private String name;
+
+    @NotNull
+    @NotEmpty
     private String identification;
-	
-	@NotNull
-	@NotEmpty
-	@Size(min = 10)
-	@Pattern(regexp = "^([+0-9])*$")
-	private String mobileNo;
-	
-	@NotNull
-	@NotEmpty
-	private List<String> accountNos;
 
-	public CustomerDTO() {
-		super();
-	}
+    @NotNull
+    @NotEmpty
+    @Size(min = 10)
+    @Pattern(regexp = "^([+0-9])*$")
+    private String mobileNo;
 
-	public CustomerDTO(@NotNull @NotEmpty String name, @NotNull @NotEmpty String identification,
-			@NotNull @NotEmpty String mobileNo, @NotNull @NotEmpty List<String> accountNos) {
-		super();
-		this.name = name;
-		this.identification = identification;
-		this.mobileNo = mobileNo;
-		this.accountNos = accountNos;
-	}
+    @NotNull
+    @NotEmpty
+    private List<String> accountNos;
 
-	public String getName() {
-		return name;
-	}
+    public CustomerDTO() {
+        super();
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public CustomerDTO(@NotNull @NotEmpty String name, @NotNull @NotEmpty String identification,
+                       @NotNull @NotEmpty String mobileNo, @NotNull @NotEmpty List<String> accountNos) {
+        super();
+        this.name = name;
+        this.identification = identification;
+        this.mobileNo = mobileNo;
+        this.accountNos = accountNos;
+    }
 
-	public String getIdentification() {
-		return identification;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setIdentification(String identification) {
-		this.identification = identification;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getMobileNo() {
-		return mobileNo;
-	}
+    public String getIdentification() {
+        return identification;
+    }
 
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
+    public void setIdentification(String identification) {
+        this.identification = identification;
+    }
 
-	public List<String> getAccountNos() {
-		return accountNos;
-	}
+    public String getMobileNo() {
+        return mobileNo;
+    }
 
-	public void setAccountNos(List<String> accountNos) {
-		this.accountNos = accountNos;
-	}
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
+
+    public List<String> getAccountNos() {
+        return accountNos;
+    }
+
+    public void setAccountNos(List<String> accountNos) {
+        this.accountNos = accountNos;
+    }
 
 }

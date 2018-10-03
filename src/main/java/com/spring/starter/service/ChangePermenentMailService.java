@@ -6,5 +6,5 @@ import com.spring.starter.model.ChangePermanentMail;
 
 public interface ChangePermenentMailService {
 
-	public ResponseEntity<?> changePermenantAddress(ChangePermanentMail changePermanentMail, int customerServiceRequestId);
+    public ResponseEntity<?> changePermenantAddress(ChangePermanentMail changePermanentMail, int customerServiceRequestId);
 }

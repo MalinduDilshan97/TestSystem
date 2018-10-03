@@ -140,41 +140,40 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
     public ResponseEntity<?> statementFrequencyService(StatementFrequency statementFrequency, int customerServiceRequistId) {
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequistId);
-        if(!customerServiceRequest.isPresent()) {
+        if (!customerServiceRequest.isPresent()) {
             responsemodel.setMessage("There is No such service Available");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
         System.out.println(serviceRequestId);
-        if(serviceRequestId != ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO)
-        {
+        if (serviceRequestId != ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO) {
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
         Optional<StatementFrequency> frequency = statementFrequencyRepository.getFormFromCSR(customerServiceRequistId);
-        if(frequency.isPresent()){
+        if (frequency.isPresent()) {
             statementFrequency.setStatementFrequency(frequency.get().getStatementFrequency());
         }
 
-        if(statementFrequency.isAnnually() && statementFrequency.isBiAnnaully() && statementFrequency.isDaily() && statementFrequency.isMonthly() && statementFrequency.isQuarterly()){
+        if (statementFrequency.isAnnually() && statementFrequency.isBiAnnaully() && statementFrequency.isDaily() && statementFrequency.isMonthly() && statementFrequency.isQuarterly()) {
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-        } else if(!statementFrequency.isAnnually() && !statementFrequency.isBiAnnaully() && !statementFrequency.isDaily() && !statementFrequency.isMonthly() && !statementFrequency.isQuarterly()){
+        } else if (!statementFrequency.isAnnually() && !statementFrequency.isBiAnnaully() && !statementFrequency.isDaily() && !statementFrequency.isMonthly() && !statementFrequency.isQuarterly()) {
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
 
-        try{
+        try {
             statementFrequency.setCustomerServiceRequest(customerServiceRequest.get());
             statementFrequencyRepository.save(statementFrequency);
             responsemodel.setMessage("Service Created Successfully");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
 
@@ -204,8 +203,8 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
                 }
 
-                Optional<AccountStatementIssueRequest>request=accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
-                if (request.isPresent()){
+                Optional<AccountStatementIssueRequest> request = accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
+                if (request.isPresent()) {
                     accountStatementIssueRequest.setAccountStatementIssueRequestId(request.get().getAccountStatementIssueRequestId());
                 }
 

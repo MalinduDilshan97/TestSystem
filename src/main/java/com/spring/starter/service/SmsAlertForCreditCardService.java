@@ -6,5 +6,5 @@ import com.spring.starter.DTO.SMSAlertsForCreditCardDTO;
 
 public interface SmsAlertForCreditCardService {
 
-	public ResponseEntity<?> smsAlertForCreditCardRequest(SMSAlertsForCreditCardDTO smsAlertsForCreditCardDTO ,int customerServiceRequestId);
+    public ResponseEntity<?> smsAlertForCreditCardRequest(SMSAlertsForCreditCardDTO smsAlertsForCreditCardDTO, int customerServiceRequestId);
 }

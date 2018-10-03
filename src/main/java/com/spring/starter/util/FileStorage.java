@@ -1,7 +1,6 @@
 package com.spring.starter.util;
 
 
-
 import com.spring.starter.Exception.FileNotFoundException;
 import com.spring.starter.Exception.FileStorageException;
 import com.spring.starter.property.FileStorageProperties;
@@ -32,7 +31,7 @@ public class FileStorage {
         path = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
 
-        this.fileStorageLocation=Paths.get(path.toString());
+        this.fileStorageLocation = Paths.get(path.toString());
 
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -41,9 +40,9 @@ public class FileStorage {
         }
     }
 
-    public String fileSave(MultipartFile file,String location){
+    public String fileSave(MultipartFile file, String location) {
 
-        this.fileStorageLocation=Paths.get(path.toString(),location);
+        this.fileStorageLocation = Paths.get(path.toString(), location);
 
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -56,7 +55,7 @@ public class FileStorage {
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
+            if (fileName.contains("..")) {
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
             // Copy file to the target location (Replacing existing file with the same name)
@@ -70,18 +69,18 @@ public class FileStorage {
 
     }
 
-    public Resource getFile(String location){
+    public Resource getFile(String location) {
 
         String path = location;
         String[] parts = path.split("/");
-        String fileName = parts[parts.length-1];
+        String fileName = parts[parts.length - 1];
 
-        this.fileStorageLocation=Paths.get(location);
+        this.fileStorageLocation = Paths.get(location);
 
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()) {
+            if (resource.exists()) {
                 return resource;
             } else {
                 throw new FileNotFoundException("File not found " + fileName);
@@ -91,7 +90,7 @@ public class FileStorage {
         }
     }
 
-    public boolean deleteFile(String url){
+    public boolean deleteFile(String url) {
 
         Path filePath = Paths.get(url);
         File file = new File(String.valueOf(filePath));

@@ -18,19 +18,17 @@ import com.spring.starter.service.ChangePermenentMailService;
 @RequestMapping("/serviceRequest/changePermanentAddress")
 public class ChangePermenentMailController {
 
-	@Autowired
-	ChangePermenentMailService changePermenentMailService;
-	
-	@PostMapping
-	public ResponseEntity<?> changePermenentMailRequest(@RequestBody @Valid ChangePermanentMail changePermanentMail, @RequestParam(name="requestId") int requestId)
-	{
-		return changePermenentMailService.changePermenantAddress(changePermanentMail, requestId);
-	}
-	
-	@PutMapping
-	public ResponseEntity<?> updatePermenentMailRequest(@RequestBody @Valid ChangePermanentMail changePermanentMail, @RequestParam(name="requestId") int requestId)
-	{
-		return changePermenentMailService.changePermenantAddress(changePermanentMail, requestId);
-	}
-	
+    @Autowired
+    ChangePermenentMailService changePermenentMailService;
+
+    @PostMapping
+    public ResponseEntity<?> changePermenentMailRequest(@RequestBody @Valid ChangePermanentMail changePermanentMail, @RequestParam(name = "requestId") int requestId) {
+        return changePermenentMailService.changePermenantAddress(changePermanentMail, requestId);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updatePermenentMailRequest(@RequestBody @Valid ChangePermanentMail changePermanentMail, @RequestParam(name = "requestId") int requestId) {
+        return changePermenentMailService.changePermenantAddress(changePermanentMail, requestId);
+    }
+
 }

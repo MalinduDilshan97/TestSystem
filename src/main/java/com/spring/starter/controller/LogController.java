@@ -12,30 +12,28 @@ import com.spring.starter.service.LogService;
 @RequestMapping("/logs")
 public class LogController {
 
-	@Autowired
-	LogService logService;
-	
-	@GetMapping("/syatemUserRegistrationLogs")
-	public ResponseEntity<?> viewAllSyatemUserRegistrationLogs()
-	{
-		return logService.systemUserAccountCreationLog();
-	}
-	
-	@GetMapping("/systemuserDeactivatelogs")
-	public ResponseEntity<?> viewAllSystemuserDeactivatelogs()
-	{
-		return logService.systemUserDeactivationLog();
-	}
-	
-	@GetMapping("/systemUserActivitiesLogs")
-	public ResponseEntity<?> viewAllUserActivitiesLog(){
-		return logService.systemUserActivitiesLog();
-	}
+    @Autowired
+    LogService logService;
+
+    @GetMapping("/syatemUserRegistrationLogs")
+    public ResponseEntity<?> viewAllSyatemUserRegistrationLogs() {
+        return logService.systemUserAccountCreationLog();
+    }
+
+    @GetMapping("/systemuserDeactivatelogs")
+    public ResponseEntity<?> viewAllSystemuserDeactivatelogs() {
+        return logService.systemUserDeactivationLog();
+    }
+
+    @GetMapping("/systemUserActivitiesLogs")
+    public ResponseEntity<?> viewAllUserActivitiesLog() {
+        return logService.systemUserActivitiesLog();
+    }
 	
 /*	@GetMapping("/systemUserActivationLogs")
 	public ResponseEntity<?> viewAllUserActivitivationLog(){
 		return logService.systemUserActivationLog();
 	}*/
-	 
-	
+
+
 }

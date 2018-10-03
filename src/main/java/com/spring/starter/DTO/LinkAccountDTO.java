@@ -10,40 +10,40 @@ import javax.validation.constraints.NotNull;
 
 
 public class LinkAccountDTO {
-	
-	@NotNull
-	private String existingBankingUserId;
-	
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name="internetBankingId")
-	@NotNull
-	@NotEmpty
-	private List<String> accountNumbers;
 
-	public LinkAccountDTO() {
-		super();
-	}
+    @NotNull
+    private String existingBankingUserId;
 
-	public LinkAccountDTO(@NotNull String existingBankingUserId, @NotNull @NotEmpty List<String> accountNumbers) {
-		super();
-		this.existingBankingUserId = existingBankingUserId;
-		this.accountNumbers = accountNumbers;
-	}
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "internetBankingId")
+    @NotNull
+    @NotEmpty
+    private List<String> accountNumbers;
 
-	public String getExistingBankingUserId() {
-		return existingBankingUserId;
-	}
+    public LinkAccountDTO() {
+        super();
+    }
 
-	public void setExistingBankingUserId(String existingBankingUserId) {
-		this.existingBankingUserId = existingBankingUserId;
-	}
+    public LinkAccountDTO(@NotNull String existingBankingUserId, @NotNull @NotEmpty List<String> accountNumbers) {
+        super();
+        this.existingBankingUserId = existingBankingUserId;
+        this.accountNumbers = accountNumbers;
+    }
 
-	public List<String> getAccountNumbers() {
-		return accountNumbers;
-	}
+    public String getExistingBankingUserId() {
+        return existingBankingUserId;
+    }
 
-	public void setAccountNumbers(List<String> accountNumbers) {
-		this.accountNumbers = accountNumbers;
-	}
-	
+    public void setExistingBankingUserId(String existingBankingUserId) {
+        this.existingBankingUserId = existingBankingUserId;
+    }
+
+    public List<String> getAccountNumbers() {
+        return accountNumbers;
+    }
+
+    public void setAccountNumbers(List<String> accountNumbers) {
+        this.accountNumbers = accountNumbers;
+    }
+
 }

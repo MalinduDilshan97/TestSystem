@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="service_request_customer_log")
+@Table(name = "service_request_customer_log")
 public class ServiceRequestCustomerLog {
 
     @Id

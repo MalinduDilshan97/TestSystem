@@ -18,33 +18,33 @@ public class BankStatementPassBookController {
     private BankStatementPassBookService bankStatementPassBookService;
 
     @PostMapping("/duplicatePassbook")
-    public ResponseEntity<?> duplicatePassBookRequest(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO){
+    public ResponseEntity<?> duplicatePassBookRequest(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO) {
         return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO);
     }
 
     @PutMapping("/duplicatePassbook")
-    public ResponseEntity<?> duplicatePassBookRequestUpdate(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO){
+    public ResponseEntity<?> duplicatePassBookRequestUpdate(@RequestBody DuplicatePassBookRequestDTO duplicatePassBookRequestDTO) {
         return bankStatementPassBookService.duplicatePassBookRequest(duplicatePassBookRequestDTO);
     }
 
     @PostMapping("/AccountStatement")
-    public ResponseEntity<?> AccountStatementRequest(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO){
+    public ResponseEntity<?> AccountStatementRequest(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO) {
         return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
     }
 
     @PutMapping("/AccountStatement")
-    public ResponseEntity<?> AccountStatementRequestUpdate(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO){
+    public ResponseEntity<?> AccountStatementRequestUpdate(@RequestBody AccountStatementIssueRequestDTO accountStatementIssueRequestDTO) {
         return bankStatementPassBookService.AccountStatement(accountStatementIssueRequestDTO);
     }
 
     @PostMapping("/e-statement")
-    public ResponseEntity<?> e_satementRequest(@RequestBody BankStatementAccountDTO bankStatementAccountDTO, @RequestParam(name="requestId") int requestId){
-        return bankStatementPassBookService.estatementService(bankStatementAccountDTO,requestId);
+    public ResponseEntity<?> e_satementRequest(@RequestBody BankStatementAccountDTO bankStatementAccountDTO, @RequestParam(name = "requestId") int requestId) {
+        return bankStatementPassBookService.estatementService(bankStatementAccountDTO, requestId);
     }
 
     @PostMapping("/statementFrequency")
-    public ResponseEntity<?> statementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name="requestId") int requestId){
-        return bankStatementPassBookService.statementFrequencyService(statementFrequency,requestId);
+    public ResponseEntity<?> statementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name = "requestId") int requestId) {
+        return bankStatementPassBookService.statementFrequencyService(statementFrequency, requestId);
     }
 
 

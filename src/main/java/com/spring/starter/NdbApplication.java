@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties({FileStorageProperties.class})
 public class NdbApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(NdbApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(NdbApplication.class, args);
+    }
 }

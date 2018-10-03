@@ -36,31 +36,31 @@ import com.spring.starter.service.InternetBankingService;
 
 @Service
 @Transactional
-public class InternetBankingImpl implements InternetBankingService{
-	
-	@Autowired
-	private CustomerServiceRequestRepository customerServiceRequestRepository;
-	
-	@Autowired
-	private InternetBankingRepository internetBankingRepository;
-	
-	@Autowired
-	private InternetBankingExcludeAccountNumbersRepository excludeAccountNumbersRepository;
-	
-	@Autowired
-	private ExcludeInternetAccountRepository excludeInternetAccountRepository; 
-	
-	@Autowired
-	private InternetBankingLinkAccountNumbersRepository linkAccountNumbersRepository; 
-	
-	@Autowired
-	private NDBBranchRepository branchRepository; 
-	
-	@Autowired
-	private ReissueLoginPasswordModelRepository loginPasswordModelRepository;
-	
-	@Autowired
-	private  LinkAccountModelRepository linkAccountModelRepository; 
+public class InternetBankingImpl implements InternetBankingService {
+
+    @Autowired
+    private CustomerServiceRequestRepository customerServiceRequestRepository;
+
+    @Autowired
+    private InternetBankingRepository internetBankingRepository;
+
+    @Autowired
+    private InternetBankingExcludeAccountNumbersRepository excludeAccountNumbersRepository;
+
+    @Autowired
+    private ExcludeInternetAccountRepository excludeInternetAccountRepository;
+
+    @Autowired
+    private InternetBankingLinkAccountNumbersRepository linkAccountNumbersRepository;
+
+    @Autowired
+    private NDBBranchRepository branchRepository;
+
+    @Autowired
+    private ReissueLoginPasswordModelRepository loginPasswordModelRepository;
+
+    @Autowired
+    private LinkAccountModelRepository linkAccountModelRepository;
 	
 	
 /*	@Override
@@ -259,206 +259,198 @@ public class InternetBankingImpl implements InternetBankingService{
 			return new ResponseEntity<> (responsemodel,HttpStatus.SERVICE_UNAVAILABLE);
 		}
 	}*/
-	
-	public ResponseEntity<?> reissuePasswordService(ReissueLoginPasswordDTO loginPasswordModel,int customerServiceRequestId){
-		ResponseModel responsemodel = new ResponseModel();
-		ReissueLoginPasswordModel reissueLoginPasswordModel = new ReissueLoginPasswordModel();
-		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
-		if(!customerServiceRequest.isPresent()) {
-			responsemodel.setMessage("There is No such service Available");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
-		}
-		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != ServiceRequestIdConfig.REISSUE_LOGIN_PASSWORD)
-		{
-			responsemodel.setMessage("Invalied Request");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-		}
-		NDBBranch ndbBranch = new NDBBranch();
-		if(loginPasswordModel.isAtBranch()){
-			if(loginPasswordModel.getBranchId() == 0) {
-				responsemodel.setMessage("Complete Bank Details");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-			Optional<NDBBranch> branchOpt = branchRepository.findById(loginPasswordModel.getBranchId());
-			if(!branchOpt.isPresent()) {
-				responsemodel.setMessage("Invalied Bank Details");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-			ndbBranch = branchOpt.get();
-			reissueLoginPasswordModel.setBranch(ndbBranch);
-		}
-		if(loginPasswordModel.isPostToAddress()) {
-			if(loginPasswordModel.getAddresss() == null) {
-				responsemodel.setMessage("Complete Address");
-				responsemodel.setStatus(false);
-				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-			}
-		}
-		
-		Optional<ReissueLoginPasswordModel> reissueLoginPasswordOpt = loginPasswordModelRepository.getFormFromCSR(customerServiceRequestId);
 
-		if(reissueLoginPasswordOpt.isPresent()) {
-			reissueLoginPasswordModel.setReissueLoginPasswordModelId(reissueLoginPasswordOpt.get().getReissueLoginPasswordModelId());
-		}
-		
+    public ResponseEntity<?> reissuePasswordService(ReissueLoginPasswordDTO loginPasswordModel, int customerServiceRequestId) {
+        ResponseModel responsemodel = new ResponseModel();
+        ReissueLoginPasswordModel reissueLoginPasswordModel = new ReissueLoginPasswordModel();
+        Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
+        if (!customerServiceRequest.isPresent()) {
+            responsemodel.setMessage("There is No such service Available");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
+        int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
+        if (serviceRequestId != ServiceRequestIdConfig.REISSUE_LOGIN_PASSWORD) {
+            responsemodel.setMessage("Invalied Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
+        NDBBranch ndbBranch = new NDBBranch();
+        if (loginPasswordModel.isAtBranch()) {
+            if (loginPasswordModel.getBranchId() == 0) {
+                responsemodel.setMessage("Complete Bank Details");
+                responsemodel.setStatus(false);
+                return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+            }
+            Optional<NDBBranch> branchOpt = branchRepository.findById(loginPasswordModel.getBranchId());
+            if (!branchOpt.isPresent()) {
+                responsemodel.setMessage("Invalied Bank Details");
+                responsemodel.setStatus(false);
+                return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+            }
+            ndbBranch = branchOpt.get();
+            reissueLoginPasswordModel.setBranch(ndbBranch);
+        }
+        if (loginPasswordModel.isPostToAddress()) {
+            if (loginPasswordModel.getAddresss() == null) {
+                responsemodel.setMessage("Complete Address");
+                responsemodel.setStatus(false);
+                return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+            }
+        }
 
-		reissueLoginPasswordModel.setBankingUserId(loginPasswordModel.getBankingUserId());
-		reissueLoginPasswordModel.setAtBranch(loginPasswordModel.isAtBranch());
-		reissueLoginPasswordModel.setPostToAddress(loginPasswordModel.isPostToAddress());
-		reissueLoginPasswordModel.setAddresss(loginPasswordModel.getAddresss());
-		reissueLoginPasswordModel.setPostToCorrespondenceAddress(loginPasswordModel.isPostToCorrespondenceAddress());
-		reissueLoginPasswordModel.setCustomerServiceRequest(customerServiceRequest.get());
-		
-		try {
-		loginPasswordModelRepository.save(reissueLoginPasswordModel);
-		responsemodel.setMessage("Request Saved Successfully");
-		responsemodel.setStatus(true);
-		return new ResponseEntity<> (responsemodel,HttpStatus.CREATED);
-		} catch (Exception e) {
-			throw new CustomException("Something went wrong......");
-		}
-	}
-	
-	
-	
-	
-	public ResponseEntity<?> linkJointAccounts(LinkAccountDTO accountDTO,int customerServiceRequestId){
-		ResponseModel responsemodel = new ResponseModel();
-		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
-		if(!customerServiceRequest.isPresent()) {
-			responsemodel.setMessage("There is No such service Available");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
-		}
-		
-		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != ServiceRequestIdConfig.LINK_FOLLOWING_JOINT_ACCOUNTS)
-		{
-			responsemodel.setMessage("Invalied Request");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-		}
-		
-		LinkAccountModel linkAccountModel = new LinkAccountModel();
-		List<InternetBankingLinkAccountNumbers> accountNumbers = new ArrayList<>();
-		
-		Optional<LinkAccountModel> linkAccountOPT = linkAccountModelRepository.getFormFromCSR(customerServiceRequestId);
-		if(linkAccountOPT.isPresent()) {
-			linkAccountModel.setLinkAccountModelId(linkAccountOPT.get().getLinkAccountModelId());
-			accountNumbers = linkAccountOPT.get().getInternetBankingLinkAccountNumbers();
-			for(InternetBankingLinkAccountNumbers numbers : accountNumbers) {
-				linkAccountNumbersRepository.delete(numbers);
-			}
+        Optional<ReissueLoginPasswordModel> reissueLoginPasswordOpt = loginPasswordModelRepository.getFormFromCSR(customerServiceRequestId);
 
-		}
-		for(String s : accountDTO.getAccountNumbers()) 
-		{
-			InternetBankingLinkAccountNumbers accountNumber = new InternetBankingLinkAccountNumbers();
-			accountNumber.setAccountNumber(s);
-			accountNumber = linkAccountNumbersRepository.save(accountNumber);
-			accountNumbers.add(accountNumber);
-		}
-		
-		linkAccountModel.setExistingBankingUserId(accountDTO.getExistingBankingUserId());
-		linkAccountModel.setInternetBankingLinkAccountNumbers(accountNumbers);
-		linkAccountModel.setCustomerServiceRequest(customerServiceRequest.get());
-		
-		try {
-			linkAccountModelRepository.save(linkAccountModel);
-			responsemodel.setMessage("Request Created Successfully");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<> (responsemodel,HttpStatus.CREATED);
-		} catch (Exception e) {
-			responsemodel.setMessage("Something Went Wrong with the DB Connection");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<> (responsemodel,HttpStatus.SERVICE_UNAVAILABLE);
-		}
-	}
+        if (reissueLoginPasswordOpt.isPresent()) {
+            reissueLoginPasswordModel.setReissueLoginPasswordModelId(reissueLoginPasswordOpt.get().getReissueLoginPasswordModelId());
+        }
 
-	public ResponseEntity<?> excludeAccountNo(LinkAccountDTO accountDTO,int customerServiceRequestId){
-		ResponseModel responsemodel = new ResponseModel();
-		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
-		if(!customerServiceRequest.isPresent()) {
-			responsemodel.setMessage("There is No such service Available");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
-		}
-		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY)
-		{
-			responsemodel.setMessage("Invalied Request");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-		}
-		ExcludeInternetAccount excludeAccountModel = new ExcludeInternetAccount();
-		List<InternetBankingExcludeAccountNumbers> accountNumbers = new ArrayList<>();
-		Optional<ExcludeInternetAccount> excludeAccountOPT = excludeInternetAccountRepository.getFormFromCSR(customerServiceRequestId);
-		if(excludeAccountOPT.isPresent()) {
-			excludeAccountModel.setExcludeInternetAccountId(excludeAccountOPT.get().getExcludeInternetAccountId());
-			accountNumbers = excludeAccountOPT.get().getBankingExcludeAccountNumbers();
-			for(InternetBankingExcludeAccountNumbers accountNumbers2 : accountNumbers) {
-				excludeAccountNumbersRepository.delete(accountNumbers2);
-			}
-		}
-		
-		for(String s : accountDTO.getAccountNumbers()) 
-		{
-			InternetBankingExcludeAccountNumbers accountNumber = new InternetBankingExcludeAccountNumbers();
-			accountNumber.setAccountNumber(s);
-			accountNumber = excludeAccountNumbersRepository.save(accountNumber);
-			accountNumbers.add(accountNumber);
-		}
-		excludeAccountModel.setExistingBankingUserId(accountDTO.getExistingBankingUserId());
-		excludeAccountModel.setBankingExcludeAccountNumbers(accountNumbers);
-		excludeAccountModel.setCustomerServiceRequest(customerServiceRequest.get());
-		
-		try {
-			excludeInternetAccountRepository.save(excludeAccountModel);
-			responsemodel.setMessage("Request Saved Successfully");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<> (responsemodel,HttpStatus.CREATED);
-		} catch (Exception e) {
-			responsemodel.setMessage("Something Went Wrong with the DB Connection");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<> (responsemodel,HttpStatus.SERVICE_UNAVAILABLE);
-		}
-	}
 
-	@Override
-	public ResponseEntity<?> internetOtherService(InternetBanking banking, int customerServiceRequestId) {
-		ResponseModel responsemodel = new ResponseModel();
-		Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
-		if(!customerServiceRequest.isPresent()) {
-			responsemodel.setMessage("There is No such service Available");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
-		}
-		int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-		if(serviceRequestId != ServiceRequestIdConfig.OTHER_INTERNET_BANKING_SERVICES)
-		{
-			responsemodel.setMessage("Invalied Request");
-			responsemodel.setStatus(false);
-			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-		}
-		
-		Optional<InternetBanking> internetBankingOpt = internetBankingRepository.getFormFromCSR(customerServiceRequestId);
+        reissueLoginPasswordModel.setBankingUserId(loginPasswordModel.getBankingUserId());
+        reissueLoginPasswordModel.setAtBranch(loginPasswordModel.isAtBranch());
+        reissueLoginPasswordModel.setPostToAddress(loginPasswordModel.isPostToAddress());
+        reissueLoginPasswordModel.setAddresss(loginPasswordModel.getAddresss());
+        reissueLoginPasswordModel.setPostToCorrespondenceAddress(loginPasswordModel.isPostToCorrespondenceAddress());
+        reissueLoginPasswordModel.setCustomerServiceRequest(customerServiceRequest.get());
 
-		banking.setCustomerServiceRequest(customerServiceRequest.get());
-		if(internetBankingOpt.isPresent()) {
-			banking.setInternetBankingId(internetBankingOpt.get().getInternetBankingId());
-		}
-		try {
-			internetBankingRepository.save(banking);
-			responsemodel.setMessage("service Saved Successfully");
-			responsemodel.setStatus(true);
-			return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-		} catch (Exception e) {
-			throw new CustomException(e.getMessage());
-		}
-	}
+        try {
+            loginPasswordModelRepository.save(reissueLoginPasswordModel);
+            responsemodel.setMessage("Request Saved Successfully");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new CustomException("Something went wrong......");
+        }
+    }
+
+
+    public ResponseEntity<?> linkJointAccounts(LinkAccountDTO accountDTO, int customerServiceRequestId) {
+        ResponseModel responsemodel = new ResponseModel();
+        Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
+        if (!customerServiceRequest.isPresent()) {
+            responsemodel.setMessage("There is No such service Available");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
+
+        int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
+        if (serviceRequestId != ServiceRequestIdConfig.LINK_FOLLOWING_JOINT_ACCOUNTS) {
+            responsemodel.setMessage("Invalied Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
+
+        LinkAccountModel linkAccountModel = new LinkAccountModel();
+        List<InternetBankingLinkAccountNumbers> accountNumbers = new ArrayList<>();
+
+        Optional<LinkAccountModel> linkAccountOPT = linkAccountModelRepository.getFormFromCSR(customerServiceRequestId);
+        if (linkAccountOPT.isPresent()) {
+            linkAccountModel.setLinkAccountModelId(linkAccountOPT.get().getLinkAccountModelId());
+            accountNumbers = linkAccountOPT.get().getInternetBankingLinkAccountNumbers();
+            for (InternetBankingLinkAccountNumbers numbers : accountNumbers) {
+                linkAccountNumbersRepository.delete(numbers);
+            }
+
+        }
+        for (String s : accountDTO.getAccountNumbers()) {
+            InternetBankingLinkAccountNumbers accountNumber = new InternetBankingLinkAccountNumbers();
+            accountNumber.setAccountNumber(s);
+            accountNumber = linkAccountNumbersRepository.save(accountNumber);
+            accountNumbers.add(accountNumber);
+        }
+
+        linkAccountModel.setExistingBankingUserId(accountDTO.getExistingBankingUserId());
+        linkAccountModel.setInternetBankingLinkAccountNumbers(accountNumbers);
+        linkAccountModel.setCustomerServiceRequest(customerServiceRequest.get());
+
+        try {
+            linkAccountModelRepository.save(linkAccountModel);
+            responsemodel.setMessage("Request Created Successfully");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        } catch (Exception e) {
+            responsemodel.setMessage("Something Went Wrong with the DB Connection");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public ResponseEntity<?> excludeAccountNo(LinkAccountDTO accountDTO, int customerServiceRequestId) {
+        ResponseModel responsemodel = new ResponseModel();
+        Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
+        if (!customerServiceRequest.isPresent()) {
+            responsemodel.setMessage("There is No such service Available");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
+        int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
+        if (serviceRequestId != ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY) {
+            responsemodel.setMessage("Invalied Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
+        ExcludeInternetAccount excludeAccountModel = new ExcludeInternetAccount();
+        List<InternetBankingExcludeAccountNumbers> accountNumbers = new ArrayList<>();
+        Optional<ExcludeInternetAccount> excludeAccountOPT = excludeInternetAccountRepository.getFormFromCSR(customerServiceRequestId);
+        if (excludeAccountOPT.isPresent()) {
+            excludeAccountModel.setExcludeInternetAccountId(excludeAccountOPT.get().getExcludeInternetAccountId());
+            accountNumbers = excludeAccountOPT.get().getBankingExcludeAccountNumbers();
+            for (InternetBankingExcludeAccountNumbers accountNumbers2 : accountNumbers) {
+                excludeAccountNumbersRepository.delete(accountNumbers2);
+            }
+        }
+
+        for (String s : accountDTO.getAccountNumbers()) {
+            InternetBankingExcludeAccountNumbers accountNumber = new InternetBankingExcludeAccountNumbers();
+            accountNumber.setAccountNumber(s);
+            accountNumber = excludeAccountNumbersRepository.save(accountNumber);
+            accountNumbers.add(accountNumber);
+        }
+        excludeAccountModel.setExistingBankingUserId(accountDTO.getExistingBankingUserId());
+        excludeAccountModel.setBankingExcludeAccountNumbers(accountNumbers);
+        excludeAccountModel.setCustomerServiceRequest(customerServiceRequest.get());
+
+        try {
+            excludeInternetAccountRepository.save(excludeAccountModel);
+            responsemodel.setMessage("Request Saved Successfully");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        } catch (Exception e) {
+            responsemodel.setMessage("Something Went Wrong with the DB Connection");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> internetOtherService(InternetBanking banking, int customerServiceRequestId) {
+        ResponseModel responsemodel = new ResponseModel();
+        Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
+        if (!customerServiceRequest.isPresent()) {
+            responsemodel.setMessage("There is No such service Available");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
+        int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
+        if (serviceRequestId != ServiceRequestIdConfig.OTHER_INTERNET_BANKING_SERVICES) {
+            responsemodel.setMessage("Invalied Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<InternetBanking> internetBankingOpt = internetBankingRepository.getFormFromCSR(customerServiceRequestId);
+
+        banking.setCustomerServiceRequest(customerServiceRequest.get());
+        if (internetBankingOpt.isPresent()) {
+            banking.setInternetBankingId(internetBankingOpt.get().getInternetBankingId());
+        }
+        try {
+            internetBankingRepository.save(banking);
+            responsemodel.setMessage("service Saved Successfully");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+    }
 }

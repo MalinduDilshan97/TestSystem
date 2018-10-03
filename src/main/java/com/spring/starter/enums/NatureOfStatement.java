@@ -1,5 +1,5 @@
 package com.spring.starter.enums;
 
 public enum NatureOfStatement {
-	PRINTED, E_STATEMENT
+    PRINTED, E_STATEMENT
 }

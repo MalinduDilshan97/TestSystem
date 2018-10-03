@@ -5,172 +5,172 @@ import java.util.List;
 import com.spring.starter.model.NDBBranch;
 
 public class InternetBankingDTO {
-	
-	
-	private String existingBankingUserId;
-	
-	private boolean reissueALoginPassword;
-	
-	private boolean atbranch;
-	
-	private boolean correspondanceAddress;
-	
-	private int branchId;
-		
-	private boolean postToAddress;
-	
-	private String address;
-	
-	private boolean linkjointAccounts;
-	
-	private List<String> internetBankingLinkAccountNumbers;
-	
-	private boolean excludeAccounts;
-	
-	private List<String> bankingExcludeAccountNumbers;
-	
-	private boolean cancelInternetbanking;
-	
-	private boolean activeUser;
-	
-	private boolean inactiveUser;
 
-	public InternetBankingDTO() {
-		super();
-	}
 
-	public InternetBankingDTO(String existingBankingUserId, boolean reissueALoginPassword, boolean atbranch,
-			boolean correspondanceAddress, int branchId, boolean postToAddress, String address,
-			boolean linkjointAccounts, List<String> internetBankingLinkAccountNumbers, boolean excludeAccounts,
-			List<String> bankingExcludeAccountNumbers, boolean cancelInternetbanking, boolean activeUser,
-			boolean inactiveUser) {
-		super();
-		this.existingBankingUserId = existingBankingUserId;
-		this.reissueALoginPassword = reissueALoginPassword;
-		this.atbranch = atbranch;
-		this.correspondanceAddress = correspondanceAddress;
-		this.branchId = branchId;
-		this.postToAddress = postToAddress;
-		this.address = address;
-		this.linkjointAccounts = linkjointAccounts;
-		this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
-		this.excludeAccounts = excludeAccounts;
-		this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
-		this.cancelInternetbanking = cancelInternetbanking;
-		this.activeUser = activeUser;
-		this.inactiveUser = inactiveUser;
-	}
+    private String existingBankingUserId;
 
-	public String getExistingBankingUserId() {
-		return existingBankingUserId;
-	}
+    private boolean reissueALoginPassword;
 
-	public void setExistingBankingUserId(String existingBankingUserId) {
-		this.existingBankingUserId = existingBankingUserId;
-	}
+    private boolean atbranch;
 
-	public boolean isReissueALoginPassword() {
-		return reissueALoginPassword;
-	}
+    private boolean correspondanceAddress;
 
-	public void setReissueALoginPassword(boolean reissueALoginPassword) {
-		this.reissueALoginPassword = reissueALoginPassword;
-	}
+    private int branchId;
 
-	public boolean isAtbranch() {
-		return atbranch;
-	}
+    private boolean postToAddress;
 
-	public void setAtbranch(boolean atbranch) {
-		this.atbranch = atbranch;
-	}
+    private String address;
 
-	public int getBranchId() {
-		return branchId;
-	}
+    private boolean linkjointAccounts;
 
-	public void setBranchId(int branchId) {
-		this.branchId = branchId;
-	}
+    private List<String> internetBankingLinkAccountNumbers;
 
-	public boolean isPostToAddress() {
-		return postToAddress;
-	}
+    private boolean excludeAccounts;
 
-	public void setPostToAddress(boolean postToAddress) {
-		this.postToAddress = postToAddress;
-	}
+    private List<String> bankingExcludeAccountNumbers;
 
-	public String getAddress() {
-		return address;
-	}
+    private boolean cancelInternetbanking;
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    private boolean activeUser;
 
-	public boolean isLinkjointAccounts() {
-		return linkjointAccounts;
-	}
+    private boolean inactiveUser;
 
-	public void setLinkjointAccounts(boolean linkjointAccounts) {
-		this.linkjointAccounts = linkjointAccounts;
-	}
+    public InternetBankingDTO() {
+        super();
+    }
 
-	public List<String> getInternetBankingLinkAccountNumbers() {
-		return internetBankingLinkAccountNumbers;
-	}
+    public InternetBankingDTO(String existingBankingUserId, boolean reissueALoginPassword, boolean atbranch,
+                              boolean correspondanceAddress, int branchId, boolean postToAddress, String address,
+                              boolean linkjointAccounts, List<String> internetBankingLinkAccountNumbers, boolean excludeAccounts,
+                              List<String> bankingExcludeAccountNumbers, boolean cancelInternetbanking, boolean activeUser,
+                              boolean inactiveUser) {
+        super();
+        this.existingBankingUserId = existingBankingUserId;
+        this.reissueALoginPassword = reissueALoginPassword;
+        this.atbranch = atbranch;
+        this.correspondanceAddress = correspondanceAddress;
+        this.branchId = branchId;
+        this.postToAddress = postToAddress;
+        this.address = address;
+        this.linkjointAccounts = linkjointAccounts;
+        this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
+        this.excludeAccounts = excludeAccounts;
+        this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
+        this.cancelInternetbanking = cancelInternetbanking;
+        this.activeUser = activeUser;
+        this.inactiveUser = inactiveUser;
+    }
 
-	public void setInternetBankingLinkAccountNumbers(List<String> internetBankingLinkAccountNumbers) {
-		this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
-	}
+    public String getExistingBankingUserId() {
+        return existingBankingUserId;
+    }
 
-	public boolean isExcludeAccounts() {
-		return excludeAccounts;
-	}
+    public void setExistingBankingUserId(String existingBankingUserId) {
+        this.existingBankingUserId = existingBankingUserId;
+    }
 
-	public void setExcludeAccounts(boolean excludeAccounts) {
-		this.excludeAccounts = excludeAccounts;
-	}
+    public boolean isReissueALoginPassword() {
+        return reissueALoginPassword;
+    }
 
-	public List<String> getBankingExcludeAccountNumbers() {
-		return bankingExcludeAccountNumbers;
-	}
+    public void setReissueALoginPassword(boolean reissueALoginPassword) {
+        this.reissueALoginPassword = reissueALoginPassword;
+    }
 
-	public void setBankingExcludeAccountNumbers(List<String> bankingExcludeAccountNumbers) {
-		this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
-	}
+    public boolean isAtbranch() {
+        return atbranch;
+    }
 
-	public boolean isCorrespondanceAddress() {
-		return correspondanceAddress;
-	}
+    public void setAtbranch(boolean atbranch) {
+        this.atbranch = atbranch;
+    }
 
-	public void setCorrespondanceAddress(boolean correspondanceAddress) {
-		this.correspondanceAddress = correspondanceAddress;
-	}
+    public int getBranchId() {
+        return branchId;
+    }
 
-	public boolean isCancelInternetbanking() {
-		return cancelInternetbanking;
-	}
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
+    }
 
-	public void setCancelInternetbanking(boolean cancelInternetbanking) {
-		this.cancelInternetbanking = cancelInternetbanking;
-	}
+    public boolean isPostToAddress() {
+        return postToAddress;
+    }
 
-	public boolean isActiveUser() {
-		return activeUser;
-	}
+    public void setPostToAddress(boolean postToAddress) {
+        this.postToAddress = postToAddress;
+    }
 
-	public void setActiveUser(boolean activeUser) {
-		this.activeUser = activeUser;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public boolean isInactiveUser() {
-		return inactiveUser;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setInactiveUser(boolean inactiveUser) {
-		this.inactiveUser = inactiveUser;
-	}
+    public boolean isLinkjointAccounts() {
+        return linkjointAccounts;
+    }
+
+    public void setLinkjointAccounts(boolean linkjointAccounts) {
+        this.linkjointAccounts = linkjointAccounts;
+    }
+
+    public List<String> getInternetBankingLinkAccountNumbers() {
+        return internetBankingLinkAccountNumbers;
+    }
+
+    public void setInternetBankingLinkAccountNumbers(List<String> internetBankingLinkAccountNumbers) {
+        this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
+    }
+
+    public boolean isExcludeAccounts() {
+        return excludeAccounts;
+    }
+
+    public void setExcludeAccounts(boolean excludeAccounts) {
+        this.excludeAccounts = excludeAccounts;
+    }
+
+    public List<String> getBankingExcludeAccountNumbers() {
+        return bankingExcludeAccountNumbers;
+    }
+
+    public void setBankingExcludeAccountNumbers(List<String> bankingExcludeAccountNumbers) {
+        this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
+    }
+
+    public boolean isCorrespondanceAddress() {
+        return correspondanceAddress;
+    }
+
+    public void setCorrespondanceAddress(boolean correspondanceAddress) {
+        this.correspondanceAddress = correspondanceAddress;
+    }
+
+    public boolean isCancelInternetbanking() {
+        return cancelInternetbanking;
+    }
+
+    public void setCancelInternetbanking(boolean cancelInternetbanking) {
+        this.cancelInternetbanking = cancelInternetbanking;
+    }
+
+    public boolean isActiveUser() {
+        return activeUser;
+    }
+
+    public void setActiveUser(boolean activeUser) {
+        this.activeUser = activeUser;
+    }
+
+    public boolean isInactiveUser() {
+        return inactiveUser;
+    }
+
+    public void setInactiveUser(boolean inactiveUser) {
+        this.inactiveUser = inactiveUser;
+    }
 
 }

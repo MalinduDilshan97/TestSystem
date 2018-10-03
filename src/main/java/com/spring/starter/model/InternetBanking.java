@@ -13,78 +13,78 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="internet_banking")
+@Table(name = "internet_banking")
 public class InternetBanking {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int internetBankingId;
 
-	@NotNull
-	@Size(min = 2)
-	@Pattern(regexp = "^([A-Za-z0-9_])*$")
-	private String internetBankingUserId;
-	
-	private boolean activeUser = false; 
-	
-	private boolean inactiveUser = false;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="csrId")
-	private CustomerServiceRequest customerServiceRequest;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int internetBankingId;
 
-	public InternetBanking() {
-		super();
-	}
+    @NotNull
+    @Size(min = 2)
+    @Pattern(regexp = "^([A-Za-z0-9_])*$")
+    private String internetBankingUserId;
 
-	public InternetBanking(int internetBankingId, String internetBankingUserId, boolean activeUser,
-			boolean inactiveUser, CustomerServiceRequest customerServiceRequest) {
-		super();
-		this.internetBankingId = internetBankingId;
-		this.internetBankingUserId = internetBankingUserId;
-		this.activeUser = activeUser;
-		this.inactiveUser = inactiveUser;
-		this.customerServiceRequest = customerServiceRequest;
-	}
+    private boolean activeUser = false;
 
-	public int getInternetBankingId() {
-		return internetBankingId;
-	}
+    private boolean inactiveUser = false;
 
-	public void setInternetBankingId(int internetBankingId) {
-		this.internetBankingId = internetBankingId;
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "csrId")
+    private CustomerServiceRequest customerServiceRequest;
 
-	public boolean isActiveUser() {
-		return activeUser;
-	}
+    public InternetBanking() {
+        super();
+    }
 
-	public void setActiveUser(boolean activeUser) {
-		this.activeUser = activeUser;
-	}
+    public InternetBanking(int internetBankingId, String internetBankingUserId, boolean activeUser,
+                           boolean inactiveUser, CustomerServiceRequest customerServiceRequest) {
+        super();
+        this.internetBankingId = internetBankingId;
+        this.internetBankingUserId = internetBankingUserId;
+        this.activeUser = activeUser;
+        this.inactiveUser = inactiveUser;
+        this.customerServiceRequest = customerServiceRequest;
+    }
 
-	public boolean isInactiveUser() {
-		return inactiveUser;
-	}
+    public int getInternetBankingId() {
+        return internetBankingId;
+    }
 
-	public void setInactiveUser(boolean inactiveUser) {
-		this.inactiveUser = inactiveUser;
-	}
+    public void setInternetBankingId(int internetBankingId) {
+        this.internetBankingId = internetBankingId;
+    }
 
-	public CustomerServiceRequest getCustomerServiceRequest() {
-		return customerServiceRequest;
-	}
+    public boolean isActiveUser() {
+        return activeUser;
+    }
 
-	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-		this.customerServiceRequest = customerServiceRequest;
-	}
+    public void setActiveUser(boolean activeUser) {
+        this.activeUser = activeUser;
+    }
 
-	public String getInternetBankingUserId() {
-		return internetBankingUserId;
-	}
+    public boolean isInactiveUser() {
+        return inactiveUser;
+    }
 
-	public void setInternetBankingUserId(String internetBankingUserId) {
-		this.internetBankingUserId = internetBankingUserId;
-	}
-	
+    public void setInactiveUser(boolean inactiveUser) {
+        this.inactiveUser = inactiveUser;
+    }
+
+    public CustomerServiceRequest getCustomerServiceRequest() {
+        return customerServiceRequest;
+    }
+
+    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+        this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public String getInternetBankingUserId() {
+        return internetBankingUserId;
+    }
+
+    public void setInternetBankingUserId(String internetBankingUserId) {
+        this.internetBankingUserId = internetBankingUserId;
+    }
+
 }

@@ -37,55 +37,55 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
     @Override
     public ResponseEntity<?> changeIdentificationDetails(IdentificationFormDTO identificationFormDTO) {
         ResponseModel responsemodel = new ResponseModel();
-        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(identificationFormDTO.getCustomerServiceRequestId());
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(identificationFormDTO.getCustomerServiceRequestId());
 
-        if (!optional.isPresent()){
+        if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
 
             return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }
         int serviceRequestId = serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO){
+        if (serviceRequestId != ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
-        } else{
+        } else {
 
-            CustomerServiceRequest customerServiceRequest=optional.get();
+            CustomerServiceRequest customerServiceRequest = optional.get();
 
 
 //          creating a new Path
-                String location=("/"+optional.get().getCustomerServiceRequestId()+"");
+            String location = ("/" + optional.get().getCustomerServiceRequestId() + "");
 //          Saving and getting storage url
-                String url= fileStorage.fileSave(identificationFormDTO.getFile(),location);
+            String url = fileStorage.fileSave(identificationFormDTO.getFile(), location);
 //          Checking Is File Saved ?
-                if (url.equals("Failed")) {
-                    res.setMessage(" Failed To Upload File");
+            if (url.equals("Failed")) {
+                res.setMessage(" Failed To Upload File");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            } else {
+
+                IdentificationForm identificationForm = new IdentificationForm();
+
+                Optional<IdentificationForm> request = changeIdentificationFormRepository.getFormFromCSR(identificationFormDTO.getCustomerServiceRequestId());
+                if (request.isPresent()) {
+                    identificationForm.setChangeIdentificationFormId(identificationFormDTO.getCustomerServiceRequestId());
+                }
+
+                identificationForm.setIdentification(identificationFormDTO.getIdentification());
+                identificationForm.setDocumentUrl(url);
+                identificationForm.setCustomerServiceRequest(customerServiceRequest);
+
+                if (changeIdentificationFormRepository.save(identificationForm) != null) {
+                    res.setMessage(" Request Form Successfully Saved To The System");
+                    res.setStatus(true);
+                    return new ResponseEntity<>(res, HttpStatus.CREATED);
+                } else {
+                    res.setMessage(" Failed TO Save The Request Form... Operation Unsuccessful");
                     res.setStatus(false);
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-                }else {
-
-                    IdentificationForm identificationForm=new IdentificationForm();
-
-                    Optional<IdentificationForm> request=changeIdentificationFormRepository.getFormFromCSR(identificationFormDTO.getCustomerServiceRequestId());
-                    if (request.isPresent()){
-                        identificationForm.setChangeIdentificationFormId(identificationFormDTO.getCustomerServiceRequestId());
-                    }
-
-                    identificationForm.setIdentification(identificationFormDTO.getIdentification());
-                    identificationForm.setDocumentUrl(url);
-                    identificationForm.setCustomerServiceRequest(customerServiceRequest);
-
-                    if (changeIdentificationFormRepository.save(identificationForm)!=null){
-                        res.setMessage(" Request Form Successfully Saved To The System");
-                        res.setStatus(true);
-                        return new ResponseEntity<>(res, HttpStatus.CREATED);
-                    }else{
-                        res.setMessage(" Failed TO Save The Request Form... Operation Unsuccessful");
-                        res.setStatus(false);
-                        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-                    }
+                }
             }
 
         }
@@ -94,24 +94,23 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
     @Override
     public ResponseEntity<?> UpdateContactDetails(ContactDetailsDTO contactDetailsDTO) {
-        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(contactDetailsDTO.getCustomerServiceRequestId());
-        if (!optional.isPresent()){
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(contactDetailsDTO.getCustomerServiceRequestId());
+        if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
         }
         int serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
+        if (serviceRequestId != ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO) {
             res.setMessage("Invalid Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-        }
-        else{
+        } else {
 
-            CustomerServiceRequest customerServiceRequest=optional.get();
-            ContactDetails contactDetails=new ContactDetails();
-            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(contactDetailsDTO.getCustomerServiceRequestId());
-            if (request.isPresent()){
+            CustomerServiceRequest customerServiceRequest = optional.get();
+            ContactDetails contactDetails = new ContactDetails();
+            Optional<ContactDetails> request = contactDetailsRepository.getFormFromCSR(contactDetailsDTO.getCustomerServiceRequestId());
+            if (request.isPresent()) {
                 contactDetails.setContactDetailsId(contactDetailsDTO.getCustomerServiceRequestId());
             }
 
@@ -121,11 +120,11 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
             contactDetails.setEmail(contactDetailsDTO.getEmail());
             contactDetails.setCustomerServiceRequest(customerServiceRequest);
 
-            if (contactDetailsRepository.save(contactDetails)!=null){
+            if (contactDetailsRepository.save(contactDetails) != null) {
                 res.setMessage(" Request Form Successfully Saved To The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.CREATED);
-            }else{
+            } else {
                 res.setMessage(" Failed TO Save The Request Form");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);

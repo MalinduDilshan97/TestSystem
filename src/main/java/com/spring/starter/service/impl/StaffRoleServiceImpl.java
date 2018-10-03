@@ -13,27 +13,25 @@ import com.spring.starter.service.StaffRoleService;
 
 @Service
 public class StaffRoleServiceImpl implements StaffRoleService {
-	
-	@Autowired
-	StaffRoleRepository staffRoleRepository;
-	
-	public ResponseEntity<?> saveNewUserRole(StaffRole staffRole)
-	{
-		try {
-			staffRoleRepository.save(staffRole);
-			return new ResponseEntity<>("{\"message\":\"Role Added Successfully\",\"Status\":"+true+"}",HttpStatus.CREATED);
-		}catch (Exception e) {
-			return new ResponseEntity<>("{\"Error\":\"Role Adition Failed\",\"Status\":"+false+"}",HttpStatus.BAD_REQUEST);
-		}
-	}
 
-	public ResponseEntity<?> getAllUserRoles()
-	{
-		try {
-			List<StaffRole> staffRoles =  staffRoleRepository.findAll();
-			return new ResponseEntity<>(staffRoles,HttpStatus.CREATED);
-		}catch (Exception e) {
-			return new ResponseEntity<>("{\"Error\":\"Connection failed\",\"Status\":"+false+"}",HttpStatus.SERVICE_UNAVAILABLE);
-		}	
-	}
+    @Autowired
+    StaffRoleRepository staffRoleRepository;
+
+    public ResponseEntity<?> saveNewUserRole(StaffRole staffRole) {
+        try {
+            staffRoleRepository.save(staffRole);
+            return new ResponseEntity<>("{\"message\":\"Role Added Successfully\",\"Status\":" + true + "}", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("{\"Error\":\"Role Adition Failed\",\"Status\":" + false + "}", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public ResponseEntity<?> getAllUserRoles() {
+        try {
+            List<StaffRole> staffRoles = staffRoleRepository.findAll();
+            return new ResponseEntity<>(staffRoles, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("{\"Error\":\"Connection failed\",\"Status\":" + false + "}", HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 }

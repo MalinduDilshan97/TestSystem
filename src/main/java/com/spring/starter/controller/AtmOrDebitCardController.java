@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.starter.service.AtmOrDebitCardService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,63 +25,63 @@ public class AtmOrDebitCardController {
     private AtmOrDebitCardService atmOrDebitCardService;
 
     @PostMapping("/request")
-    public ResponseEntity<?> addAtmOrDebitRequest(@RequestBody AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO) {
-        return atmOrDebitCardService.atmOrDebitCardRequest(atmOrDebitCardRequestDTO);
+    public ResponseEntity<?> addAtmOrDebitRequest(@RequestBody AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.atmOrDebitCardRequest(atmOrDebitCardRequestDTO, request);
     }
 
     @PutMapping("/request")
-    public ResponseEntity<?> addAtmOrDebitRequestUpdate(@RequestBody AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO) {
-        return atmOrDebitCardService.atmOrDebitCardRequest(atmOrDebitCardRequestDTO);
+    public ResponseEntity<?> addAtmOrDebitRequestUpdate(@RequestBody AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.atmOrDebitCardRequest(atmOrDebitCardRequestDTO, request);
     }
 
     @PostMapping("/reIssuePin")
-    public ResponseEntity<?> reIssueAPin(@RequestBody ReIssuePinRequestDTO reIssuePinRequestDTO) {
-        return atmOrDebitCardService.reIssueAPin(reIssuePinRequestDTO);
+    public ResponseEntity<?> reIssueAPin(@RequestBody ReIssuePinRequestDTO reIssuePinRequestDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.reIssueAPin(reIssuePinRequestDTO, request);
     }
 
     @PutMapping("/reIssuePin")
-    public ResponseEntity<?> reIssueAPinUpdate(@RequestBody ReIssuePinRequestDTO reIssuePinRequestDTO) {
-        return atmOrDebitCardService.reIssueAPin(reIssuePinRequestDTO);
+    public ResponseEntity<?> reIssueAPinUpdate(@RequestBody ReIssuePinRequestDTO reIssuePinRequestDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.reIssueAPin(reIssuePinRequestDTO, request);
     }
 
     @PostMapping("/smsSubscription")
-    public ResponseEntity<?> smsSubscription(@RequestBody SmsSubscriptionDTO smsSubscriptionDTO) {
-        return atmOrDebitCardService.smsSubscription(smsSubscriptionDTO);
+    public ResponseEntity<?> smsSubscription(@RequestBody SmsSubscriptionDTO smsSubscriptionDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.smsSubscription(smsSubscriptionDTO, request);
     }
 
     @PutMapping("/smsSubscription")
-    public ResponseEntity<?> smsSubscriptionUpdate(@RequestBody SmsSubscriptionDTO smsSubscriptionDTO) {
-        return atmOrDebitCardService.smsSubscription(smsSubscriptionDTO);
+    public ResponseEntity<?> smsSubscriptionUpdate(@RequestBody SmsSubscriptionDTO smsSubscriptionDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.smsSubscription(smsSubscriptionDTO, request);
     }
 
     @PostMapping("/posLimit")
-    public ResponseEntity<?> IncreasePosLimit(@RequestBody PosLimitDTO posLimitDTO) {
-        return atmOrDebitCardService.increasePosLimit(posLimitDTO);
+    public ResponseEntity<?> IncreasePosLimit(@RequestBody PosLimitDTO posLimitDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.increasePosLimit(posLimitDTO, request);
     }
 
     @PutMapping("/posLimit")
-    public ResponseEntity<?> IncreasePosLimitUpdate(@RequestBody PosLimitDTO posLimitDTO) {
-        return atmOrDebitCardService.increasePosLimit(posLimitDTO);
+    public ResponseEntity<?> IncreasePosLimitUpdate(@RequestBody PosLimitDTO posLimitDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.increasePosLimit(posLimitDTO, request);
     }
 
     @PostMapping("/LinkedAccount")
-    public ResponseEntity<?> LinkedAccount(@RequestBody LinkedAccountDTO linkedAccountDTO) {
-        return atmOrDebitCardService.accountLinkedToTheCard(linkedAccountDTO);
+    public ResponseEntity<?> LinkedAccount(@RequestBody LinkedAccountDTO linkedAccountDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.accountLinkedToTheCard(linkedAccountDTO, request);
     }
 
     @PutMapping("/LinkedAccount")
-    public ResponseEntity<?> LinkedAccountUpdate(@RequestBody LinkedAccountDTO linkedAccountDTO) {
-        return atmOrDebitCardService.accountLinkedToTheCard(linkedAccountDTO);
+    public ResponseEntity<?> LinkedAccountUpdate(@RequestBody LinkedAccountDTO linkedAccountDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.accountLinkedToTheCard(linkedAccountDTO, request);
     }
 
     @PostMapping("/changePrimaryAccount")
-    public ResponseEntity<?> ChangePrimaryAccount(@RequestBody ChangePrimaryAccountDTO changePrimaryAccountDTO) {
-        return atmOrDebitCardService.changePrimaryAccount(changePrimaryAccountDTO);
+    public ResponseEntity<?> ChangePrimaryAccount(@RequestBody ChangePrimaryAccountDTO changePrimaryAccountDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.changePrimaryAccount(changePrimaryAccountDTO, request);
     }
 
     @PutMapping("/changePrimaryAccount")
-    public ResponseEntity<?> ChangePrimaryAccountUpdate(@RequestBody ChangePrimaryAccountDTO changePrimaryAccountDTO) {
-        return atmOrDebitCardService.changePrimaryAccount(changePrimaryAccountDTO);
+    public ResponseEntity<?> ChangePrimaryAccountUpdate(@RequestBody ChangePrimaryAccountDTO changePrimaryAccountDTO, HttpServletRequest request) {
+        return atmOrDebitCardService.changePrimaryAccount(changePrimaryAccountDTO, request);
     }
 
 }

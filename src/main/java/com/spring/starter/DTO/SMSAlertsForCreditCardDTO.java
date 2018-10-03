@@ -6,36 +6,36 @@ import javax.validation.constraints.NotNull;
 
 public class SMSAlertsForCreditCardDTO {
 
-	@NotNull
-	private String mobileNumber;
-	
-	@NotNull
-	private List<String> creditCardNumbers;
+    @NotNull
+    private String mobileNumber;
 
-	public SMSAlertsForCreditCardDTO() {
-		super();
-	}
+    @NotNull
+    private List<String> creditCardNumbers;
 
-	public SMSAlertsForCreditCardDTO(@NotNull String mobileNumber, @NotNull List<String> creditCardNumbers) {
-		super();
-		this.mobileNumber = mobileNumber;
-		this.creditCardNumbers = creditCardNumbers;
-	}
+    public SMSAlertsForCreditCardDTO() {
+        super();
+    }
 
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
+    public SMSAlertsForCreditCardDTO(@NotNull String mobileNumber, @NotNull List<String> creditCardNumbers) {
+        super();
+        this.mobileNumber = mobileNumber;
+        this.creditCardNumbers = creditCardNumbers;
+    }
 
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
 
-	public List<String> getCreditCardNumbers() {
-		return creditCardNumbers;
-	}
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
 
-	public void setCreditCardNumbers(List<String> creditCardNumbers) {
-		this.creditCardNumbers = creditCardNumbers;
-	}
-	
+    public List<String> getCreditCardNumbers() {
+        return creditCardNumbers;
+    }
+
+    public void setCreditCardNumbers(List<String> creditCardNumbers) {
+        this.creditCardNumbers = creditCardNumbers;
+    }
+
 }

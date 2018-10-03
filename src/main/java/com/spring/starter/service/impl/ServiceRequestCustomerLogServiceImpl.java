@@ -17,6 +17,6 @@ public class ServiceRequestCustomerLogServiceImpl implements ServiceRequestCusto
 
     @Override
     public boolean saveServiceRequestCustomerLog(ServiceRequestCustomerLog serviceRequestCustomerLog) {
-        return serviceRequestCustomerLogRepository.save(serviceRequestCustomerLog)!=null;
+        return serviceRequestCustomerLogRepository.save(serviceRequestCustomerLog) != null;
     }
 }

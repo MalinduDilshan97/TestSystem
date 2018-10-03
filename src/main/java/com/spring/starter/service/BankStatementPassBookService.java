@@ -11,7 +11,7 @@ public interface BankStatementPassBookService {
     public ResponseEntity<?> estatementService(BankStatementAccountDTO bankStatementAccountDTO, int customerServiceRequistId);
 
     public ResponseEntity<?> statementFrequencyService(StatementFrequency statementFrequency, int customerServiceRequistId);
-   
+
     public ResponseEntity<?> duplicatePassBookRequest(DuplicatePassBookRequestDTO duplicatePassBookRequestDTO);
 
     public ResponseEntity<?> AccountStatement(AccountStatementIssueRequestDTO accountStatementIssueRequestDTO);

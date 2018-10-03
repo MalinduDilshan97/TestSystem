@@ -6,6 +6,6 @@ import com.spring.starter.DTO.MailingMailDTO;
 
 public interface MailingMailService {
 
-	public ResponseEntity<?> addchangeMailingMailRequest(MailingMailDTO mailingMailDTO,int customerServiceRequestId);
-	
+    public ResponseEntity<?> addchangeMailingMailRequest(MailingMailDTO mailingMailDTO, int customerServiceRequestId);
+
 }

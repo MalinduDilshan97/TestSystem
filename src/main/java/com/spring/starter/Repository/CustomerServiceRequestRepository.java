@@ -10,10 +10,10 @@ import com.spring.starter.model.CustomerServiceRequest;
 
 public interface CustomerServiceRequestRepository extends JpaRepository<CustomerServiceRequest, Integer> {
 
-	@Query("SELECT cs FROM CustomerServiceRequest cs WHERE cs.customer.customerId = ?1 AND date(cs.requestDate)=?2")
-	List<CustomerServiceRequest> getrequestsByDateAndCustomer(int customerId, Date requestDate);
-	
-	@Query("SELECT cs FROM CustomerServiceRequest cs WHERE cs.customer.customerId = ?1")
-	List<CustomerServiceRequest> getAllCustomerRequest(int customerId);
-	
+    @Query("SELECT cs FROM CustomerServiceRequest cs WHERE cs.customer.customerId = ?1 AND date(cs.requestDate)=?2")
+    List<CustomerServiceRequest> getrequestsByDateAndCustomer(int customerId, Date requestDate);
+
+    @Query("SELECT cs FROM CustomerServiceRequest cs WHERE cs.customer.customerId = ?1")
+    List<CustomerServiceRequest> getAllCustomerRequest(int customerId);
+
 }

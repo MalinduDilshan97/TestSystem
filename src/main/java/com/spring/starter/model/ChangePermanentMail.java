@@ -13,160 +13,160 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "change_permanent_mail")
 public class ChangePermanentMail {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int ChangePermanentMailId;
-	
-	private String newPermanentAddress;
 
-	private String city;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int ChangePermanentMailId;
 
-	private String postalCode;
-	
+    private String newPermanentAddress;
 
-	private String stateOrProvince;
-	
+    private String city;
 
-	private String country;
-	
-	private String documentUrl;
-	
-	private String documentType;
-	
-	private String issuingAuthority;
-	
-	private String placeOfIssue;
-	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="csrId")
-	private CustomerServiceRequest customerServiceRequest;
+    private String postalCode;
 
-	public ChangePermanentMail() {
-		super();
-	}
-	
-	public ChangePermanentMail(int changePermanentMailId, @NotNull String newPermanentAddress, @NotNull String city,
-			@NotNull String postalCode, @NotNull String stateOrProvince, @NotNull String country,
-			@NotNull String documentUrl, @NotNull String documentType, @NotNull String issuingAuthority,
-			@NotNull String placeOfIssue, CustomerServiceRequest customerServiceRequest) {
-		super();
-		ChangePermanentMailId = changePermanentMailId;
-		this.newPermanentAddress = newPermanentAddress;
-		this.city = city;
-		this.postalCode = postalCode;
-		this.stateOrProvince = stateOrProvince;
-		this.country = country;
-		this.documentUrl = documentUrl;
-		this.documentType = documentType;
-		this.issuingAuthority = issuingAuthority;
-		this.placeOfIssue = placeOfIssue;
-		this.customerServiceRequest = customerServiceRequest;
-	}
 
-	public ChangePermanentMail(int changePermanentMailId, @NotNull String newPermanentAddress, @NotNull String city,
-			@NotNull String postalCode, @NotNull String stateOrProvince, @NotNull String country,
-			@NotNull String documentUrl, @NotNull String documentType, @NotNull String issuingAuthority,
-			@NotNull String placeOfIssue) {
-		super();
-		ChangePermanentMailId = changePermanentMailId;
-		this.newPermanentAddress = newPermanentAddress;
-		this.city = city;
-		this.postalCode = postalCode;
-		this.stateOrProvince = stateOrProvince;
-		this.country = country;
-		this.documentUrl = documentUrl;
-		this.documentType = documentType;
-		this.issuingAuthority = issuingAuthority;
-		this.placeOfIssue = placeOfIssue;
-	}
+    private String stateOrProvince;
 
-	public int getChangePermanentMailId() {
-		return ChangePermanentMailId;
-	}
 
-	public void setChangePermanentMailId(int changePermanentMailId) {
-		ChangePermanentMailId = changePermanentMailId;
-	}
+    private String country;
 
-	public String getNewPermanentAddress() {
-		return newPermanentAddress;
-	}
+    private String documentUrl;
 
-	public void setNewPermanentAddress(String newPermanentAddress) {
-		this.newPermanentAddress = newPermanentAddress;
-	}
+    private String documentType;
 
-	public String getCity() {
-		return city;
-	}
+    private String issuingAuthority;
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    private String placeOfIssue;
 
-	public String getPostalCode() {
-		return postalCode;
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "csrId")
+    private CustomerServiceRequest customerServiceRequest;
 
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
+    public ChangePermanentMail() {
+        super();
+    }
 
-	public String getStateOrProvince() {
-		return stateOrProvince;
-	}
+    public ChangePermanentMail(int changePermanentMailId, @NotNull String newPermanentAddress, @NotNull String city,
+                               @NotNull String postalCode, @NotNull String stateOrProvince, @NotNull String country,
+                               @NotNull String documentUrl, @NotNull String documentType, @NotNull String issuingAuthority,
+                               @NotNull String placeOfIssue, CustomerServiceRequest customerServiceRequest) {
+        super();
+        ChangePermanentMailId = changePermanentMailId;
+        this.newPermanentAddress = newPermanentAddress;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.stateOrProvince = stateOrProvince;
+        this.country = country;
+        this.documentUrl = documentUrl;
+        this.documentType = documentType;
+        this.issuingAuthority = issuingAuthority;
+        this.placeOfIssue = placeOfIssue;
+        this.customerServiceRequest = customerServiceRequest;
+    }
 
-	public void setStateOrProvince(String stateOrProvince) {
-		this.stateOrProvince = stateOrProvince;
-	}
+    public ChangePermanentMail(int changePermanentMailId, @NotNull String newPermanentAddress, @NotNull String city,
+                               @NotNull String postalCode, @NotNull String stateOrProvince, @NotNull String country,
+                               @NotNull String documentUrl, @NotNull String documentType, @NotNull String issuingAuthority,
+                               @NotNull String placeOfIssue) {
+        super();
+        ChangePermanentMailId = changePermanentMailId;
+        this.newPermanentAddress = newPermanentAddress;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.stateOrProvince = stateOrProvince;
+        this.country = country;
+        this.documentUrl = documentUrl;
+        this.documentType = documentType;
+        this.issuingAuthority = issuingAuthority;
+        this.placeOfIssue = placeOfIssue;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public int getChangePermanentMailId() {
+        return ChangePermanentMailId;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public void setChangePermanentMailId(int changePermanentMailId) {
+        ChangePermanentMailId = changePermanentMailId;
+    }
 
-	public String getDocumentType() {
-		return documentType;
-	}
+    public String getNewPermanentAddress() {
+        return newPermanentAddress;
+    }
 
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
+    public void setNewPermanentAddress(String newPermanentAddress) {
+        this.newPermanentAddress = newPermanentAddress;
+    }
 
-	public String getIssuingAuthority() {
-		return issuingAuthority;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setIssuingAuthority(String issuingAuthority) {
-		this.issuingAuthority = issuingAuthority;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public String getPlaceOfIssue() {
-		return placeOfIssue;
-	}
+    public String getPostalCode() {
+        return postalCode;
+    }
 
-	public void setPlaceOfIssue(String placeOfIssue) {
-		this.placeOfIssue = placeOfIssue;
-	}
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
 
-	public String getDocumentUrl() {
-		return documentUrl;
-	}
+    public String getStateOrProvince() {
+        return stateOrProvince;
+    }
 
-	public void setDocumentUrl(String documentUrl) {
-		this.documentUrl = documentUrl;
-	}
+    public void setStateOrProvince(String stateOrProvince) {
+        this.stateOrProvince = stateOrProvince;
+    }
 
-	public CustomerServiceRequest getCustomerServiceRequest() {
-		return customerServiceRequest;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
-		this.customerServiceRequest = customerServiceRequest;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getIssuingAuthority() {
+        return issuingAuthority;
+    }
+
+    public void setIssuingAuthority(String issuingAuthority) {
+        this.issuingAuthority = issuingAuthority;
+    }
+
+    public String getPlaceOfIssue() {
+        return placeOfIssue;
+    }
+
+    public void setPlaceOfIssue(String placeOfIssue) {
+        this.placeOfIssue = placeOfIssue;
+    }
+
+    public String getDocumentUrl() {
+        return documentUrl;
+    }
+
+    public void setDocumentUrl(String documentUrl) {
+        this.documentUrl = documentUrl;
+    }
+
+    public CustomerServiceRequest getCustomerServiceRequest() {
+        return customerServiceRequest;
+    }
+
+    public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
+        this.customerServiceRequest = customerServiceRequest;
+    }
 
 }

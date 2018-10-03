@@ -16,12 +16,12 @@ public class EffectOrRevokePaymentController {
     private EffectOrRevokePaymentService effectOrRevokePaymentService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> createAEffectOrRevokePaymentRequest(@RequestBody EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request){
-        return effectOrRevokePaymentService.saveEffectOrPaymentRequest(effectOrRevokePaymentDTO,request);
+    public ResponseEntity<?> createAEffectOrRevokePaymentRequest(@RequestBody EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
+        return effectOrRevokePaymentService.saveEffectOrPaymentRequest(effectOrRevokePaymentDTO, request);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> effectOrRevokePaymentRequestUpdate(@RequestBody EffectOrRevokePaymentDTO effectOrRevokePaymentDTO,HttpServletRequest request){
-        return effectOrRevokePaymentService.saveEffectOrPaymentRequest(effectOrRevokePaymentDTO,request);
+    public ResponseEntity<?> effectOrRevokePaymentRequestUpdate(@RequestBody EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
+        return effectOrRevokePaymentService.saveEffectOrPaymentRequest(effectOrRevokePaymentDTO, request);
     }
 }

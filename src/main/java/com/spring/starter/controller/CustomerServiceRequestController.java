@@ -26,20 +26,20 @@ public class CustomerServiceRequestController {
 
     @PutMapping("/identification-change")
     public ResponseEntity<?> updateIdentificationsChange(@RequestParam MultipartFile file,
-                                                   @RequestParam String identification,
-                                                   @RequestParam int customerServiceRequestId) {
+                                                         @RequestParam String identification,
+                                                         @RequestParam int customerServiceRequestId) {
 
         IdentificationFormDTO identificationFormDTO = new IdentificationFormDTO(identification, file, customerServiceRequestId);
         return customerServiceRequestService.changeIdentificationDetails(identificationFormDTO);
     }
 
     @PostMapping("/contacts-change")
-    public ResponseEntity<?> changeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO){
+    public ResponseEntity<?> changeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO) {
         return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO);
     }
 
     @PutMapping("/contacts-change")
-    public ResponseEntity<?> updateChangeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO){
+    public ResponseEntity<?> updateChangeContactDetails(@RequestBody ContactDetailsDTO contactDetailsDTO) {
         return customerServiceRequestService.UpdateContactDetails(contactDetailsDTO);
     }
 

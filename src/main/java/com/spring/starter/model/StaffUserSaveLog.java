@@ -13,91 +13,91 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="staff_user_save_log")
+@Table(name = "staff_user_save_log")
 public class StaffUserSaveLog {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int staffUserSaveLogId;
-	
-	@NotNull
-	private Date date;
-	
-	@NotNull
-	private String savedIp;
-	
-	@ManyToOne
-	@JoinColumn(name="savedById")
-	private StaffUser savedBy;
-	
-	@OneToOne
-	@JoinColumn(name="savedWhoId")
-	private StaffUser savedWho;
-	
-	@NotNull
-	private String message;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int staffUserSaveLogId;
 
-	public StaffUserSaveLog(int staffUserSaveLogId, @NotNull Date date, @NotNull String savedIp, StaffUser savedBy,
-			StaffUser savedWho, @NotNull String message) {
-		super();
-		this.staffUserSaveLogId = staffUserSaveLogId;
-		this.date = date;
-		this.savedIp = savedIp;
-		this.savedBy = savedBy;
-		this.savedWho = savedWho;
-		this.message = message;
-	}
+    @NotNull
+    private Date date;
 
-	public StaffUserSaveLog() {
-		super();
-	}
+    @NotNull
+    private String savedIp;
 
-	public int getStaffUserSaveLogId() {
-		return staffUserSaveLogId;
-	}
+    @ManyToOne
+    @JoinColumn(name = "savedById")
+    private StaffUser savedBy;
 
-	public void setStaffUserSaveLogId(int staffUserSaveLogId) {
-		this.staffUserSaveLogId = staffUserSaveLogId;
-	}
+    @OneToOne
+    @JoinColumn(name = "savedWhoId")
+    private StaffUser savedWho;
 
-	public Date getDate() {
-		return date;
-	}
+    @NotNull
+    private String message;
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public StaffUserSaveLog(int staffUserSaveLogId, @NotNull Date date, @NotNull String savedIp, StaffUser savedBy,
+                            StaffUser savedWho, @NotNull String message) {
+        super();
+        this.staffUserSaveLogId = staffUserSaveLogId;
+        this.date = date;
+        this.savedIp = savedIp;
+        this.savedBy = savedBy;
+        this.savedWho = savedWho;
+        this.message = message;
+    }
 
-	public String getSavedIp() {
-		return savedIp;
-	}
+    public StaffUserSaveLog() {
+        super();
+    }
 
-	public void setSavedIp(String savedIp) {
-		this.savedIp = savedIp;
-	}
+    public int getStaffUserSaveLogId() {
+        return staffUserSaveLogId;
+    }
 
-	public StaffUser getSavedBy() {
-		return savedBy;
-	}
+    public void setStaffUserSaveLogId(int staffUserSaveLogId) {
+        this.staffUserSaveLogId = staffUserSaveLogId;
+    }
 
-	public void setSavedBy(StaffUser savedBy) {
-		this.savedBy = savedBy;
-	}
+    public Date getDate() {
+        return date;
+    }
 
-	public StaffUser getSavedWho() {
-		return savedWho;
-	}
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-	public void setSavedWho(StaffUser savedWho) {
-		this.savedWho = savedWho;
-	}
+    public String getSavedIp() {
+        return savedIp;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public void setSavedIp(String savedIp) {
+        this.savedIp = savedIp;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
+    public StaffUser getSavedBy() {
+        return savedBy;
+    }
+
+    public void setSavedBy(StaffUser savedBy) {
+        this.savedBy = savedBy;
+    }
+
+    public StaffUser getSavedWho() {
+        return savedWho;
+    }
+
+    public void setSavedWho(StaffUser savedWho) {
+        this.savedWho = savedWho;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }

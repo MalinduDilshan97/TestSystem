@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class JwtAuthenticationConfig {
 
-	@Value("${jwt.url:/login}")
+    @Value("${jwt.url:/login}")
     private String url;
 
     @Value("${jwt.header}")
@@ -19,44 +19,44 @@ public class JwtAuthenticationConfig {
     @Value(ApiParameters.JWT_SECRET)
     private String secret;
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getHeader() {
-		return header;
-	}
+    public String getHeader() {
+        return header;
+    }
 
-	public void setHeader(String header) {
-		this.header = header;
-	}
+    public void setHeader(String header) {
+        this.header = header;
+    }
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
-	public int getExpiration() {
-		return expiration;
-	}
+    public int getExpiration() {
+        return expiration;
+    }
 
-	public void setExpiration(int expiration) {
-		this.expiration = expiration;
-	}
+    public void setExpiration(int expiration) {
+        this.expiration = expiration;
+    }
 
-	public String getSecret() {
-		return secret;
-	}
+    public String getSecret() {
+        return secret;
+    }
 
-	public void setSecret(String secret) {
-		this.secret = secret;
-	}
-    
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
 }

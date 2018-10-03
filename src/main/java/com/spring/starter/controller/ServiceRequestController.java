@@ -77,8 +77,8 @@ public class ServiceRequestController {
     }
 
     @GetMapping("/completeAllCustomerRequests")
-    public ResponseEntity<?> completeAllRequests(Principal principal,@RequestParam(name = "customerId") int customerId){
-        return serviceRequestService.completeAllCustomerRequests(principal,customerId);
+    public ResponseEntity<?> completeAllRequests(Principal principal, @RequestParam(name = "customerId") int customerId) {
+        return serviceRequestService.completeAllCustomerRequests(principal, customerId);
     }
 
     @GetMapping("/getServiceRequestForm")

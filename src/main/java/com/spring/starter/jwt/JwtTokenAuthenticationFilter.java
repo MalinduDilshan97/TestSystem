@@ -24,15 +24,15 @@ import io.jsonwebtoken.Jwts;
 @Order(1)
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtAuthenticationConfig config;
+    private final JwtAuthenticationConfig config;
 
     public JwtTokenAuthenticationFilter(JwtAuthenticationConfig config) {
         this.config = config;
     }
-	
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String token = request.getHeader(config.getHeader());
         if (token != null && token.startsWith(config.getPrefix() + " ")) {
             token = token.replace(config.getPrefix() + " ", "");
@@ -59,6 +59,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-	}
+    }
 
 }

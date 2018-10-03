@@ -1,6 +1,7 @@
 package com.spring.starter.DTO;
 
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.Serializable;
 
 public class IdentificationFormDTO implements Serializable {

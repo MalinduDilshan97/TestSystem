@@ -12,7 +12,7 @@ public class OtherServiceRequest {
     private Date date;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="csrId")
+    @JoinColumn(name = "csrId")
     private CustomerServiceRequest customerServiceRequest;
 
     public OtherServiceRequest() {

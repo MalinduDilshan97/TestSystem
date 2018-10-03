@@ -48,51 +48,51 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
     @Override
     public ResponseEntity<?> saveEffectOrPaymentRequest(EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
 
-        ServiceRequestCustomerLog serviceRequestCustomerLog= new ServiceRequestCustomerLog();
-        ServiceRequestFormLog serviceRequestFormLog= new ServiceRequestFormLog();
+        ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
+        ServiceRequestFormLog serviceRequestFormLog = new ServiceRequestFormLog();
 
-        Optional<CustomerAccountNo> customerAccountNoOptional= customerAccountNoRepository.findByAccountNumber(effectOrRevokePaymentDTO.getAccountNo());
-        if (!customerAccountNoOptional.isPresent()){
+        Optional<CustomerAccountNo> customerAccountNoOptional = customerAccountNoRepository.findByAccountNumber(effectOrRevokePaymentDTO.getAccountNo());
+        if (!customerAccountNoOptional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
-        if (!optional.isPresent()){
+        if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
 
-        CustomerServiceRequest customerServiceRequest=optional.get();
-        CustomerAccountNo customerAccountNo=customerAccountNoOptional.get();
+        CustomerServiceRequest customerServiceRequest = optional.get();
+        CustomerAccountNo customerAccountNo = customerAccountNoOptional.get();
 
-        EffectOrRevokePayment effectOrRevokePayment= new EffectOrRevokePayment();
+        EffectOrRevokePayment effectOrRevokePayment = new EffectOrRevokePayment();
         effectOrRevokePayment.setEffectOrRevokePaymentId(effectOrRevokePaymentDTO.getEffectOrRevokePaymentId());
         effectOrRevokePayment.setCustomerAccountNo(customerAccountNo);
         effectOrRevokePayment.setCustomerServiceRequest(customerServiceRequest);
 
         EffectOrRevokePayment payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
 
-        if (payment!=null){
+        if (payment != null) {
 
             for (EffectOrRevokePaymentDetailsDTO dto : effectOrRevokePaymentDTO.getList()) {
 
                 try {
                     Date chequeDate = df.parse(dto.getDateOfCheque());
 
-                EffectOrRevokePaymentDetails details=new EffectOrRevokePaymentDetails(0,
-                        dto.getChequeNumber(),
-                        dto.getValue(),
-                        dto.getPayeeName(),
-                        chequeDate,
-                        dto.getReason(),
-                        payment);
+                    EffectOrRevokePaymentDetails details = new EffectOrRevokePaymentDetails(0,
+                            dto.getChequeNumber(),
+                            dto.getValue(),
+                            dto.getPayeeName(),
+                            chequeDate,
+                            dto.getReason(),
+                            payment);
 
-                effectOrRevokePaymentDetailsRepository.save(details);
+                    effectOrRevokePaymentDetailsRepository.save(details);
 
                 } catch (ParseException e) {
-                    throw new  CustomException("Failed TO Save The Request... Operation Unsuccessful Input Date To This Format (YYYY-MM-DD)");
+                    throw new CustomException("Failed TO Save The Request... Operation Unsuccessful Input Date To This Format (YYYY-MM-DD)");
                 }
             }
 
@@ -101,9 +101,9 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
             serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
             serviceRequestCustomerLog.setIp(request.getRemoteAddr());
             serviceRequestCustomerLog.setMessage("Request Form Successfully Saved To The System");
-            boolean result=serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+            boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
 
-            if (result){
+            if (result) {
                 serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
                 serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
                 serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());
@@ -119,15 +119,15 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
             res.setStatus(true);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
 
-        }else{
+        } else {
 
             serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
             serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
             serviceRequestCustomerLog.setIp(request.getRemoteAddr());
             serviceRequestCustomerLog.setMessage("Failed TO Save The Request... Operation Unsuccessful");
-            boolean result=serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
+            boolean result = serviceRequestCustomerLogService.saveServiceRequestCustomerLog(serviceRequestCustomerLog);
 
-            if (result){
+            if (result) {
                 serviceRequestFormLog.setDigiFormId(customerServiceRequest.getServiceRequest().getDigiFormId());
                 serviceRequestFormLog.setCustomerId(customerServiceRequest.getCustomer().getCustomerId());
                 serviceRequestFormLog.setDate(java.util.Calendar.getInstance().getTime());

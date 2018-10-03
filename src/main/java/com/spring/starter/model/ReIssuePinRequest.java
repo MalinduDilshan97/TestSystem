@@ -5,10 +5,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "reissue_pin_request")
-public class ReIssuePinRequest  {
+public class ReIssuePinRequest {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reIssuePinRequestId;
     private String Branch;
     private String Address;

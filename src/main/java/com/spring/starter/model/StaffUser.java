@@ -16,124 +16,125 @@ import javax.validation.constraints.Pattern;
 import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(name="staff_user")
+@Table(name = "staff_user")
 public class StaffUser {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int staffId;
-	@NonNull
-	@NotBlank
-	@NotEmpty
-	private String Name;
-	@NotNull
-	@NotBlank
-	@NotEmpty
-	@Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message="Email Must be in Correct Format")
-	@Column(unique=true) 
-	private String email;
-	@NonNull
-	@NotBlank
-	@NotEmpty
-	@Column(unique=true) 
-	private String username;
-	@NonNull
-	@NotBlank
-	@NotEmpty
-	@JsonIgnore
-	private String password;
-	
-	private int active = 0;
-	
-	@NonNull
-	@OneToOne
-	@JoinColumn(name="roleId")
-	private StaffRole staffRole;
-		
-	public StaffUser() {
-		super();
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int staffId;
+    @NonNull
+    @NotBlank
+    @NotEmpty
+    private String Name;
+    @NotNull
+    @NotBlank
+    @NotEmpty
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format")
+    @Column(unique = true)
+    private String email;
+    @NonNull
+    @NotBlank
+    @NotEmpty
+    @Column(unique = true)
+    private String username;
+    @NonNull
+    @NotBlank
+    @NotEmpty
+    @JsonIgnore
+    private String password;
 
-	public StaffUser(@NotBlank @NotEmpty String name,
-			@NotNull @NotBlank @NotEmpty @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format") String email,
-			@NotBlank @NotEmpty String username, @NotBlank @NotEmpty String password, int active, StaffRole staffRole) {
-		super();
-		Name = name;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.active = active;
-		this.staffRole = staffRole;
-	}
-	
-	public StaffUser(int staffId, @NotBlank @NotEmpty String name,
-			@NotNull @NotBlank @NotEmpty @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format") String email,
-			@NotBlank @NotEmpty String username, @NotBlank @NotEmpty String password, int active, StaffRole staffRole) {
-		super();
-		this.staffId = staffId;
-		Name = name;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.active = active;
-		this.staffRole = staffRole;
-	}
+    private int active = 0;
 
-	public int getStaffId() {
-		return staffId;
-	}
+    @NonNull
+    @OneToOne
+    @JoinColumn(name = "roleId")
+    private StaffRole staffRole;
 
-	public void setStaffId(int staffId) {
-		this.staffId = staffId;
-	}
+    public StaffUser() {
+        super();
+    }
 
-	public String getName() {
-		return Name;
-	}
+    public StaffUser(@NotBlank @NotEmpty String name,
+                     @NotNull @NotBlank @NotEmpty @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format") String email,
+                     @NotBlank @NotEmpty String username, @NotBlank @NotEmpty String password, int active, StaffRole staffRole) {
+        super();
+        Name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.staffRole = staffRole;
+    }
 
-	public void setName(String name) {
-		Name = name;
-	}
+    public StaffUser(int staffId, @NotBlank @NotEmpty String name,
+                     @NotNull @NotBlank @NotEmpty @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email Must be in Correct Format") String email,
+                     @NotBlank @NotEmpty String username, @NotBlank @NotEmpty String password, int active, StaffRole staffRole) {
+        super();
+        this.staffId = staffId;
+        Name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.staffRole = staffRole;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public int getStaffId() {
+        return staffId;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setStaffId(int staffId) {
+        this.staffId = staffId;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getName() {
+        return Name;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setName(String name) {
+        Name = name;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public int getActive() {
-		return active;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setActive(int active) {
-		this.active = active;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public StaffRole getStaffRole() {
-		return staffRole;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setStaffRole(StaffRole staffRole) {
-		this.staffRole = staffRole;
-	}
-		
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public StaffRole getStaffRole() {
+        return staffRole;
+    }
+
+    public void setStaffRole(StaffRole staffRole) {
+        this.staffRole = staffRole;
+    }
+
 }

@@ -195,11 +195,11 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         customerServiceRequest.setStatus(true);
         customerServiceRequest.setStaffUser(staffHandled);
         CustomerServiceRequest save = customerServiceRequestRepository.save(customerServiceRequest);
-        if (save!=null){
+        if (save != null) {
             responsemodel.setMessage("User Request finished successfully");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        }else{
+        } else {
             responsemodel.setMessage("User Request Unsuccessful");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
@@ -222,11 +222,11 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         staffHandled.add(staffUser.get());
         customerServiceRequest.setStaffUser(staffHandled);
         CustomerServiceRequest save = customerServiceRequestRepository.save(customerServiceRequest);
-        if (save!=null){
+        if (save != null) {
             responsemodel.setMessage("Part OF User Request finished successfully");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        }else{
+        } else {
             responsemodel.setMessage("User Request Unsuccessful");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
@@ -346,32 +346,32 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     @Override
     public ResponseEntity<?> saveSignature(SignatureDTO signatureDTO) {
 
-        Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(signatureDTO.getService_request_id());
-        if (!optional.isPresent()){
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(signatureDTO.getService_request_id());
+        if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
 
 //        creating a new Path
-        String location = ("/" + signatureDTO.getService_request_id()+"/ Customer Signature");
+        String location = ("/" + signatureDTO.getService_request_id() + "/ Customer Signature");
 //        Saving and getting storage url
         String url = fileStorage.fileSave(signatureDTO.getFile(), location);
 //        Checking Is File Saved ?
-		if(url.equals("Failed")) {
+        if (url.equals("Failed")) {
             res.setMessage(" Failed To Upload Signature");
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
 
-		    CustomerServiceRequest customerServiceRequest = optional.get();
-		    customerServiceRequest.setUrl(url);
+            CustomerServiceRequest customerServiceRequest = optional.get();
+            customerServiceRequest.setUrl(url);
 
-		    if (customerServiceRequestRepository.save(customerServiceRequest)!=null){
+            if (customerServiceRequestRepository.save(customerServiceRequest) != null) {
                 res.setMessage(" Request Form Successfully Saved To The System");
                 res.setStatus(true);
                 return new ResponseEntity<>(res, HttpStatus.OK);
-            }else{
+            } else {
                 res.setMessage(" Failed TO Save The Request... Operation Unsuccessful");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);

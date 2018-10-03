@@ -8,55 +8,55 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.lang.NonNull;
 
 public class QueueDTO implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4007916497960366103L;
 
-	private String name;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4007916497960366103L;
 
-	private String mobileNo;
-	
-	private int serviceRequestId;
+    private String name;
 
-	public QueueDTO() {
-		super();
-	}
+    private String mobileNo;
 
-	public QueueDTO(String name, String mobileNo, int serviceRequestId) {
-		super();
-		this.name = name;
-		this.mobileNo = mobileNo;
-		this.serviceRequestId = serviceRequestId;
-	}
+    private int serviceRequestId;
 
-	public String getName() {
-		return name;
-	}
+    public QueueDTO() {
+        super();
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public QueueDTO(String name, String mobileNo, int serviceRequestId) {
+        super();
+        this.name = name;
+        this.mobileNo = mobileNo;
+        this.serviceRequestId = serviceRequestId;
+    }
 
-	public String getMobileNo() {
-		return mobileNo;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getServiceRequestId() {
-		return serviceRequestId;
-	}
+    public String getMobileNo() {
+        return mobileNo;
+    }
 
-	public void setServiceRequestId(int serviceRequestId) {
-		this.serviceRequestId = serviceRequestId;
-	}
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
+    public int getServiceRequestId() {
+        return serviceRequestId;
+    }
+
+    public void setServiceRequestId(int serviceRequestId) {
+        this.serviceRequestId = serviceRequestId;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
 }

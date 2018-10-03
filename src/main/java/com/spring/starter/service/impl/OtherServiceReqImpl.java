@@ -25,27 +25,24 @@ public class OtherServiceReqImpl implements OtherServiceReqService {
     OtherServiceRequestRepository otherServiceRequestRepository;
 
 
-
-
     @Override
     public ResponseEntity<?> addOtherRequest(OtherServiceRequest otherServiceRequest, int requestId) {
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(requestId);
-        if(!customerServiceRequest.isPresent()) {
+        if (!customerServiceRequest.isPresent()) {
             responsemodel.setMessage("There is No such service Available");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
-        if(serviceRequestId != ServiceRequestIdConfig.OTHER)
-        {
+        if (serviceRequestId != ServiceRequestIdConfig.OTHER) {
             responsemodel.setMessage("Invalid Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
 
-        Optional<OtherServiceRequest> otherFdCdRelatedRequestOptional=otherServiceRequestRepository.findByRequestId(requestId);
-        if (otherFdCdRelatedRequestOptional.isPresent()){
+        Optional<OtherServiceRequest> otherFdCdRelatedRequestOptional = otherServiceRequestRepository.findByRequestId(requestId);
+        if (otherFdCdRelatedRequestOptional.isPresent()) {
             otherServiceRequest.setOtherid(otherFdCdRelatedRequestOptional.get().getOtherid());
         }
         TimeZone.setDefault(TimeZone.getTimeZone("UTC+5.30"));
@@ -57,7 +54,7 @@ public class OtherServiceReqImpl implements OtherServiceReqService {
             responsemodel.setMessage("Successfully added other request");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
-        }catch (Exception e){
+        } catch (Exception e) {
             responsemodel.setMessage("Error  in creating requests");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);

@@ -13,86 +13,85 @@ import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
 @Entity
-@Table(name="set_active_log")
+@Table(name = "set_active_log")
 public class SetActiveLog {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int activeId;
-	@ManyToOne
-	@JoinColumn(name="staffId")
-	private StaffUser activeBy;
-	@ManyToOne
-	@JoinColumn(name="activeWhoID")
-	private StaffUser activeWho;
-	@NonNull
-	private Date activeDate;
-	@NonNull
-	private String activeIp;
-	@NonNull
-	private String message;
-	
-	public SetActiveLog() {
-		super();
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int activeId;
+    @ManyToOne
+    @JoinColumn(name = "staffId")
+    private StaffUser activeBy;
+    @ManyToOne
+    @JoinColumn(name = "activeWhoID")
+    private StaffUser activeWho;
+    @NonNull
+    private Date activeDate;
+    @NonNull
+    private String activeIp;
+    @NonNull
+    private String message;
 
-	public SetActiveLog(int activeId, StaffUser activeBy, StaffUser activeWho, Date activeDate, String activeIp) {
-		super();
-		this.activeId = activeId;
-		this.activeBy = activeBy;
-		this.activeWho = activeWho;
-		this.activeDate = activeDate;
-		this.activeIp = activeIp;
-	}
+    public SetActiveLog() {
+        super();
+    }
 
-	
-	
-	public String getMessage() {
-		return message;
-	}
+    public SetActiveLog(int activeId, StaffUser activeBy, StaffUser activeWho, Date activeDate, String activeIp) {
+        super();
+        this.activeId = activeId;
+        this.activeBy = activeBy;
+        this.activeWho = activeWho;
+        this.activeDate = activeDate;
+        this.activeIp = activeIp;
+    }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
 
-	public int getActiveId() {
-		return activeId;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public void setActiveId(int activeId) {
-		this.activeId = activeId;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public StaffUser getActiveBy() {
-		return activeBy;
-	}
+    public int getActiveId() {
+        return activeId;
+    }
 
-	public void setActiveBy(StaffUser activeBy) {
-		this.activeBy = activeBy;
-	}
+    public void setActiveId(int activeId) {
+        this.activeId = activeId;
+    }
 
-	public StaffUser getActiveWho() {
-		return activeWho;
-	}
+    public StaffUser getActiveBy() {
+        return activeBy;
+    }
 
-	public void setActiveWho(StaffUser activeWho) {
-		this.activeWho = activeWho;
-	}
+    public void setActiveBy(StaffUser activeBy) {
+        this.activeBy = activeBy;
+    }
 
-	public Date getActiveDate() {
-		return activeDate;
-	}
+    public StaffUser getActiveWho() {
+        return activeWho;
+    }
 
-	public void setActiveDate(Date activeDate) {
-		this.activeDate = activeDate;
-	}
+    public void setActiveWho(StaffUser activeWho) {
+        this.activeWho = activeWho;
+    }
 
-	public String getActiveIp() {
-		return activeIp;
-	}
+    public Date getActiveDate() {
+        return activeDate;
+    }
 
-	public void setActiveIp(String activeIp) {
-		this.activeIp = activeIp;
-	}
-	
+    public void setActiveDate(Date activeDate) {
+        this.activeDate = activeDate;
+    }
+
+    public String getActiveIp() {
+        return activeIp;
+    }
+
+    public void setActiveIp(String activeIp) {
+        this.activeIp = activeIp;
+    }
+
 }

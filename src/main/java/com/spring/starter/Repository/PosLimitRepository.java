@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface PosLimitRepository extends JpaRepository<PosLimit,Integer> {
+public interface PosLimitRepository extends JpaRepository<PosLimit, Integer> {
 
     @Query("SELECT p FROM PosLimit p WHERE p.customerServiceRequest.customerServiceRequestId=?1")
     Optional<PosLimit> getFormFromCSR(int customerServiceRequestId);
