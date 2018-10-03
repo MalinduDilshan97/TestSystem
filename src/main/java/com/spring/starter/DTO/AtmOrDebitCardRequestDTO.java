@@ -6,19 +6,19 @@ public class AtmOrDebitCardRequestDTO implements Serializable {
 
     private int atmOrDebitRequestId;
     private long cardNumber;
-    private String requestType;
+    private int requestType;
     private int customerServiceRequestId;
 
     public AtmOrDebitCardRequestDTO() {
     }
 
-    public AtmOrDebitCardRequestDTO(long cardNumber, String requestType, int customerServiceRequestId) {
+    public AtmOrDebitCardRequestDTO(long cardNumber, int requestType, int customerServiceRequestId) {
         this.cardNumber = cardNumber;
         this.requestType = requestType;
         this.customerServiceRequestId = customerServiceRequestId;
     }
 
-    public AtmOrDebitCardRequestDTO(int atmOrDebitRequestId, long cardNumber, String requestType, int customerServiceRequestId) {
+    public AtmOrDebitCardRequestDTO(int atmOrDebitRequestId, long cardNumber, int requestType, int customerServiceRequestId) {
         this.atmOrDebitRequestId = atmOrDebitRequestId;
         this.cardNumber = cardNumber;
         this.requestType = requestType;
@@ -41,11 +41,11 @@ public class AtmOrDebitCardRequestDTO implements Serializable {
         this.cardNumber = cardNumber;
     }
 
-    public String getRequestType() {
+    public int getRequestType() {
         return requestType;
     }
 
-    public void setRequestType(String requestType) {
+    public void setRequestType(int requestType) {
         this.requestType = requestType;
     }
 

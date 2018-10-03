@@ -18,6 +18,12 @@ public class AtmOrDebitCardRequest {
     public AtmOrDebitCardRequest() {
     }
 
+    public AtmOrDebitCardRequest(long cardNumber, String requestType, CustomerServiceRequest customerServiceRequest) {
+        this.cardNumber = cardNumber;
+        this.requestType = requestType;
+        this.customerServiceRequest = customerServiceRequest;
+    }
+
     public AtmOrDebitCardRequest(int atmOrDebitRequestId, long cardNumber, String requestType, CustomerServiceRequest customerServiceRequest) {
         this.atmOrDebitRequestId = atmOrDebitRequestId;
         this.cardNumber = cardNumber;

@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import com.spring.starter.DTO.*;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.ServiceRequestIdConfig;
+import com.spring.starter.enums.CardRequests;
 import com.spring.starter.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,7 +59,13 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         if (request.isPresent()){
             atmOrDebitCardRequest.setAtmOrDebitRequestId(request.get().getAtmOrDebitRequestId());
         }
-            atmOrDebitCardRequest.setRequestType(atmOrDebitCardRequestDTO.getRequestType());
+            if (atmOrDebitCardRequestDTO.getRequestType()==123){
+                    atmOrDebitCardRequest.setRequestType(CardRequests.SUSPEND_DEBIT_CARD.toString());
+            }else if (atmOrDebitCardRequestDTO.getRequestType()==124){
+                atmOrDebitCardRequest.setRequestType(CardRequests.REACTIVE_DEBIT_CARD.toString());
+            }else{
+                atmOrDebitCardRequest.setRequestType(CardRequests.CANCEL_CARDS.toString());
+            }
             atmOrDebitCardRequest.setCardNumber(atmOrDebitCardRequestDTO.getCardNumber());
             atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
 
