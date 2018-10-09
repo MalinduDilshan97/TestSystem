@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
@@ -17,16 +18,21 @@ public class BillPaymentController {
     BillPaymentService billPaymentService;
 
     @PostMapping
-    public ResponseEntity<?> saveBillPaymentRequest(@RequestBody BillPayment billPayment,@RequestParam(name="requestId") int requestId) {
+    public ResponseEntity<?> saveBillPaymentRequest(@RequestBody @Valid BillPayment billPayment, @RequestParam(name="requestId") int requestId) {
        return billPaymentService.saveBillPayment(billPayment,requestId);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateBillPaymentRequest(@RequestBody BillPayment billPayment,@RequestParam(name="requestId") int requestId) {
+    public ResponseEntity<?> updateBillPaymentRequest(@RequestBody @Valid BillPayment billPayment,@RequestParam(name="requestId") int requestId) {
         return billPaymentService.saveBillPayment(billPayment,requestId);
     }
 
-    @GetMapping
+    @GetMapping("/{billPaymentId}")
+    public ResponseEntity<?> getBillPaymentRequest(@PathVariable int billPaymentId ){
+        return billPaymentService.getBillPaymentRequest(billPaymentId);
+    }
+
+    @GetMapping("/test")
     public ResponseEntity<?> getBillPaymentRequest(){
 
         Date date = java.util.Calendar.getInstance().getTime();

@@ -1,6 +1,8 @@
 package com.spring.starter.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
@@ -9,6 +11,7 @@ public class DuplicateFdCdCert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int duplicateId;
 
+    @NotNull
     private String fdCdDepositNo;
 
     private Date date;
@@ -16,6 +19,16 @@ public class DuplicateFdCdCert {
     @JoinColumn(name="csrId")
     private CustomerServiceRequest customerServiceRequest;
 
+    @NotNull
+    @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'")
+    private String accountType;
+
+    public DuplicateFdCdCert(@NotNull String fdCdDepositNo, Date date, CustomerServiceRequest customerServiceRequest, @NotNull @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'") String accountType) {
+        this.fdCdDepositNo = fdCdDepositNo;
+        this.date = date;
+        this.customerServiceRequest = customerServiceRequest;
+        this.accountType = accountType;
+    }
 
     public DuplicateFdCdCert() {
     }
@@ -51,5 +64,13 @@ public class DuplicateFdCdCert {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 }
