@@ -29,8 +29,6 @@ public class FdorCdServiceImpl implements FdorCdService {
     @Autowired
     DuplicateFdCdCertRepository duplicateFdCdCertRepository;
 
-
-
     @Override
     public ResponseEntity<?> addWithHoldingTaxDC(WithholdingFdCdDTO fdCdNumbersDTO, int requestId) {
         WithholdingFdCd withholdingFdCd=new WithholdingFdCd();
@@ -73,7 +71,7 @@ public class FdorCdServiceImpl implements FdorCdService {
         withholdingFdCd.setMaturityDate(fdCdNumbersDTO.getMaturityDate());
         withholdingFdCd.setFdCdNumbers(numbersList2);
         withholdingFdCd.setCustomerServiceRequest(customerServiceRequest.get());
-
+        withholdingFdCd.setAccountType(fdCdNumbersDTO.getAccountType());
 
         try{
             withholdingFdCdRepository.save(withholdingFdCd);

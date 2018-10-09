@@ -6,5 +6,6 @@ public class TransactionIdConfig {
     public static int WITHDRAWALS = 2;
     public static int BILLPAYMENT = 3 ;
     public static int FUND_TRANSFER_WITHIN_NDB = 4;
-    public static int FUND_TRANSFER_TO_OTHER_BANKS = 5;
+    public static int FUND_TRANSFER_TO_OTHER_BANKS_SLIP = 5;
+    public static int FUND_TRANSFER_TO_OTHER_BANKS_CEFT = 6;
 }

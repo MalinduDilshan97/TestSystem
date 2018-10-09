@@ -7,4 +7,6 @@ public interface BillPaymentService {
 
     public ResponseEntity<?> saveBillPayment(BillPayment billPayment, int customerTransactionRequestId);
 
+    public ResponseEntity<?> getBillPaymentRequest(int billPaymentId);
+
 }

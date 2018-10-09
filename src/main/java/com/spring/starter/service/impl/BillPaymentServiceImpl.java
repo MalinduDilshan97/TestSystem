@@ -77,4 +77,18 @@ public class BillPaymentServiceImpl implements BillPaymentService {
            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
        }
     }
+
+    @Override
+    public ResponseEntity<?> getBillPaymentRequest(int billPaymentId){
+        Optional<BillPayment> billPaymentOptional = billPaymentRepository.findById(billPaymentId);
+        if(!billPaymentOptional.isPresent()){
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setMessage("There is no bill payment details available for that id");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(billPaymentOptional,HttpStatus.OK);
+        }
+
+    }
 }

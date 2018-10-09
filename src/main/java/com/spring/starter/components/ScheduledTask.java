@@ -24,6 +24,7 @@ public class ScheduledTask {
             System.out.println("Scheduled Running");
 
         } catch (Exception e) {
+
             e.printStackTrace();
         }
     }*/
