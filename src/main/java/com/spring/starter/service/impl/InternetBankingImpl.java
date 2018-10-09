@@ -452,6 +452,16 @@ public class InternetBankingImpl implements InternetBankingService{
 		if(internetBankingOpt.isPresent()) {
 			banking.setInternetBankingId(internetBankingOpt.get().getInternetBankingId());
 		}
+		if(banking.isActiveUser() && banking.isInactiveUser() && banking.isCanselInternetBanking()){
+			responsemodel.setMessage("Invalied Request");
+			responsemodel.setStatus(false);
+			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+		}
+		if(!banking.isActiveUser() && !banking.isInactiveUser() && !banking.isCanselInternetBanking()){
+			responsemodel.setMessage("Invalied Request");
+			responsemodel.setStatus(false);
+			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+		}
 		try {
 			internetBankingRepository.save(banking);
 			responsemodel.setMessage("service Saved Successfully");

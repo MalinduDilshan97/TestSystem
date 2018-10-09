@@ -8,26 +8,19 @@ public class AccountStatementIssueRequestDTO implements Serializable {
     private long accountNo;
     private String fromDate;
     private String toDate;
-    private String NatureOfStatement;
+    private int natureOfStatement;
     private int customerServiceRequestId;
 
     public AccountStatementIssueRequestDTO() {
     }
 
-    public AccountStatementIssueRequestDTO(long accountNo, String fromDate, String toDate, String natureOfStatement, int customerServiceRequestId) {
-        this.accountNo = accountNo;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        NatureOfStatement = natureOfStatement;
-        this.customerServiceRequestId = customerServiceRequestId;
-    }
-
-    public AccountStatementIssueRequestDTO(int accountStatementIssueRequestId, long accountNo, String fromDate, String toDate, String natureOfStatement, int customerServiceRequestId) {
+    public AccountStatementIssueRequestDTO(int accountStatementIssueRequestId, long accountNo, String fromDate,
+                                           String toDate, int natureOfStatement, int customerServiceRequestId) {
         this.accountStatementIssueRequestId = accountStatementIssueRequestId;
         this.accountNo = accountNo;
         this.fromDate = fromDate;
         this.toDate = toDate;
-        NatureOfStatement = natureOfStatement;
+        this.natureOfStatement = natureOfStatement;
         this.customerServiceRequestId = customerServiceRequestId;
     }
 
@@ -63,12 +56,12 @@ public class AccountStatementIssueRequestDTO implements Serializable {
         this.toDate = toDate;
     }
 
-    public String getNatureOfStatement() {
-        return NatureOfStatement;
+    public int getNatureOfStatement() {
+        return natureOfStatement;
     }
 
-    public void setNatureOfStatement(String natureOfStatement) {
-        NatureOfStatement = natureOfStatement;
+    public void setNatureOfStatement(int natureOfStatement) {
+        this.natureOfStatement = natureOfStatement;
     }
 
     public int getCustomerServiceRequestId() {

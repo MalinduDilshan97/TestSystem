@@ -19,7 +19,7 @@ import com.spring.starter.DTO.MailingMailDTO;
 import com.spring.starter.service.MailingMailService;
 
 @RestController
-@RequestMapping("serviceRequest/address/change-permenenet")
+@RequestMapping("serviceRequest/address/change-mailing")
 @CrossOrigin
 public class MailingMailController {
 

@@ -42,6 +42,8 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
     private ServiceRequestCustomerLogService serviceRequestCustomerLogService;
     @Autowired
     private ServiceRequestFormLogService serviceRequestFormLogService;
+    @Autowired
+    private Card_Validation card_validation;
 
     private ResponseModel res = new ResponseModel();
     private ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
@@ -69,6 +71,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
         if (optionalRequest.isPresent()){
             atmOrDebitCardRequest.setAtmOrDebitRequestId(optionalRequest.get().getAtmOrDebitRequestId());
         }
+
             atmOrDebitCardRequest.setRequestType(atmOrDebitCardRequestDTO.getRequestType());
             atmOrDebitCardRequest.setCardNumber(atmOrDebitCardRequestDTO.getCardNumber());
             atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
@@ -202,8 +205,14 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             }
 
             Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(serviceRequestId);
-            if (optional.isPresent()){
+            if (subscription.isPresent()){
                 smsSubscription.setSubscriptionId(subscription.get().getSubscriptionId());
+            }
+
+            if(!card_validation.checkCardValidity(Long.toString(smsSubscriptionDTO.getCardNumber()))){
+                res.setMessage("Invalid Card Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
             smsSubscription.setSubscriptionId(smsSubscriptionDTO.getSubscriptionId());
@@ -286,10 +295,16 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                     posLimit.setPosLimitId(pos.get().getPosLimitId());
                 }
 
-            posLimit.setPosLimitId(posLimitDTO.getPosLimitId());
-            posLimit.setCardNumber(posLimitDTO.getCardNumber());
-            posLimit.setValue(posLimitDTO.getValue());
-            posLimit.setCustomerServiceRequest(customerServiceRequest);
+                if(!card_validation.checkCardValidity(Long.toString(posLimitDTO.getCardNumber()))){
+                    res.setMessage("Invalid Card Details");
+                    res.setStatus(false);
+                    return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+                }
+
+                posLimit.setPosLimitId(posLimitDTO.getPosLimitId());
+                posLimit.setCardNumber(posLimitDTO.getCardNumber());
+                posLimit.setValue(posLimitDTO.getValue());
+                posLimit.setCustomerServiceRequest(customerServiceRequest);
 
             if (posLimitRepository.save(posLimit) != null) {
 
@@ -363,6 +378,11 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             if (account.isPresent()){
                 linkedAccount.setLinkedAccountId(account.get().getLinkedAccountId());
             }
+            if(!card_validation.checkCardValidity(Long.toString(linkedAccountDTO.getCardNumber()))){
+                res.setMessage("Invalid Card Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
 
             linkedAccount.setCardNumber(linkedAccountDTO.getCardNumber());
             linkedAccount.setPrimaryAccount(linkedAccountDTO.getPrimaryAccount());
@@ -425,7 +445,6 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         } else {
-
             CustomerServiceRequest customerServiceRequest = optional.get();
             ChangePrimaryAccount changePrimaryAccount= new ChangePrimaryAccount();
 
@@ -439,6 +458,18 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(serviceRequestId);
             if (primaryAccount.isPresent()){
                 changePrimaryAccount.setChangePrimaryAccountId(primaryAccount.get().getChangePrimaryAccountId());
+            }
+
+            if(!card_validation.checkCardValidity(Long.toString(changePrimaryAccountDTO.getCardNumber()))){
+                res.setMessage("Invalid Card Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            }
+
+            if(!card_validation.checkCardValidity(Long.toString(changePrimaryAccountDTO.getCardNumber()))){
+                res.setMessage("Invalid Card Details");
+                res.setStatus(false);
+                return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
             changePrimaryAccount.setCardNumber(changePrimaryAccountDTO.getCardNumber());
@@ -492,4 +523,6 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             }
         }
     }
+
+
 }

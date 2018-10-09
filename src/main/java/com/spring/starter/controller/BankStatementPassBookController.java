@@ -44,10 +44,19 @@ public class BankStatementPassBookController {
         return bankStatementPassBookService.estatementService(bankStatementAccountDTO,requestId);
     }
 
+    @PutMapping("/e-statement")
+    public ResponseEntity<?> updateE_satementRequest(@RequestBody BankStatementAccountDTO bankStatementAccountDTO, @RequestParam(name="requestId") int requestId){
+        return bankStatementPassBookService.estatementService(bankStatementAccountDTO,requestId);
+    }
+
     @PostMapping("/statementFrequency")
     public ResponseEntity<?> statementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name="requestId") int requestId){
         return bankStatementPassBookService.statementFrequencyService(statementFrequency,requestId);
     }
 
+    @PutMapping("/statementFrequency")
+    public ResponseEntity<?> UpdatestatementFrequencyServiceRequest(@RequestBody StatementFrequency statementFrequency, @RequestParam(name="requestId") int requestId){
+        return bankStatementPassBookService.statementFrequencyService(statementFrequency,requestId);
+    }
 
 }

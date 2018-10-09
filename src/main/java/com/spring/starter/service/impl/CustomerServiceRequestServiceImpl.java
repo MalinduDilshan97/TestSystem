@@ -1,5 +1,6 @@
 package com.spring.starter.service.impl;
 
+import com.spring.starter.DTO.IdentificationAddDTO;
 import com.spring.starter.Repository.ChangeIdentificationFormRepository;
 import com.spring.starter.Repository.CustomerServiceRequestRepository;
 import com.spring.starter.service.ServiceRequestCustomerLogService;
@@ -136,12 +137,44 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
     }
 
     @Override
+    public ResponseEntity<?> addIdentification(IdentificationAddDTO identificationAddDTO){
+        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(identificationAddDTO.getCustomerServiceRequestId());
+        if(!optional.isPresent()){
+            res.setMessage(" No Data Found To Complete The Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
+        }
+        int serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
+        if (serviceRequestId != ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
+            res.setMessage("Invalid Request");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        }
+        IdentificationForm identificationForm = new IdentificationForm();
+
+        Optional<IdentificationForm> optionalForm = changeIdentificationFormRepository.getFormFromCSR(identificationAddDTO.getCustomerServiceRequestId());
+        if (optionalForm.isPresent()) {
+            identificationForm.setChangeIdentificationFormId(identificationAddDTO.getCustomerServiceRequestId());
+        }
+        identificationForm.setIdentification(identificationAddDTO.getIdentification());
+        identificationForm.setCustomerServiceRequest(optional.get());
+        try{
+            identificationForm = changeIdentificationFormRepository.save(identificationForm);
+            return new ResponseEntity<>(identificationForm, HttpStatus.CREATED);
+        } catch (Exception e) {
+            res.setMessage("Something went wrong");
+            res.setStatus(false);
+            return new ResponseEntity<>(res, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @Override
     public ResponseEntity<?> UpdateContactDetails(ContactDetailsDTO contactDetailsDTO, HttpServletRequest request) {
         Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(contactDetailsDTO.getCustomerServiceRequestId());
         if (!optional.isPresent()) {
             res.setMessage(" No Data Found To Complete The Request");
             res.setStatus(false);
-            return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
         }
         int serviceRequestId = optional.get().getServiceRequest().getDigiFormId();
         if (serviceRequestId != ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO) {

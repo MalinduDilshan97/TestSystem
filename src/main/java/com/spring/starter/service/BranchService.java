@@ -11,5 +11,8 @@ public interface BranchService {
 	public ResponseEntity<?> updateBranch(NDBBranch ndbBranch , int branchId);
 	
 	public ResponseEntity<?> deleteBranch(int branchId);
+
+    public ResponseEntity<?> viewAllBranches();
+
 	
 }

@@ -1,6 +1,8 @@
 package com.spring.starter.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +42,10 @@ public class ServiceRequestController {
     }
 
     @PostMapping("/addNewCustomer")
-    public ResponseEntity<?> addANewCustomer(@RequestBody @Valid CustomerDTO customerDTO) {
+    public ResponseEntity<?> addANewCustomer(@RequestBody CustomerDTO customerDTO) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         return serviceRequestService.addNewCustomer(customerDTO,request);
+        //return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
 
     @PostMapping("/addNewServiceToACustomer")
@@ -102,7 +105,17 @@ public class ServiceRequestController {
         changePermanentMail.setIssuingAuthority("issuingAuthority");
         changePermanentMail.setPlaceOfIssue("Kaluthara");
 
-        return new ResponseEntity<>(changePermanentMail, HttpStatus.OK);
+        List<String> accountNo = new ArrayList<>();
+        accountNo.add("2131232132");
+        accountNo.add("2131232124");
+
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setIdentification("1232132132");
+        customerDTO.setMobileNo("0710873073");
+        customerDTO.setName("lakithMuthugala");
+        customerDTO.setAccountNos(accountNo);
+
+        return new ResponseEntity<>(customerDTO, HttpStatus.OK);
     }
 
     @PutMapping("addSignature")

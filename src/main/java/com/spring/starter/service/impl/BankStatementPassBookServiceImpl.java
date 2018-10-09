@@ -246,11 +246,21 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                 if (issueRequest.isPresent()) {
                     accountStatementIssueRequest.setAccountStatementIssueRequestId(issueRequest.get().getAccountStatementIssueRequestId());
                 }
+                String statement;
+                if(accountStatementIssueRequestDTO.getNatureOfStatement() == 1){
+                    statement = "PRINTED";
+                } else if (accountStatementIssueRequestDTO.getNatureOfStatement() == 2) {
+                    statement = "E-STATEMENT";
+                } else {
+                    res.setMessage("Invalid statement type");
+                    res.setStatus(false);
+                    return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+                }
 
                 accountStatementIssueRequest.setAccountNo(accountStatementIssueRequestDTO.getAccountNo());
                 accountStatementIssueRequest.setFromDate(from);
                 accountStatementIssueRequest.setToDate(to);
-                accountStatementIssueRequest.setNatureOfStatement(accountStatementIssueRequestDTO.getNatureOfStatement());
+                accountStatementIssueRequest.setNatureOfStatement(statement);
                 accountStatementIssueRequest.setCustomerServiceRequest(customerServiceRequest);
 
                 if (accountStatementIssueRequestRepository.save(accountStatementIssueRequest) != null) {

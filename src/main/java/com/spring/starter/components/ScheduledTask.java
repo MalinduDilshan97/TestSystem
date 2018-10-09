@@ -27,4 +27,18 @@ public class ScheduledTask {
             e.printStackTrace();
         }
     }*/
+
+
+    @Transactional
+    @Scheduled(cron = "0 0 9 * * ?")
+    public void removeDeactivatedAccounts() {
+
+        try {
+            // loginlogsRepository.RemoveOldLoginLogs();
+            System.out.println("Scheduled Running");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

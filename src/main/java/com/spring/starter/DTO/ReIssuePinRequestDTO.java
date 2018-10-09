@@ -1,6 +1,5 @@
 package com.spring.starter.DTO;
 
-import java.io.Serializable;
 
 public class ReIssuePinRequestDTO {
 

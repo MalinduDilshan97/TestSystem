@@ -1,10 +1,12 @@
 package com.spring.starter.DTO;
 
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class SmsSubscriptionDTO implements Serializable {
 
     private int subscriptionId;
+    @Size(max = 16, min = 16)
     private long cardNumber;
     private String mobileNumber;
     private int customerServiceRequestId;

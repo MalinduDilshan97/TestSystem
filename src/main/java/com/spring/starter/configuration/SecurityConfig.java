@@ -86,6 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/serviceRequest/atmOrDebit/request").permitAll()
                 .antMatchers("/serviceRequest/atmOrDebit/reIssuePin").permitAll()
                 .antMatchers("/serviceRequest/atmOrDebit/smsSubscription").permitAll()
+                .antMatchers("/serviceRequest/atmOrDebit/posLimit").permitAll()
                 .antMatchers("/serviceRequest/atmOrDebit/LinkedAccount").permitAll()
                 .antMatchers("/serviceRequest/atmOrDebit/changePrimaryAccount").permitAll()
                 .antMatchers("/bankStatementPassBook/duplicatePassbook").permitAll()
@@ -93,7 +94,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bankStatementPassBook/e-statement").permitAll()
                 .antMatchers("/bankStatementPassBook/statementFrequency").permitAll()
                 .antMatchers("/branch/addNewBranch").permitAll()
+                .antMatchers("/branch/getAll").permitAll()
                 .antMatchers("/branch/updateBranch/*").permitAll()
+                .antMatchers("/serviceRequest/address/change-mailing").permitAll()
                 .antMatchers("/serviceRequest/changePermanentAddress").permitAll()
                 .antMatchers("/serviceRequest/CustomerServiceRequest").permitAll()
                 .antMatchers("/serviceRequest/addRelatedRequest").permitAll()
@@ -117,6 +120,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/serviceRequest/getServiceRequestForm").permitAll()
                 .antMatchers("/serviceRequest/addSignature").permitAll()
                 .antMatchers("/serviceRequest/SMSAlertsforCreditCard").permitAll()
+                .antMatchers("/Transaction-Request/add-service").permitAll()
+                .antMatchers("/Transaction-Request/ger-all-service").permitAll()
                 .anyRequest().authenticated();
 
 

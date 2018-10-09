@@ -119,7 +119,10 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     @Autowired
     OtherServiceRequestRepository otherServiceRequestRepository;
 
-    private ResponseModel res = new ResponseModel();
+    @Autowired
+    ServiceRequestCustomerLogRepository serviceRequestCustomerLogRepository;
+
+
 
     @Override
     public ResponseEntity<?> addNewServiceRequest(ServiceRequest serviceRequest) {
@@ -138,8 +141,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     @Override
     public ResponseEntity<?> addNewCustomer(CustomerDTO customerDTO,HttpServletRequest request) {
         ResponseModel responsemodel = new ResponseModel();
-
-        List<String> accNo = customerDTO.getAccountNos();
+                List<String> accNo = customerDTO.getAccountNos();
         Customer customer = new Customer();
 /*        Optional<Customer> customerOpt = customerRepository.getCustomerFromIdentity(customerDTO.getIdentification());
         if (customerOpt.isPresent()) {
@@ -147,12 +149,19 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         } else {
             customer = new Customer();
         }*/
+
+        ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
+        serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
+        serviceRequestCustomerLog.setIdentification(customerDTO.getIdentification());
+        serviceRequestCustomerLog.setIp(request.getRemoteAddr());
+
         customer.setIdentification(customerDTO.getIdentification());
         customer.setName(customerDTO.getName());
         customer.setMobileNo(customerDTO.getMobileNo());
         Customer customer_new;
         try {
             customer_new = customerRepository.save(customer);
+
         } catch (Exception e) {
             responsemodel.setMessage("Something wrong with the database connection");
             responsemodel.setStatus(false);
@@ -167,8 +176,20 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             customerAccountNo = customerAccountNoRepository.save(customerAccountNo);
             customerAccountNumbers.add(customerAccountNo);
         }
+
         responsemodel.setMessage("Customer Saved Successfully");
         responsemodel.setStatus(true);
+
+        serviceRequestCustomerLog.setMessage("Customer Saved Succcessfully");
+        try {
+            serviceRequestCustomerLog = serviceRequestCustomerLogRepository.save(serviceRequestCustomerLog);
+            System.out.println(serviceRequestCustomerLog);
+             }
+        catch (Exception e){
+              responsemodel.setMessage(e.getMessage());
+              responsemodel.setStatus(false);
+              return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
+        }
         return new ResponseEntity<>(customer_new, HttpStatus.CREATED);
     }
 
@@ -192,6 +213,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         customerServiceRequest.setRequestDate(java.util.Calendar.getInstance().getTime());
         customerServiceRequest = customerServiceRequestRepository.save(customerServiceRequest);
 
+
         responsemodel.setMessage("Service Created Successfully");
         responsemodel.setStatus(true);
         return new ResponseEntity<>(customerServiceRequest, HttpStatus.OK);
@@ -204,25 +226,29 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         List<CustomerServiceRequest> customerServiceRequests = new ArrayList<>();
         try {
             requestDate = df.parse(date);
-            System.out.println(date);
             customerServiceRequests = customerServiceRequestRepository.getrequestsByDateAndCustomer(customerId, requestDate);
-            System.out.println(customerServiceRequests.size());
             return new ResponseEntity<>(customerServiceRequests, HttpStatus.OK);
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        responsemodel.setMessage("blablabla");
+        responsemodel.setMessage("Success");
         responsemodel.setStatus(true);
         return new ResponseEntity<>(responsemodel, HttpStatus.OK);
     }
 
     public ResponseEntity<?> getAllCustomerRequests(int customerId) {
+        ResponseModel responsemodel = new ResponseModel();
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if(!customerOptional.isPresent()){
+            responsemodel.setMessage("There is a no such customer available");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
         try {
             List<CustomerServiceRequest> customerServiceRequests = customerServiceRequestRepository.getAllCustomerRequest(customerId);
             return new ResponseEntity<>(customerServiceRequests, HttpStatus.OK);
         } catch (Exception e) {
-            ResponseModel responsemodel = new ResponseModel();
             responsemodel.setMessage("There is a problem with the database connection");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
@@ -253,8 +279,6 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequestOPT = customerServiceRequestRepository.findById(requestId);
         CustomerServiceRequest customerServiceRequest = customerServiceRequestOPT.get();
-
-
 
         List<StaffUser> staffHandled;
         if (customerServiceRequest.getStaffUser().isEmpty()) {
@@ -605,7 +629,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
     @Override
     public ResponseEntity<?> saveSignature(SignatureDTO signatureDTO) {
-
+        ResponseModel res = new ResponseModel();
         Optional<CustomerServiceRequest> optional=customerServiceRequestRepository.findById(signatureDTO.getService_request_id());
         if (!optional.isPresent()){
             res.setMessage(" No Data Found To Complete The Request");

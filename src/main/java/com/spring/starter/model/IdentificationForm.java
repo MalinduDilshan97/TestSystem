@@ -21,7 +21,6 @@ public class IdentificationForm {
     @NotNull
     private String identification;
 
-    @NotNull
     private String documentUrl;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -32,13 +31,13 @@ public class IdentificationForm {
         super();
     }
 
-    public IdentificationForm(@NotNull String identification, @NotNull String documentUrl, CustomerServiceRequest customerServiceRequest) {
+    public IdentificationForm(@NotNull String identification, String documentUrl, CustomerServiceRequest customerServiceRequest) {
         this.identification = identification;
         this.documentUrl = documentUrl;
         this.customerServiceRequest = customerServiceRequest;
     }
 
-    public IdentificationForm(int changeIdentificationFormId, @NotNull String identification, @NotNull String documentUrl, CustomerServiceRequest customerServiceRequest) {
+    public IdentificationForm(int changeIdentificationFormId, @NotNull String identification, String documentUrl, CustomerServiceRequest customerServiceRequest) {
         ChangeIdentificationFormId = changeIdentificationFormId;
         this.identification = identification;
         this.documentUrl = documentUrl;

@@ -28,6 +28,8 @@ public class InternetBanking {
 	private boolean activeUser = false; 
 	
 	private boolean inactiveUser = false;
+
+	private boolean canselInternetBanking = false;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="csrId")
@@ -37,13 +39,13 @@ public class InternetBanking {
 		super();
 	}
 
-	public InternetBanking(int internetBankingId, String internetBankingUserId, boolean activeUser,
-			boolean inactiveUser, CustomerServiceRequest customerServiceRequest) {
-		super();
-		this.internetBankingId = internetBankingId;
+	public InternetBanking(@NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_])*$") String internetBankingUserId,
+						   boolean activeUser, boolean inactiveUser, boolean canselInternetBanking,
+						   CustomerServiceRequest customerServiceRequest) {
 		this.internetBankingUserId = internetBankingUserId;
 		this.activeUser = activeUser;
 		this.inactiveUser = inactiveUser;
+		this.canselInternetBanking = canselInternetBanking;
 		this.customerServiceRequest = customerServiceRequest;
 	}
 
@@ -77,6 +79,14 @@ public class InternetBanking {
 
 	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
 		this.customerServiceRequest = customerServiceRequest;
+	}
+
+	public boolean isCanselInternetBanking() {
+		return canselInternetBanking;
+	}
+
+	public void setCanselInternetBanking(boolean canselInternetBanking) {
+		this.canselInternetBanking = canselInternetBanking;
 	}
 
 	public String getInternetBankingUserId() {

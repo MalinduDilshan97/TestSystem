@@ -33,7 +33,10 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 	private SmsAlertsCreditCardNumbersRepository smsAlertsCreditCardNumbersRepository;
 	
 	@Autowired
-	private SMSAlertsForCreditCardRepository AlertsForCreditCardRepository; 
+	private SMSAlertsForCreditCardRepository AlertsForCreditCardRepository;
+
+	@Autowired
+	private Card_Validation card_validation;
 		
 	@Override
 	public ResponseEntity<?> smsAlertForCreditCardRequest(SMSAlertsForCreditCardDTO smsAlertsForCreditCardDTO ,int customerServiceRequestId)
@@ -52,8 +55,17 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 			responsemodel.setStatus(false);
 			return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
 		}
-			
+
 		List<String> creditCardNumbers = smsAlertsForCreditCardDTO.getCreditCardNumbers();
+
+		for(String s : creditCardNumbers){
+			if(!card_validation.checkCardValidity(s)){
+				responsemodel.setMessage("Invalied Card Details");
+				responsemodel.setStatus(false);
+				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+			}
+		}
+
 		List<SmsAlertsCreditCardNumbers> smsAlertsCreditCardNumbers = new ArrayList<>();
 		for(String s : creditCardNumbers) 
 		{
@@ -82,4 +94,5 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 			return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
 		}		
 	}
+
 }

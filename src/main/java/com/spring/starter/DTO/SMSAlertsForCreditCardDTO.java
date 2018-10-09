@@ -3,6 +3,7 @@ package com.spring.starter.DTO;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class SMSAlertsForCreditCardDTO {
 
@@ -10,6 +11,7 @@ public class SMSAlertsForCreditCardDTO {
 	private String mobileNumber;
 	
 	@NotNull
+	@Size(min = 16,max = 16)
 	private List<String> creditCardNumbers;
 
 	public SMSAlertsForCreditCardDTO() {

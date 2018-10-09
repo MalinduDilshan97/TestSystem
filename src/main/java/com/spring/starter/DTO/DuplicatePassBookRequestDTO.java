@@ -4,38 +4,33 @@ import java.io.Serializable;
 
 public class DuplicatePassBookRequestDTO implements Serializable {
 
-    private int DuplicatePassBookRequestId;
-    private long AccountNumber;
+    private int duplicatePassBookRequestId;
+    private long accountNumber;
     private int customerServiceRequestId;
 
     public DuplicatePassBookRequestDTO() {
     }
 
-    public DuplicatePassBookRequestDTO(long accountNumber, int customerServiceRequestId) {
-        AccountNumber = accountNumber;
-        this.customerServiceRequestId = customerServiceRequestId;
-    }
-
     public DuplicatePassBookRequestDTO(int duplicatePassBookRequestId, long accountNumber, int customerServiceRequestId) {
-        DuplicatePassBookRequestId = duplicatePassBookRequestId;
-        AccountNumber = accountNumber;
+        this.duplicatePassBookRequestId = duplicatePassBookRequestId;
+        this.accountNumber = accountNumber;
         this.customerServiceRequestId = customerServiceRequestId;
     }
 
     public int getDuplicatePassBookRequestId() {
-        return DuplicatePassBookRequestId;
+        return duplicatePassBookRequestId;
     }
 
     public void setDuplicatePassBookRequestId(int duplicatePassBookRequestId) {
-        DuplicatePassBookRequestId = duplicatePassBookRequestId;
+        this.duplicatePassBookRequestId = duplicatePassBookRequestId;
     }
 
     public long getAccountNumber() {
-        return AccountNumber;
+        return accountNumber;
     }
 
     public void setAccountNumber(long accountNumber) {
-        AccountNumber = accountNumber;
+        this.accountNumber = accountNumber;
     }
 
     public int getCustomerServiceRequestId() {
