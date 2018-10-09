@@ -122,6 +122,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/serviceRequest/SMSAlertsforCreditCard").permitAll()
                 .antMatchers("/Transaction-Request/add-service").permitAll()
                 .antMatchers("/Transaction-Request/ger-all-service").permitAll()
+                .antMatchers("/Transaction-Request/add-transaction-customer").permitAll()
+                .antMatchers("/Transaction-Request/add-customer-to-trasaction-request").permitAll()
+                .antMatchers("/Transaction-Request/fund-transaction-within-ndb").permitAll()
+                .antMatchers("/Transaction-Request/cash-withdrawal").permitAll()
                 .anyRequest().authenticated();
 
 

@@ -23,7 +23,6 @@ public class TransactionRequest {
 
     @Column(unique=true , nullable=false)
     @NotNull
-    @NotEmpty
     private int digiFormId;
 
     @Column
