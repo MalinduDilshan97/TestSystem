@@ -89,7 +89,7 @@ public class CashDeposit {
     private CustomerTransactionRequest customerTransactionRequest;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cash_withdrawal_relation_file_id")
+    @JoinColumn(name = "cash_deposit_relation_file_id")
     private List<CashDepositFile> cashDepositFiles;
 
     public CashDeposit() {

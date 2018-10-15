@@ -3,6 +3,7 @@ package com.spring.starter.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "fund_transfer_within_ndb")
@@ -23,12 +24,14 @@ public class FundTransferWithinNDB implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fund_transfer_within_file_id")
+    private List<FundTransferWithinNDBFile> fundTransferWithinNDBFiles;
 
     public FundTransferWithinNDB() {
     }
 
-    public FundTransferWithinNDB(int fundTransferWithinNdbId, Date date, long fromAccount, String fromAccountType, String currency, double amount, long toAccount, NDBBranch ndbBranch, CustomerTransactionRequest customerTransactionRequest) {
-        this.fundTransferWithinNdbId = fundTransferWithinNdbId;
+    public FundTransferWithinNDB(Date date, long fromAccount, String fromAccountType, String currency, double amount, long toAccount, NDBBranch ndbBranch, CustomerTransactionRequest customerTransactionRequest, List<FundTransferWithinNDBFile> fundTransferWithinNDBFiles) {
         this.date = date;
         this.fromAccount = fromAccount;
         this.fromAccountType = fromAccountType;
@@ -37,6 +40,7 @@ public class FundTransferWithinNDB implements Serializable {
         this.toAccount = toAccount;
         this.ndbBranch = ndbBranch;
         this.customerTransactionRequest = customerTransactionRequest;
+        this.fundTransferWithinNDBFiles = fundTransferWithinNDBFiles;
     }
 
     public int getFundTransferWithinNdbId() {
@@ -109,5 +113,13 @@ public class FundTransferWithinNDB implements Serializable {
 
     public void setCustomerTransactionRequest(CustomerTransactionRequest customerTransactionRequest) {
         this.customerTransactionRequest = customerTransactionRequest;
+    }
+
+    public List<FundTransferWithinNDBFile> getFundTransferWithinNDBFiles() {
+        return fundTransferWithinNDBFiles;
+    }
+
+    public void setFundTransferWithinNDBFiles(List<FundTransferWithinNDBFile> fundTransferWithinNDBFiles) {
+        this.fundTransferWithinNDBFiles = fundTransferWithinNDBFiles;
     }
 }

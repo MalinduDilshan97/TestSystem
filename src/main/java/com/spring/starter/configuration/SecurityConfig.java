@@ -93,9 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bankStatementPassBook/AccountStatement").permitAll()
                 .antMatchers("/bankStatementPassBook/e-statement").permitAll()
                 .antMatchers("/bankStatementPassBook/statementFrequency").permitAll()
-                .antMatchers("/branch/addNewBranch").permitAll()
-                .antMatchers("/branch/getAll").permitAll()
-                .antMatchers("/branch/updateBranch/*").permitAll()
                 .antMatchers("/serviceRequest/address/change-mailing").permitAll()
                 .antMatchers("/serviceRequest/changePermanentAddress").permitAll()
                 .antMatchers("/serviceRequest/CustomerServiceRequest").permitAll()
@@ -130,6 +127,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/Transaction-Request/cash-deposit/file-upload").permitAll()
                 .antMatchers("/Transaction-Request/cash-deposit/update").permitAll()
                 .antMatchers("/Transaction-Request/cash-deposit/signature").permitAll()
+                .antMatchers("/Bank/save").permitAll()
+                .antMatchers("/Bank/update").permitAll()
+                .antMatchers("/Bank/delete/**").permitAll()
+                .antMatchers("/Bank/search-bank/**").permitAll()
+                .antMatchers("/Bank/get-all-banks").permitAll()
+                .antMatchers("/Branch/addNewBranch").permitAll()
+                .antMatchers("/Branch/getAll").permitAll()
+                .antMatchers("/Branch/updateBranch").permitAll()
+                .antMatchers("/Branch/delete/**").permitAll()
+                .antMatchers("/Branch/search-branch-by-bank/**").permitAll()
+                .antMatchers("/Branch/search-branch/**").permitAll()
                 .anyRequest().authenticated();
 
 

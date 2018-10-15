@@ -1,18 +1,22 @@
 package com.spring.starter.service;
 
+import com.spring.starter.DTO.BranchDTO;
+import com.spring.starter.model.Branch;
 import org.springframework.http.ResponseEntity;
-
-import com.spring.starter.model.NDBBranch;
 
 public interface BranchService {
 
-	public ResponseEntity<?> addNewBranch(NDBBranch ndbBranch);
-	
-	public ResponseEntity<?> updateBranch(NDBBranch ndbBranch , int branchId);
-	
-	public ResponseEntity<?> deleteBranch(int branchId);
+    public ResponseEntity<?> addNewBranch(BranchDTO branchDTO);
 
-    public ResponseEntity<?> viewAllBranches();
+    public ResponseEntity<?> updateBranch(BranchDTO branchDTO);
 
-	
+    public ResponseEntity<?> deleteBranch(int mx_branch_code);
+
+    public ResponseEntity<?> searchBranch(int mx_branch_code);
+
+    public ResponseEntity<?> getAllBranches();
+
+    public ResponseEntity<?> getBranchByBank(int mx_bank_code);
+
+
 }

@@ -18,7 +18,7 @@ public class CashDepositFile implements Serializable {
     private String fileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cashWithdrawalId")
+    @JoinColumn(name = "cashDepositId")
     @JsonIgnore
     private CashDeposit cashDeposit;
 
