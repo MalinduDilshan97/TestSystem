@@ -1,8 +1,8 @@
 package com.spring.starter.service.impl;
 
 import com.spring.starter.DTO.CashWithdrawalDTO;
-import com.spring.starter.DTO.CashWithdrawalFileDTO;
-import com.spring.starter.DTO.CashWithdrawalUpdateDTO;
+import com.spring.starter.DTO.FileDTO;
+import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.DTO.TransactionSignatureDTO;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.TransactionIdConfig;
@@ -109,7 +109,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
     }
 
     @Override
-    public ResponseEntity<?> updateCashWithdrawal (CashWithdrawalDTO cashWithdrawalDTO, int customerTransactionRequestId, CashWithdrawalUpdateDTO cashWithdrawalUpdateDTO) throws Exception {
+    public ResponseEntity<?> updateCashWithdrawal (CashWithdrawalDTO cashWithdrawalDTO, int customerTransactionRequestId, DetailsUpdateDTO detailsUpdateDTO) throws Exception {
 
         CashWithdrawal cashWithdrawal = new CashWithdrawal();
         Optional<CustomerTransactionRequest> customerTransactionRequest;
@@ -175,12 +175,12 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
 
-        String extention = cashWithdrawalUpdateDTO.getFile().getOriginalFilename();
+        String extention = detailsUpdateDTO.getFile().getOriginalFilename();
         extention = FilenameUtils.getExtension(extention);
 
         String location =  ("/cash_withdrawals/signatures/update_record_verifications/" + customerTransactionRequestId );
         String filename = ""+customerTransactionRequestId + "_uuid-"+ randomUUIDString+extention;
-        String url = fileStorage.fileSaveWithRenaming(cashWithdrawalUpdateDTO.getFile(),location,filename);
+        String url = fileStorage.fileSaveWithRenaming(detailsUpdateDTO.getFile(),location,filename);
         location = ""+location+"/"+filename;
         if(url.equals("Failed")) {
             responseModel.setMessage(" Failed To Upload Signature");
@@ -189,7 +189,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
         } else {
 
             cashWithdrawalUpdateRecords.setSignatureUrl(location);
-            cashWithdrawalUpdateRecords.setComment(cashWithdrawalUpdateDTO.getComment());
+            cashWithdrawalUpdateRecords.setComment(detailsUpdateDTO.getComment());
             cashWithdrawalUpdateRecords.setCustomerTransactionRequest(customerTransactionRequest.get());
 
             cashWithdrawalUpdateRecords = cashWithdrawalUpdateRecordsRepository.save(cashWithdrawalUpdateRecords);
@@ -267,10 +267,10 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
 
 
     @Override
-    public ResponseEntity<?> uploadFilesToCashWithdrawls(CashWithdrawalFileDTO cashWithdrawalFileDTO) throws Exception {
+    public ResponseEntity<?> uploadFilesToCashWithdrawls(FileDTO fileDTO) throws Exception {
         try {
             Optional<CustomerTransactionRequest> customerTransactionRequest = customerTransactionRequestRepository
-                    .findById(cashWithdrawalFileDTO.getCustomerTransactionRequestId());
+                    .findById(fileDTO.getCustomerTransactionRequestId());
             if (!customerTransactionRequest.isPresent()) {
                 responseModel.setMessage("Invalid Transaction Request");
                 responseModel.setStatus(false);
@@ -286,16 +286,16 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
         } catch (Exception e){
             throw new Exception(e.getMessage());
         }
-        Optional<CashWithdrawal> optional=cashWithdrawalRepository.getFormFromCSR(cashWithdrawalFileDTO
+        Optional<CashWithdrawal> optional=cashWithdrawalRepository.getFormFromCSR(fileDTO
                 .getCustomerTransactionRequestId());
         if(!optional.isPresent()){
             responseModel.setMessage("Invalied customer transaction id");
             responseModel.setStatus(false);
             return new ResponseEntity<>(responseModel, HttpStatus.NOT_FOUND);
         } else {
-            String location =  ("/cash_withdrawals/file_uploads/" +cashWithdrawalFileDTO.getCustomerTransactionRequestId()
+            String location =  ("/cash_withdrawals/file_uploads/" + fileDTO.getCustomerTransactionRequestId()
                     +"/Customer Files");
-            String url = fileStorage.fileSave(cashWithdrawalFileDTO.getFile(),location);
+            String url = fileStorage.fileSave(fileDTO.getFile(),location);
             if(url.equals("Failed")) {
                 responseModel.setMessage(" Failed To Upload Signature");
                 responseModel.setStatus(false);
@@ -303,7 +303,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
             } else {
                 CashWithdrawalFile cashWithdrawalFile = new CashWithdrawalFile();
                 cashWithdrawalFile.setCashWithdrawal(optional.get());
-                cashWithdrawalFile.setFileType(cashWithdrawalFileDTO.getFileType());
+                cashWithdrawalFile.setFileType(fileDTO.getFileType());
                 cashWithdrawalFile.setFileUrl(url);
 
                 try {

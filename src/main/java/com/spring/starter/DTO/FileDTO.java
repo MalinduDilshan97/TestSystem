@@ -2,7 +2,7 @@ package com.spring.starter.DTO;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class CashWithdrawalFileDTO {
+public class FileDTO {
 
     private String fileType;
 
@@ -10,10 +10,10 @@ public class CashWithdrawalFileDTO {
 
     private int customerTransactionRequestId;
 
-    public CashWithdrawalFileDTO() {
+    public FileDTO() {
     }
 
-    public CashWithdrawalFileDTO(String fileType, MultipartFile file, int customerTransactionRequestId) {
+    public FileDTO(String fileType, MultipartFile file, int customerTransactionRequestId) {
         this.fileType = fileType;
         this.file = file;
         this.customerTransactionRequestId = customerTransactionRequestId;

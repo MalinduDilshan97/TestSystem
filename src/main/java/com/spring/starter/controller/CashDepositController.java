@@ -1,8 +1,8 @@
 package com.spring.starter.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.starter.DTO.CashWithdrawalFileDTO;
-import com.spring.starter.DTO.CashWithdrawalUpdateDTO;
+import com.spring.starter.DTO.FileDTO;
+import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.DTO.TransactionSignatureDTO;
 import com.spring.starter.model.CashDeposit;
 import com.spring.starter.service.CashDepositService;
@@ -35,12 +35,12 @@ public class CashDepositController {
     public ResponseEntity<?> uploadFilesToCashDeposit(@RequestParam MultipartFile file,
                                                          @RequestParam int customerServiceRequestId,
                                                          @RequestParam String fileType) throws Exception {
-        CashWithdrawalFileDTO cashWithdrawalFileDTO = new CashWithdrawalFileDTO();
-        cashWithdrawalFileDTO.setCustomerTransactionRequestId(customerServiceRequestId);
-        cashWithdrawalFileDTO.setFile(file);
-        cashWithdrawalFileDTO.setFileType(fileType);
+        FileDTO fileDTO = new FileDTO();
+        fileDTO.setCustomerTransactionRequestId(customerServiceRequestId);
+        fileDTO.setFile(file);
+        fileDTO.setFileType(fileType);
 
-        return cashDepositService.uploadFilesToCashDeposit(cashWithdrawalFileDTO);
+        return cashDepositService.uploadFilesToCashDeposit(fileDTO);
     }
 
     @PutMapping("/update")
@@ -52,11 +52,11 @@ public class CashDepositController {
         ObjectMapper mapper = new ObjectMapper();
         CashDeposit deposit = mapper.readValue(cashDeposit, CashDeposit.class);
 
-        CashWithdrawalUpdateDTO cashWithdrawalUpdateDTO = new CashWithdrawalUpdateDTO();
-        cashWithdrawalUpdateDTO.setComment(comment);
-        cashWithdrawalUpdateDTO.setFile(file);
+        DetailsUpdateDTO detailsUpdateDTO = new DetailsUpdateDTO();
+        detailsUpdateDTO.setComment(comment);
+        detailsUpdateDTO.setFile(file);
 
-        return cashDepositService.updateCashDeposit(deposit,customerServiceRequestId,cashWithdrawalUpdateDTO);
+        return cashDepositService.updateCashDeposit(deposit,customerServiceRequestId, detailsUpdateDTO);
     }
 
 

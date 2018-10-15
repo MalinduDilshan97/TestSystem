@@ -1,7 +1,7 @@
 package com.spring.starter.service.impl;
 
-import com.spring.starter.DTO.CashWithdrawalFileDTO;
-import com.spring.starter.DTO.CashWithdrawalUpdateDTO;
+import com.spring.starter.DTO.FileDTO;
+import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.DTO.TransactionSignatureDTO;
 import com.spring.starter.Exception.CustomException;
 import com.spring.starter.Repository.*;
@@ -88,7 +88,7 @@ public class CashDepositServiceImpl implements CashDepositService {
     }
 
     @Override
-    public ResponseEntity<?> uploadFilesToCashDeposit(CashWithdrawalFileDTO cashDepositFileDTO) throws Exception {
+    public ResponseEntity<?> uploadFilesToCashDeposit(FileDTO cashDepositFileDTO) throws Exception {
         try {
 
             Optional<CustomerTransactionRequest> customerTransactionRequest = customerTransactionRequestRepository
@@ -167,7 +167,7 @@ public class CashDepositServiceImpl implements CashDepositService {
     }
 
     @Override
-    public ResponseEntity<?> updateCashDeposit(CashDeposit cashDeposit, int customerTransactionRequestId, CashWithdrawalUpdateDTO cashWithdrawalUpdateDTO) throws Exception {
+    public ResponseEntity<?> updateCashDeposit(CashDeposit cashDeposit, int customerTransactionRequestId, DetailsUpdateDTO detailsUpdateDTO) throws Exception {
         Optional<CustomerTransactionRequest> customerTransactionRequest;
 
         try {
@@ -209,12 +209,12 @@ public class CashDepositServiceImpl implements CashDepositService {
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
 
-        String extention = cashWithdrawalUpdateDTO.getFile().getOriginalFilename();
+        String extention = detailsUpdateDTO.getFile().getOriginalFilename();
         extention = FilenameUtils.getExtension(extention);
 
         String location =  ("/cash_deposit/signatures/update_record_verifications/" + customerTransactionRequestId );
         String filename = ""+customerTransactionRequestId + "_uuid-"+ randomUUIDString+extention;
-        String url = fileStorage.fileSaveWithRenaming(cashWithdrawalUpdateDTO.getFile(),location,filename);
+        String url = fileStorage.fileSaveWithRenaming(detailsUpdateDTO.getFile(),location,filename);
         location = ""+location+"/"+filename;
         if(url.equals("Failed")) {
             responseModel.setMessage(" Failed To Upload Signature");
@@ -223,7 +223,7 @@ public class CashDepositServiceImpl implements CashDepositService {
         } else {
 
             cashDepositUpdateRecords.setSignatureUrl(location);
-            cashDepositUpdateRecords.setComment(cashWithdrawalUpdateDTO.getComment());
+            cashDepositUpdateRecords.setComment(detailsUpdateDTO.getComment());
             cashDepositUpdateRecords.setCustomerTransactionRequest(customerTransactionRequest.get());
 
             cashDepositUpdateRecords=cashDepositUpdateRecordsRepository.save(cashDepositUpdateRecords);
