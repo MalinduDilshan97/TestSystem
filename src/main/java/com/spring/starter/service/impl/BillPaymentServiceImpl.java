@@ -1,10 +1,7 @@
 package com.spring.starter.service.impl;
 
 import com.spring.starter.DTO.BillPaymentUpdateDTO;
-import com.spring.starter.Repository.BillPaymentErrorRecordsRepository;
-import com.spring.starter.Repository.BillPaymentRepository;
-import com.spring.starter.Repository.BillPaymentUpdateRecordsRepository;
-import com.spring.starter.Repository.CustomerTransactionRequestRepository;
+import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.TransactionIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.service.BillPaymentService;
@@ -37,6 +34,9 @@ public class BillPaymentServiceImpl implements BillPaymentService {
     BillPaymentUpdateRecordsRepository billPaymentUpdateRecordsRepository;
 
     @Autowired
+    BillPaymentReferanceRepository billPaymentReferanceRepository;
+
+    @Autowired
     private FileStorage fileStorage;
 
     @Override
@@ -59,6 +59,17 @@ public class BillPaymentServiceImpl implements BillPaymentService {
        if(billPaymentOptional.isPresent()){
             billPayment.setBillPaymentId(billPaymentOptional.get().getBillPaymentId());
        }
+
+       Optional<BillPaymentReferance> billPaymentReferanceOpt = billPaymentReferanceRepository.findById(billPayment.getBillPaymentReferance().getBillPaymentReferanceId());
+
+       if(!billPaymentReferanceOpt.isPresent()){
+           responseModel.setMessage("Invalied bill response details");
+           responseModel.setStatus(false);
+           return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+       }
+
+       billPayment.setBillPaymentReferance(billPaymentReferanceOpt.get());
+
        billPayment.setCustomerTransactionRequest(customerTransactionRequest.get());
        if(billPayment.isCurrencyIsCash()) {
            if (billPayment.getValueOf10Notes() == 0 && billPayment.getValueOf20Notes() == 0 &&
@@ -123,9 +134,9 @@ public class BillPaymentServiceImpl implements BillPaymentService {
             extention = FilenameUtils.getExtension(extention);
 
             String location =  ("/billPayment/signatures/update_record_verifications/" + customerTransactionRequestId);
-            String filename = ""+customerTransactionRequestId + "_uuid-"+ randomUUIDString+extention;
+            String filename = ""+customerTransactionRequestId + "_uuid-"+ randomUUIDString+"."+extention;
             String url = fileStorage.fileSaveWithRenaming(billPaymentUpdateDTO.getFile(),location,filename);
-            location = ""+location+"/"+filename;
+            location = location+"/"+filename;
             if(url.equals("Failed")) {
                 responseModel.setMessage(" Failed To Upload Signature");
                 responseModel.setStatus(false);
@@ -135,9 +146,8 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                 BillPaymentUpdateRecords billPaymentUpdateRecords = new BillPaymentUpdateRecords();
                 billPaymentUpdateRecords.setComment(billPaymentUpdateDTO.getComment());
                 billPaymentUpdateRecords.setCustomerTransactionRequest(customerTransactionRequest.get());
+                billPaymentUpdateRecords.setUrl(location);
                 billPaymentUpdateRecords = billPaymentUpdateRecordsRepository.save(billPaymentUpdateRecords);
-
-
 
                 List<BillPaymentErrorRecords> billPaymentErrorRecords = getBillPaymentErrors(billPaymentOptional.get()
                         ,billPayment,billPaymentUpdateRecords);
@@ -156,6 +166,15 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                     return new ResponseEntity<>(responseModel,HttpStatus.SERVICE_UNAVAILABLE);
                 } else {
                     try{
+                        Optional<BillPaymentReferance> billPaymentReferanceOpt = billPaymentReferanceRepository.findById(billPayment.getBillPaymentReferance().getBillPaymentReferanceId());
+
+                        if(!billPaymentReferanceOpt.isPresent()){
+                            responseModel.setMessage("Invalied bill response details");
+                            responseModel.setStatus(false);
+                            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+                        }
+
+                        billPayment.setBillPaymentReferance(billPaymentReferanceOpt.get());
                         billPaymentRepository.save(billPayment);
                         responseModel.setMessage("Bill payment Updated successfully");
                         responseModel.setStatus(true);
@@ -318,6 +337,14 @@ public class BillPaymentServiceImpl implements BillPaymentService {
             billPaymentErrorRecords = new BillPaymentErrorRecords();
             billPaymentErrorRecords.setOldValue("{\"valueOfcoins\":\""+billPaymentOld.getValueOfcoins()+"\"}");
             billPaymentErrorRecords.setNewValue("{\"valueOfcoins\":\""+billPaymentnew.getValueOfcoins()+"\"}");
+            billPaymentErrorRecords.setBillPaymentUpdateRecords(billPaymentUpdateRecords);
+            billPaymentErrorRecords = billPaymentErrorRecordsRepository.save(billPaymentErrorRecords);
+            billPaymentErrorRecordslist.add(billPaymentErrorRecords);
+        }
+        if(billPaymentnew.getBillPaymentReferance().getBillPaymentReferanceId() != billPaymentOld.getBillPaymentReferance().getBillPaymentReferanceId()){
+            billPaymentErrorRecords= new BillPaymentErrorRecords();
+            billPaymentErrorRecords.setOldValue("{\"referance\":\""+billPaymentOld.getBillPaymentReferance().getBillPaymentReferanceId()+"\"}");
+            billPaymentErrorRecords.setOldValue("{\"referance\":\""+billPaymentnew.getBillPaymentReferance().getBillPaymentReferanceId()+"\"}");
             billPaymentErrorRecords.setBillPaymentUpdateRecords(billPaymentUpdateRecords);
             billPaymentErrorRecords = billPaymentErrorRecordsRepository.save(billPaymentErrorRecords);
             billPaymentErrorRecordslist.add(billPaymentErrorRecords);

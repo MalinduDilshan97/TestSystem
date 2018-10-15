@@ -40,9 +40,9 @@ public class BillPayment {
     @NotNull
     private String collectionAccountNo;
 
-    @Size(min = 2)
-    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
-    private String referanceNo;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "billPaymentReferanceId")
+    private BillPaymentReferance billPaymentReferance;
 
     private int valueOf5000Notes;
 
@@ -72,7 +72,15 @@ public class BillPayment {
     public BillPayment() {
     }
 
-    public BillPayment(@NotNull String accountName, @NotNull String benificiaryName, @NotNull String benificiaryTelNo, @NotNull String bankAndBranch, Date date, boolean currencyIsCash, boolean currencyIsChaque, @NotNull String collectionAccountNo, String referanceNo, int valueOf5000Notes, int valueOf2000Notes, int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes, int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total) {
+    public BillPayment(@NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName,
+                       @NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String benificiaryName,
+                       @NotNull @Size(min = 9, max = 10) @Pattern(regexp = "^([+0-9])*$") String benificiaryTelNo,
+                       @NotNull String bankAndBranch, @FutureOrPresent Date date, boolean currencyIsCash,
+                       boolean currencyIsChaque, @NotNull String collectionAccountNo,
+                       BillPaymentReferance billPaymentReferance, int valueOf5000Notes, int valueOf2000Notes,
+                       int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes,
+                       int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total,
+                       CustomerTransactionRequest customerTransactionRequest) {
         this.accountName = accountName;
         this.benificiaryName = benificiaryName;
         this.benificiaryTelNo = benificiaryTelNo;
@@ -81,7 +89,7 @@ public class BillPayment {
         this.currencyIsCash = currencyIsCash;
         this.currencyIsChaque = currencyIsChaque;
         this.collectionAccountNo = collectionAccountNo;
-        this.referanceNo = referanceNo;
+        this.billPaymentReferance = billPaymentReferance;
         this.valueOf5000Notes = valueOf5000Notes;
         this.valueOf2000Notes = valueOf2000Notes;
         this.valueof1000Notes = valueof1000Notes;
@@ -92,6 +100,7 @@ public class BillPayment {
         this.valueOf10Notes = valueOf10Notes;
         this.valueOfcoins = valueOfcoins;
         this.total = total;
+        this.customerTransactionRequest = customerTransactionRequest;
     }
 
     public int getBillPaymentId() {
@@ -164,14 +173,6 @@ public class BillPayment {
 
     public void setCollectionAccountNo(String collectionAccountNo) {
         this.collectionAccountNo = collectionAccountNo;
-    }
-
-    public String getReferanceNo() {
-        return referanceNo;
-    }
-
-    public void setReferanceNo(String referanceNo) {
-        this.referanceNo = referanceNo;
     }
 
     public int getValueOf5000Notes() {
@@ -260,5 +261,13 @@ public class BillPayment {
 
     public void setCustomerTransactionRequest(CustomerTransactionRequest customerTransactionRequest) {
         this.customerTransactionRequest = customerTransactionRequest;
+    }
+
+    public BillPaymentReferance getBillPaymentReferance() {
+        return billPaymentReferance;
+    }
+
+    public void setBillPaymentReferance(BillPaymentReferance billPaymentReferance) {
+        this.billPaymentReferance = billPaymentReferance;
     }
 }
