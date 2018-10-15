@@ -61,14 +61,14 @@ public class BranchServiceImpl implements BranchService {
             response.setStatus(false);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        Optional<Branch> optionalBranch = branchRepository.findById(branchDTO.getMx_branch_code());
+        Optional<Branch> optionalBranch = branchRepository.findById(branchDTO.getBranch_id());
         if (!optionalBranch.isPresent()) {
             response.setMessage("No Branch Details Present");
             response.setStatus(false);
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-            Branch branch = new Branch(optionalBranch.get().getMx_branch_code(),branchDTO.getMx_branch_name(),
+            Branch branch = new Branch(optionalBranch.get().getBranch_id(),optionalBranch.get().getMx_branch_code(),branchDTO.getMx_branch_name(),
                     branchDTO.isCeft(),optional.get());
 
             try {

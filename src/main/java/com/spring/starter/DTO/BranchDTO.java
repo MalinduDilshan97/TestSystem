@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class BranchDTO implements Serializable {
 
+    private int branch_id;
     private int mx_branch_code;
     private String mx_branch_name;
     private boolean ceft;
@@ -12,11 +13,20 @@ public class BranchDTO implements Serializable {
     public BranchDTO() {
     }
 
-    public BranchDTO(int mx_branch_code, String mx_branch_name, boolean ceft, int mx_bank_code) {
+    public BranchDTO(int branch_id, int mx_branch_code, String mx_branch_name, boolean ceft, int mx_bank_code) {
+        this.branch_id = branch_id;
         this.mx_branch_code = mx_branch_code;
         this.mx_branch_name = mx_branch_name;
         this.ceft = ceft;
         this.mx_bank_code = mx_bank_code;
+    }
+
+    public int getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(int branch_id) {
+        this.branch_id = branch_id;
     }
 
     public int getMx_branch_code() {
