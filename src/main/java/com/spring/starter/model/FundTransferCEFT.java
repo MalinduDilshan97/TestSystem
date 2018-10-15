@@ -26,15 +26,13 @@ public class FundTransferCEFT {
     @NotNull
     private double ammount;
 
-    @NotNull
-    @Size(min = 2)
-    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
-    private String creditingAccountBank;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bankId")
+    private Bank bank;
 
-    @NotNull
-    @Size(min = 2)
-    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
-    private String branch;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brancbId")
+    private Branch branch;
 
     @NotNull
     @Size(min = 2)
@@ -45,20 +43,36 @@ public class FundTransferCEFT {
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
 
-    public FundTransferCEFT() {
-    }
+    private String url;
 
-    public FundTransferCEFT(@NotNull String creditAccountNo, @NotNull @Size(min = 2)
-    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName, @NotNull double ammount,
-                            @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String creditingAccountBank,
-                            @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String branch,
-                            @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String reason) {
+    public FundTransferCEFT(@NotNull String creditAccountNo, @NotNull @Size(min = 3) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName, @NotNull double ammount, Bank bank, Branch branch, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String reason, CustomerTransactionRequest customerTransactionRequest, String url) {
         this.creditAccountNo = creditAccountNo;
         this.accountName = accountName;
         this.ammount = ammount;
-        this.creditingAccountBank = creditingAccountBank;
+        this.bank = bank;
         this.branch = branch;
         this.reason = reason;
+        this.customerTransactionRequest = customerTransactionRequest;
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
+    public FundTransferCEFT() {
     }
 
     public int getFundTransferCEFTId() {
@@ -93,21 +107,15 @@ public class FundTransferCEFT {
         this.ammount = ammount;
     }
 
-    public String getCreditingAccountBank() {
-        return creditingAccountBank;
+    public Bank getBank() {
+        return bank;
     }
 
-    public void setCreditingAccountBank(String creditingAccountBank) {
-        this.creditingAccountBank = creditingAccountBank;
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
-    public String getBranch() {
-        return branch;
-    }
 
-    public void setBranch(String branch) {
-        this.branch = branch;
-    }
 
     public String getReason() {
         return reason;

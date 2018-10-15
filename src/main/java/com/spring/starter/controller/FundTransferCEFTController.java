@@ -1,5 +1,7 @@
 package com.spring.starter.controller;
 
+import com.spring.starter.model.Bank;
+import com.spring.starter.model.Branch;
 import com.spring.starter.model.FundTransferCEFT;
 import com.spring.starter.service.FundTransferCEFTService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,18 @@ public class FundTransferCEFTController {
 
     @GetMapping("/testing")
     public ResponseEntity<?> testing(){
+
+        Bank bank = new Bank();
+        bank.setMx_bank_code(7011);
+
+        Branch branch = new Branch();
+        branch.setBranch_id(1);
+
         FundTransferCEFT fundTransferCEFT = new FundTransferCEFT();
         fundTransferCEFT.setAccountName("lakith muthugala");
         fundTransferCEFT.setAmmount(10000.0);
-        fundTransferCEFT.setCreditingAccountBank("sampath");
-        fundTransferCEFT.setBranch("horana");
+        fundTransferCEFT.setBank(bank);
+        fundTransferCEFT.setBranch(branch);
         fundTransferCEFT.setReason("there is no reason");
 
         return new ResponseEntity<>(fundTransferCEFT,HttpStatus.OK);

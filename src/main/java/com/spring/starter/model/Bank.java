@@ -1,5 +1,7 @@
 package com.spring.starter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -15,6 +17,7 @@ public class Bank implements Serializable {
     private String mx_bank_name;
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id")
+    @JsonIgnore
     private List<Branch> branchList;
 
     public Bank() {
