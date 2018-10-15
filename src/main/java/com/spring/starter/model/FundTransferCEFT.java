@@ -19,7 +19,7 @@ public class FundTransferCEFT {
     private String creditAccountNo;
 
     @NotNull
-    @Size(min = 2)
+    @Size(min = 3)
     @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
     private String accountName;
 
@@ -48,7 +48,11 @@ public class FundTransferCEFT {
     public FundTransferCEFT() {
     }
 
-    public FundTransferCEFT(@NotNull String creditAccountNo, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName, @NotNull double ammount, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String creditingAccountBank, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String branch, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String reason) {
+    public FundTransferCEFT(@NotNull String creditAccountNo, @NotNull @Size(min = 2)
+    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName, @NotNull double ammount,
+                            @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String creditingAccountBank,
+                            @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String branch,
+                            @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String reason) {
         this.creditAccountNo = creditAccountNo;
         this.accountName = accountName;
         this.ammount = ammount;
