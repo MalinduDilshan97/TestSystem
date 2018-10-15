@@ -70,6 +70,33 @@ public class FileStorage {
 
     }
 
+    public String fileSaveWithRenaming(MultipartFile file,String location,String filename){
+        this.fileStorageLocation=Paths.get(path.toString(),location);
+
+        try {
+            Files.createDirectories(this.fileStorageLocation);
+        } catch (Exception ex) {
+            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
+        }
+
+        // Normalize file name
+        String fileName = StringUtils.cleanPath(filename);
+
+        try {
+            // Check if the file's name contains invalid characters
+            if(fileName.contains("..")) {
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence  " + fileName);
+            }
+            // Copy file to the target location (Replacing existing file with the same name)
+            Path targetLocation = this.fileStorageLocation.resolve(fileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            return targetLocation.toString();
+
+        } catch (IOException ex) {
+            return "Failed";
+        }
+    }
+
     public Resource getFile(String location){
 
         String path = location;

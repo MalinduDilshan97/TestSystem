@@ -2,6 +2,7 @@ package com.spring.starter.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "effect_or_revoke_payment")
@@ -11,9 +12,8 @@ public class EffectOrRevokePayment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int EffectOrRevokePaymentId;
     private String status;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CustomerAccountNoId")
-    private CustomerAccountNo customerAccountNo;
+    @NotNull
+    private String customerAccountNo;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_service_request_id")
     private CustomerServiceRequest customerServiceRequest;
@@ -21,8 +21,7 @@ public class EffectOrRevokePayment {
     public EffectOrRevokePayment() {
     }
 
-    public EffectOrRevokePayment(int effectOrRevokePaymentId, String status, CustomerAccountNo customerAccountNo, CustomerServiceRequest customerServiceRequest) {
-        EffectOrRevokePaymentId = effectOrRevokePaymentId;
+    public EffectOrRevokePayment(String status, @NotNull String customerAccountNo, CustomerServiceRequest customerServiceRequest) {
         this.status = status;
         this.customerAccountNo = customerAccountNo;
         this.customerServiceRequest = customerServiceRequest;
@@ -44,11 +43,11 @@ public class EffectOrRevokePayment {
         this.status = status;
     }
 
-    public CustomerAccountNo getCustomerAccountNo() {
+    public String getCustomerAccountNo() {
         return customerAccountNo;
     }
 
-    public void setCustomerAccountNo(CustomerAccountNo customerAccountNo) {
+    public void setCustomerAccountNo(String customerAccountNo) {
         this.customerAccountNo = customerAccountNo;
     }
 

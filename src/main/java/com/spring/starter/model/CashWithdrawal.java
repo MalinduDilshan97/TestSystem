@@ -3,6 +3,7 @@ package com.spring.starter.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cash_withdrawal")
@@ -25,10 +26,19 @@ public class CashWithdrawal implements Serializable {
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cash_withdrawal_relation_file_id")
+    private List<CashWithdrawalFile> cashWithdrawalFile;
+
+    private String signatureUrl;
+
     public CashWithdrawal() {
     }
 
-    public CashWithdrawal(Date date, long accountNo, String accountHolder, String currency, double amount, String amountInWords, String identity, NDBBranch ndbBranch, CustomerTransactionRequest customerTransactionRequest) {
+    public CashWithdrawal(Date date, long accountNo, String accountHolder, String currency, double amount,
+                          String amountInWords, String identity, NDBBranch ndbBranch,
+                          CustomerTransactionRequest customerTransactionRequest,
+                          List<CashWithdrawalFile> cashWithdrawalFile, String signatureUrl) {
         this.date = date;
         this.accountNo = accountNo;
         this.accountHolder = accountHolder;
@@ -38,6 +48,16 @@ public class CashWithdrawal implements Serializable {
         this.identity = identity;
         this.ndbBranch = ndbBranch;
         this.customerTransactionRequest = customerTransactionRequest;
+        this.cashWithdrawalFile = cashWithdrawalFile;
+        this.signatureUrl = signatureUrl;
+    }
+
+    public List<CashWithdrawalFile> getCashWithdrawalFile() {
+        return cashWithdrawalFile;
+    }
+
+    public void setCashWithdrawalFile(List<CashWithdrawalFile> cashWithdrawalFile) {
+        this.cashWithdrawalFile = cashWithdrawalFile;
     }
 
     public int getCashWithdrawalId() {
@@ -118,5 +138,13 @@ public class CashWithdrawal implements Serializable {
 
     public void setCustomerTransactionRequest(CustomerTransactionRequest customerTransactionRequest) {
         this.customerTransactionRequest = customerTransactionRequest;
+    }
+
+    public String getSignatureUrl() {
+        return signatureUrl;
+    }
+
+    public void setSignatureUrl(String signatureUrl) {
+        this.signatureUrl = signatureUrl;
     }
 }

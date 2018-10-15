@@ -1,6 +1,9 @@
 package com.spring.starter.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Entity
@@ -8,6 +11,10 @@ public class OtherServiceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int otherid;
+
+    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
     private String requestMsg;
     private Date date;
 

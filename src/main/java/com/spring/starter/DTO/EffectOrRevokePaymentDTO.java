@@ -1,14 +1,24 @@
 package com.spring.starter.DTO;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
 public class EffectOrRevokePaymentDTO implements Serializable {
 
     private int EffectOrRevokePaymentId;
+    @NotNull
+    @Pattern(regexp = "^(STOP|REVOKE)$")
     private String status;
+    @NotNull
+    @Size(min = 6)
     private String accountNo;
+    @NotNull
     private int customerServiceRequestId;
+    @Valid
     private List<EffectOrRevokePaymentDetailsDTO> list;
 
     public EffectOrRevokePaymentDTO() {

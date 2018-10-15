@@ -77,8 +77,8 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
         String num =  transactionCustomer.getMobile();
          if(num.length() == 10){
             num = num.substring(1,10);
-            char a_char = num.charAt(1);
-            if(a_char == '7'){
+            char a_char = num.charAt(0);
+            if(a_char != '7'){
                 responseModel.setMessage("Please Insert A Correct Mobile number");
                 responseModel.setStatus(false);
                 return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
@@ -86,7 +86,7 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
             transactionCustomer.setMobile(num);
         } else if(num.length() == 9){
              char a_char = num.charAt(0);
-             if(a_char == '7'){
+             if(a_char != '7'){
                  responseModel.setMessage("Plese Insert A Correct Mobile number");
                  responseModel.setStatus(false);
                  return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);

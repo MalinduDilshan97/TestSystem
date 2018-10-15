@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/effectOrRevokePayment")
@@ -16,12 +17,14 @@ public class EffectOrRevokePaymentController {
     private EffectOrRevokePaymentService effectOrRevokePaymentService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> createAEffectOrRevokePaymentRequest(@RequestBody EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
+    public ResponseEntity<?> createAEffectOrRevokePaymentRequest
+            (@RequestBody @Valid EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
         return effectOrRevokePaymentService.saveEffectOrPaymentRequest(effectOrRevokePaymentDTO, request);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> effectOrRevokePaymentRequestUpdate(@RequestBody EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
+    public ResponseEntity<?> effectOrRevokePaymentRequestUpdate
+            (@RequestBody @Valid EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
         return effectOrRevokePaymentService.saveEffectOrPaymentRequest(effectOrRevokePaymentDTO, request);
     }
 }

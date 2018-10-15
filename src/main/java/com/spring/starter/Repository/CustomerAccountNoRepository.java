@@ -14,4 +14,6 @@ public interface CustomerAccountNoRepository extends JpaRepository<CustomerAccou
     @Query("SELECT ca from CustomerAccountNo ca WHERE ca.accountNumber= :accountNumber")
     public Optional<CustomerAccountNo> findByAccountNumber(@Param("accountNumber") String accountNumber);
 
+
+
 }

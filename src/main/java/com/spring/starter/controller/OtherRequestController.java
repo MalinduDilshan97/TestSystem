@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("serviceRequest/otherRequest")
 public class OtherRequestController {
@@ -15,7 +17,7 @@ public class OtherRequestController {
     OtherServiceReqService otherServiceReqService;
 
     @PostMapping
-    public ResponseEntity<?> addOtherRequest(@RequestBody OtherServiceRequest otherServiceRequest, @RequestParam(name="requestId") int requestId){
+    public ResponseEntity<?> addOtherRequest(@RequestBody @Valid OtherServiceRequest otherServiceRequest, @RequestParam(name="requestId") int requestId){
         return otherServiceReqService.addOtherRequest(otherServiceRequest,requestId);
     }
 }

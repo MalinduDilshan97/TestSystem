@@ -1,13 +1,17 @@
 package com.spring.starter.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.starter.DTO.BillPaymentUpdateDTO;
 import com.spring.starter.model.BillPayment;
 import com.spring.starter.service.BillPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -31,6 +35,23 @@ public class BillPaymentController {
     public ResponseEntity<?> getBillPaymentRequest(@PathVariable int billPaymentId ){
         return billPaymentService.getBillPaymentRequest(billPaymentId);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<?>updateBillPaymentWithSignatures(@RequestParam  MultipartFile file,
+                                                            @RequestParam  String billPaymentString,
+                                                            @RequestParam int customerServiceRequestId,
+                                                            @RequestParam(required = false) String comment) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        BillPayment billPayment = mapper.readValue(billPaymentString,BillPayment.class);
+
+        BillPaymentUpdateDTO billPaymentUpdateDTO = new BillPaymentUpdateDTO();
+        billPaymentUpdateDTO.setComment(comment);
+        billPaymentUpdateDTO.setFile(file);
+
+        return billPaymentService.updateBillPayment(billPayment,customerServiceRequestId,billPaymentUpdateDTO);
+    }
+
 
     @GetMapping("/test")
     public ResponseEntity<?> getBillPaymentRequest(){

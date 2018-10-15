@@ -27,12 +27,12 @@ public class Card_Validation {
         cardType = CardType.CHINA_UNION_PAY;
         boolean china = cardType.isValid(card);
 
-        if(!visa && !master && !amarican && !diners && !discover && !jcb && !china){
-            return false;
-        } else if(visa && master && amarican && diners && discover && jcb && china){
-            return false;
-        } else {
+         if(visa || master || amarican || diners || discover || jcb || china) {
             return true;
+        }else {
+            return false;
         }
     }
+
 }
+

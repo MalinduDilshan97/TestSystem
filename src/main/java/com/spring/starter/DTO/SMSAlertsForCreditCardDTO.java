@@ -11,7 +11,6 @@ public class SMSAlertsForCreditCardDTO {
 	private String mobileNumber;
 	
 	@NotNull
-	@Size(min = 16,max = 16)
 	private List<String> creditCardNumbers;
 
 	public SMSAlertsForCreditCardDTO() {

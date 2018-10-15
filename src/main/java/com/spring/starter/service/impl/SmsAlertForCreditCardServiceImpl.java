@@ -59,6 +59,11 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 		List<String> creditCardNumbers = smsAlertsForCreditCardDTO.getCreditCardNumbers();
 
 		for(String s : creditCardNumbers){
+			if(s.length() != 16){
+				responsemodel.setMessage("Invalied Card Length");
+				responsemodel.setStatus(false);
+				return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+			}
 			if(!card_validation.checkCardValidity(s)){
 				responsemodel.setMessage("Invalied Card Details");
 				responsemodel.setStatus(false);
@@ -94,5 +99,4 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 			return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
 		}		
 	}
-
 }

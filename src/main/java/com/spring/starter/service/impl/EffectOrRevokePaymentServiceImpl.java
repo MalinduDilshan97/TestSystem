@@ -4,6 +4,7 @@ import com.spring.starter.DTO.EffectOrRevokePaymentDTO;
 import com.spring.starter.DTO.EffectOrRevokePaymentDetailsDTO;
 import com.spring.starter.Exception.CustomException;
 import com.spring.starter.Repository.*;
+import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.service.EffectOrRevokePaymentService;
 import com.spring.starter.service.ServiceRequestCustomerLogService;
@@ -46,38 +47,47 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
-    public ResponseEntity<?> saveEffectOrPaymentRequest(EffectOrRevokePaymentDTO effectOrRevokePaymentDTO, HttpServletRequest request) {
+    public ResponseEntity<?> saveEffectOrPaymentRequest(EffectOrRevokePaymentDTO effectOrRevokePaymentDTO,
+                                                        HttpServletRequest request) {
 
+        ResponseModel responsemodel = new ResponseModel();
         ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
         ServiceRequestFormLog serviceRequestFormLog = new ServiceRequestFormLog();
 
-        Optional<CustomerAccountNo> customerAccountNoOptional = customerAccountNoRepository.findByAccountNumber(effectOrRevokePaymentDTO.getAccountNo());
-        if (!customerAccountNoOptional.isPresent()) {
-            res.setMessage(" No Data Found To Complete The Request");
-            res.setStatus(false);
-            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
-        }
-        Optional<CustomerServiceRequest> optional = customerServiceRequestRepository.findById(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
-        if (!optional.isPresent()) {
-            res.setMessage(" No Data Found To Complete The Request");
-            res.setStatus(false);
-            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+        Optional<CustomerServiceRequest> customerServiceRequestOpt = customerServiceRequestRepository
+                .findById(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
+        if(!customerServiceRequestOpt.isPresent()) {
+            responsemodel.setMessage("There is No such service Available");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
 
-        CustomerServiceRequest customerServiceRequest = optional.get();
-        CustomerAccountNo customerAccountNo = customerAccountNoOptional.get();
+        int serviceRequestId = customerServiceRequestOpt.get().getServiceRequest().getDigiFormId();
+        if(serviceRequestId != ServiceRequestIdConfig.STOP_REVOKE_PAYMENT)
+        {
+            responsemodel.setMessage("Invalided Request");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
+        }
 
+        Optional<EffectOrRevokePayment> optionalPayment = effectOrRevokePaymentRepository
+                .getFormFromCSR(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
         EffectOrRevokePayment effectOrRevokePayment = new EffectOrRevokePayment();
+        if(optionalPayment.isPresent()){
+            effectOrRevokePayment.setEffectOrRevokePaymentId(optionalPayment.get().getEffectOrRevokePaymentId());
+        }
+
+        CustomerServiceRequest customerServiceRequest = customerServiceRequestOpt.get();
+
         effectOrRevokePayment.setEffectOrRevokePaymentId(effectOrRevokePaymentDTO.getEffectOrRevokePaymentId());
-        effectOrRevokePayment.setCustomerAccountNo(customerAccountNo);
+        effectOrRevokePayment.setCustomerAccountNo(effectOrRevokePaymentDTO.getAccountNo());
         effectOrRevokePayment.setCustomerServiceRequest(customerServiceRequest);
+        effectOrRevokePayment.setStatus(effectOrRevokePaymentDTO.getStatus());
 
         EffectOrRevokePayment payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
 
         if (payment != null) {
-
             for (EffectOrRevokePaymentDetailsDTO dto : effectOrRevokePaymentDTO.getList()) {
-
                 try {
                     Date chequeDate = df.parse(dto.getDateOfCheque());
 
@@ -95,7 +105,6 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
                     throw new CustomException("Failed TO Save The Request... Operation Unsuccessful Input Date To This Format (YYYY-MM-DD)");
                 }
             }
-
 
             serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
             serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
@@ -141,6 +150,5 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
             res.setStatus(false);
             return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
         }
-
     }
 }
