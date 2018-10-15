@@ -13,4 +13,8 @@ public interface BillPaymentReferanceService {
     public ResponseEntity<?> updateBillPaymentReferance(BillPaymentReferanceDTO billPaymentReferance,
                                                         int billpaymentReferanceId);
 
+    public ResponseEntity<?> searchBillPayemtnReferance(int billpaymentReferanceId);
+
+    public ResponseEntity<?> deleteBillReferance(int billpaymentReferanceId);
+
 }

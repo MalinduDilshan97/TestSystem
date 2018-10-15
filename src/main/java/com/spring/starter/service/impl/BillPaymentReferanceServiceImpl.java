@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,18 +78,40 @@ public class BillPaymentReferanceServiceImpl implements BillPaymentReferanceServ
         }
     }
 
+    @Override
+    public ResponseEntity<?> searchBillPayemtnReferance(int billpaymentReferanceId) {
+        Optional<BillPaymentReferance> billPaymentReferance = billPaymentReferanceRepository.findById(billpaymentReferanceId);
+        if(billPaymentReferance.isPresent()){
+            return new ResponseEntity<>(billPaymentReferance,HttpStatus.OK);
+        } else {
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setMessage("There is no content to display for that id");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> deleteBillReferance(int billpaymentReferanceId){
+        billPaymentReferanceRepository.deleteById(billpaymentReferanceId);
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setMessage("Bill referance deleted successfully");
+        responseModel.setStatus(true);
+        return new ResponseEntity<>(responseModel,HttpStatus.OK);
+    }
+
     private BillPaymentReferance setToBillPayment(BillPaymentReferanceDTO billPaymentReferanceDTO){
 
         BillPaymentReferance billPaymentReferance = new BillPaymentReferance();
         billPaymentReferance.setReferanceType(billPaymentReferanceDTO.getReferanceType());
         billPaymentReferance.setCollectionAccountNo(billPaymentReferanceDTO.getCollectionAccountNo());
         billPaymentReferance.setBillerNickname(billPaymentReferanceDTO.getBillerNickname());
-        billPaymentReferance.setLocation(billPaymentReferance.getLocation());
+        billPaymentReferance.setLocation(billPaymentReferanceDTO.getLocation());
         billPaymentReferance.setBillerType(billPaymentReferanceDTO.getBillerType());
         billPaymentReferance.setCollectionAccountType(billPaymentReferanceDTO.getCollectionAccountType());
         billPaymentReferance.setCollectionAccountBankAndBranch(billPaymentReferanceDTO.getCollectionAccountBankAndBranch());
         billPaymentReferance.setMaximumAmmountCanPay(billPaymentReferanceDTO.getMaximumAmmountCanPay());
-        billPaymentReferance.setMaximumAmmountCanPay(billPaymentReferanceDTO.getMaximumAmmountCanPay());
+        billPaymentReferance.setMinumumAmmountCanPay(billPaymentReferanceDTO.getMinumumAmmountCanPay());
         billPaymentReferance.setBillerContactEmail(billPaymentReferanceDTO.getBillerContactEmail());
         billPaymentReferance.setBillerContactPhoneNumber(billPaymentReferanceDTO.getBillerContactPhoneNumber());
         billPaymentReferance.setInputField_1(billPaymentReferanceDTO.getInputField_1());
