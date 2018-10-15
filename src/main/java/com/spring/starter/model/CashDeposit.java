@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cash_deposit")
@@ -81,14 +82,20 @@ public class CashDeposit {
     @NotNull
     private double total;
 
+    private String signatureUrl;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cash_withdrawal_relation_file_id")
+    private List<CashDepositFile> cashDepositFiles;
+
     public CashDeposit() {
     }
 
-    public CashDeposit(@NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountHolderName, @NotNull @Pattern(regexp = "^0-9]*$") String accountNumber, @NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String nameOfDepositor, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String address, @NotNull String identification, @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String purposeOfDeposit, @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String ammountInWords, String phoneNumberAndExtn, @FutureOrPresent Date date, @NotNull String currency, int valueOf5000Notes, int valueOf2000Notes, int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes, int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total, CustomerTransactionRequest customerTransactionRequest) {
+    public CashDeposit(@NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountHolderName, @NotNull @Size(min = 6) @Pattern(regexp = "^[0-9]*$") String accountNumber, @NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String nameOfDepositor, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String address, @NotNull String identification, @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String purposeOfDeposit, @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String ammountInWords, @NotNull @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String phoneNumberAndExtn, @FutureOrPresent Date date, @NotNull String currency, int valueOf5000Notes, int valueOf2000Notes, int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes, int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total, String signatureUrl, CustomerTransactionRequest customerTransactionRequest, List<CashDepositFile> cashDepositFiles) {
         this.accountHolderName = accountHolderName;
         this.accountNumber = accountNumber;
         this.nameOfDepositor = nameOfDepositor;
@@ -109,7 +116,9 @@ public class CashDeposit {
         this.valueOf10Notes = valueOf10Notes;
         this.valueOfcoins = valueOfcoins;
         this.total = total;
+        this.signatureUrl = signatureUrl;
         this.customerTransactionRequest = customerTransactionRequest;
+        this.cashDepositFiles = cashDepositFiles;
     }
 
     public int getCashDepositId() {
@@ -286,5 +295,21 @@ public class CashDeposit {
 
     public void setPhoneNumberAndExtn(String phoneNumberAndExtn) {
         this.phoneNumberAndExtn = phoneNumberAndExtn;
+    }
+
+    public List<CashDepositFile> getCashDepositFiles() {
+        return cashDepositFiles;
+    }
+
+    public void setCashDepositFiles(List<CashDepositFile> cashDepositFiles) {
+        this.cashDepositFiles = cashDepositFiles;
+    }
+
+    public String getSignatureUrl() {
+        return signatureUrl;
+    }
+
+    public void setSignatureUrl(String signatureUrl) {
+        this.signatureUrl = signatureUrl;
     }
 }

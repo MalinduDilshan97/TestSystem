@@ -1,12 +1,16 @@
 package com.spring.starter.controller;
 
-import com.spring.starter.model.BillPayment;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.starter.DTO.CashWithdrawalFileDTO;
+import com.spring.starter.DTO.CashWithdrawalUpdateDTO;
+import com.spring.starter.DTO.TransactionSignatureDTO;
 import com.spring.starter.model.CashDeposit;
 import com.spring.starter.service.CashDepositService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -27,9 +31,52 @@ public class CashDepositController {
         return cashDepositService.saveNewCashDepositRequest(cashDeposit,requestId);
     }
 
+    @PutMapping("/file-upload")
+    public ResponseEntity<?> uploadFilesToCashDeposit(@RequestParam MultipartFile file,
+                                                         @RequestParam int customerServiceRequestId,
+                                                         @RequestParam String fileType) throws Exception {
+        CashWithdrawalFileDTO cashWithdrawalFileDTO = new CashWithdrawalFileDTO();
+        cashWithdrawalFileDTO.setCustomerTransactionRequestId(customerServiceRequestId);
+        cashWithdrawalFileDTO.setFile(file);
+        cashWithdrawalFileDTO.setFileType(fileType);
+
+        return cashDepositService.uploadFilesToCashDeposit(cashWithdrawalFileDTO);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCashDeposit(@RequestParam MultipartFile file,
+                                                  @RequestParam String cashDeposit,
+                                                  @RequestParam int customerServiceRequestId,
+                                                  @RequestParam(required = false) String comment
+    ) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        CashDeposit deposit = mapper.readValue(cashDeposit, CashDeposit.class);
+
+        CashWithdrawalUpdateDTO cashWithdrawalUpdateDTO = new CashWithdrawalUpdateDTO();
+        cashWithdrawalUpdateDTO.setComment(comment);
+        cashWithdrawalUpdateDTO.setFile(file);
+
+        return cashDepositService.updateCashDeposit(deposit,customerServiceRequestId,cashWithdrawalUpdateDTO);
+    }
+
+
+
     @GetMapping("/{cashDepositId}")
     public ResponseEntity<?> getCashDepositRequestForm(@PathVariable int cashDepositId){
         return cashDepositService.getCashDepositRequest(cashDepositId);
+    }
+
+    @PutMapping("/signature")
+    public ResponseEntity<?> addMethodSignature(@RequestParam MultipartFile file,
+                                                @RequestParam int customerServiceRequestId,
+                                                @RequestParam String message) throws Exception {
+
+        TransactionSignatureDTO transactionSignatureDTO = new TransactionSignatureDTO();
+        transactionSignatureDTO.setCustomerTransactionId(customerServiceRequestId);
+        int q;
+        transactionSignatureDTO.setMessage(message);
+        transactionSignatureDTO.setFile(file);
+        return  cashDepositService.saveTrasnsactionSignature(transactionSignatureDTO);
     }
 
     @GetMapping ("/test")

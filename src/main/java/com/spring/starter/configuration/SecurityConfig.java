@@ -126,6 +126,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/Transaction-Request/add-customer-to-trasaction-request").permitAll()
                 .antMatchers("/Transaction-Request/fund-transaction-within-ndb").permitAll()
                 .antMatchers("/Transaction-Request/cash-withdrawal").permitAll()
+                .antMatchers("/Transaction-Request/cash-deposit").permitAll()
+                .antMatchers("/Transaction-Request/cash-deposit/file-upload").permitAll()
+                .antMatchers("/Transaction-Request/cash-deposit/update").permitAll()
+                .antMatchers("/Transaction-Request/cash-deposit/signature").permitAll()
                 .anyRequest().authenticated();
 
 

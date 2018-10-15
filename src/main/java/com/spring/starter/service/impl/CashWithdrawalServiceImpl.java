@@ -241,7 +241,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
         if(!optional.isPresent()){
             responseModel.setMessage("Invalied customer transaction id");
             responseModel.setStatus(false);
-            return new ResponseEntity<>("There is no data present for that id", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("There is no data present for that id", HttpStatus.NO_CONTENT);
         } else {
             String location = ("/cash_withdrawals/signatures/" + signatureDTO.getCustomerTransactionId());
             String url = fileStorage.fileSave(signatureDTO.getFile(),location);
