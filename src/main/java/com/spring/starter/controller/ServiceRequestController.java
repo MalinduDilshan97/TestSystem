@@ -1,7 +1,10 @@
 package com.spring.starter.controller;
 
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.spring.starter.DTO.SignatureDTO;
+import com.spring.starter.model.CustomerServiceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,6 +95,20 @@ public class ServiceRequestController {
     @GetMapping("/getServiceRequestForm")
     public ResponseEntity<?> getServiceRequestForm(@RequestParam(name = "requestId") int requestId) {
         return serviceRequestService.getServiceRequestForm(requestId);
+    }
+
+    @PostMapping("/tif-image")
+    public ResponseEntity<?> savetif(@RequestParam  MultipartFile file,
+                                     @RequestParam int serviceRequestCustomerId,
+                                     @RequestParam int queueId) throws Exception {
+
+        return serviceRequestService.saveTif(file,serviceRequestCustomerId,queueId);
+    }
+
+    @GetMapping("/tif-image")
+    public ResponseEntity<?> getTif(@RequestParam String date) throws Exception {
+
+        return serviceRequestService.getTifs(date);
     }
 
     @GetMapping("/test")

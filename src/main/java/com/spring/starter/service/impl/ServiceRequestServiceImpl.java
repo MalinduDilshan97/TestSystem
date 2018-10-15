@@ -4,10 +4,7 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -17,6 +14,7 @@ import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.ServiceRequestIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.util.FileStorage;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +25,7 @@ import com.spring.starter.Exception.CustomException;
 import com.spring.starter.Repository.AtmOrDebitCardRequestRepository;
 import com.spring.starter.model.AtmOrDebitCardRequest;
 import com.spring.starter.service.ServiceRequestService;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -121,6 +120,9 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
     @Autowired
     ServiceRequestCustomerLogRepository serviceRequestCustomerLogRepository;
+
+    @Autowired
+    ServiceRequestTifRepository serviceRequestTifRepository;
 
 
 
@@ -446,6 +448,76 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 	}*/
 
     @Override
+    public ResponseEntity<?> getTifs(String date) throws CustomException {
+        ResponseModel responseModel = new ResponseModel();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date requestDate;
+        try {
+            requestDate = df.parse(date);
+
+            List<ServiceRequestTif> serviceRequestTifs = serviceRequestTifRepository.getTifsOfADate(requestDate);
+            if (serviceRequestTifs.isEmpty()) {
+                responseModel.setMessage("There are no tifs for that day");
+                responseModel.setStatus(false);
+                return new ResponseEntity<>(responseModel, HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(serviceRequestTifs, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> saveTif(MultipartFile file,
+                                     int serviceRequestCustomerId,
+                                     int queueId) throws Exception {
+        ResponseModel responseModel = new ResponseModel();
+        Optional<Customer> customerOptional = customerRepository.findById(serviceRequestCustomerId);
+        if(!customerOptional.isPresent()){
+            responseModel.setMessage("Invalied Customer record");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+        } else {
+
+            UUID uuid = UUID.randomUUID();
+            String randomUUIDString = uuid.toString();
+
+            String extention = file.getOriginalFilename();
+            extention = FilenameUtils.getExtension(extention);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = new Date();
+            String location = ("/serviceRequest/tif/" + formatter.format(date));
+            String filename = serviceRequestCustomerId + "." + extention;
+            String url = fileStorage.fileSaveWithRenaming(file, location, filename);
+            location = location + "/" + filename;
+            if (url.equals("Failed")) {
+                responseModel.setMessage(" Failed To Upload File");
+                responseModel.setStatus(false);
+                return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+            } else {
+                ServiceRequestTif serviceRequestTif = new ServiceRequestTif();
+                serviceRequestTif.setCustomer(customerOptional.get());
+                serviceRequestTif.setDate(java.util.Calendar.getInstance().getTime());
+                serviceRequestTif.setQueueId(queueId);
+                serviceRequestTif.setUrl(location);
+
+                try {
+                    serviceRequestTifRepository.save(serviceRequestTif);
+                    responseModel.setMessage("tif saved successfully");
+                    responseModel.setStatus(true);
+                    return new ResponseEntity<>(responseModel,HttpStatus.CREATED);
+                } catch (Exception e) {
+                    throw new Exception(e.getMessage());
+                }
+            }
+        }
+    }
+
+
+    @Override
     public ResponseEntity<?> getServiceRequestForm(int customerServiceRequestId) {
         ResponseModel responsemodel = new ResponseModel();
         Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository.findById(customerServiceRequestId);
@@ -470,28 +542,28 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
                 return new ResponseEntity<>(request, HttpStatus.OK);
             }
         } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS){
-            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(serviceRequestId);
+            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(customerServiceRequestId);
             if (!subscription.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(subscription, HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.INCREASE_POS_LIMIT_OF_DEBIT_CARD){
-            Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(serviceRequestId);
+            Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(customerServiceRequestId);
             if (!pos.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(pos,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.LINK_NEW_ACCAUNTS_TO_D13EBIT_ATM_CARD){
-            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(serviceRequestId);
+            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(customerServiceRequestId);
             if (!account.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(account,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PRIMARY_ACCOUNT) {
-            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(serviceRequestId);
+            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(customerServiceRequestId);
             if (!primaryAccount.isPresent()){
                return returnResponse();
             } else{
@@ -555,14 +627,14 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             }
 
         } else if(serviceRequestId == ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
-            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(serviceRequestId);
+            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(customerServiceRequestId);
             if (request.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(contactDetailsRepository,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD){
-            Optional<AccountStatementIssueRequest> accountStatementIssueRequestOpt=accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
+            Optional<AccountStatementIssueRequest> accountStatementIssueRequestOpt=accountStatementIssueRequestRepository.getFormFromCSR(customerServiceRequestId);
             if (!accountStatementIssueRequestOpt.isPresent()){
                return returnResponse();
             } else {
@@ -570,49 +642,49 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             }
 
         } else if (serviceRequestId == ServiceRequestIdConfig.PASSBOOK_DUPLICATE_PASSBOOK_REQUEST) {
-            Optional<DuplicatePassBookRequest> bookRequestOpt = duplicatePassBookRequestRepository.getFormFromCSR(serviceRequestId);
+            Optional<DuplicatePassBookRequest> bookRequestOpt = duplicatePassBookRequestRepository.getFormFromCSR(customerServiceRequestId);
             if (!bookRequestOpt.isPresent()) {
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(bookRequestOpt,HttpStatus.OK);
             }
         } else if(serviceRequestId == ServiceRequestIdConfig.PI_ACTIVE_CACEL_ESTATEMENT_FACILITY_FOR_ACCOUNTS){
-            Optional<EstatementFacility> estatementFacilityOpt = estatementFacilityRepository.getFormFromCSR(serviceRequestId);
+            Optional<EstatementFacility> estatementFacilityOpt = estatementFacilityRepository.getFormFromCSR(customerServiceRequestId);
             if (!estatementFacilityOpt.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(estatementFacilityOpt,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO){
-            Optional<StatementFrequency> statementFrequencyOpt = statementFrequencyRepository.getFormFromCSR(serviceRequestId);
+            Optional<StatementFrequency> statementFrequencyOpt = statementFrequencyRepository.getFormFromCSR(customerServiceRequestId);
             if(!statementFrequencyOpt.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(statementFrequencyOpt,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE){
-            Optional<WithholdingFdCd> fdCdNumbersOptional=withholdingFdCdRepository.findByRequestId(serviceRequestId);
+            Optional<WithholdingFdCd> fdCdNumbersOptional=withholdingFdCdRepository.findByRequestId(customerServiceRequestId);
             if (!fdCdNumbersOptional.isPresent()){
                return returnResponse();
             } else {
                 return new ResponseEntity<>(fdCdNumbersOptional,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS){
-            Optional<OtherFdCdRelatedRequest> otherFdCdRelatedRequestOptional=otherFdCdRelatedRequestRepository.findByRequestId(serviceRequestId);
+            Optional<OtherFdCdRelatedRequest> otherFdCdRelatedRequestOptional=otherFdCdRelatedRequestRepository.findByRequestId(customerServiceRequestId);
             if (!otherFdCdRelatedRequestOptional.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(otherFdCdRelatedRequestOptional,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE) {
-            Optional<DuplicateFdCdCert> duplicateFdCdCertOptional=duplicateFdCdCertRepository.findByRequestId(serviceRequestId);
+            Optional<DuplicateFdCdCert> duplicateFdCdCertOptional=duplicateFdCdCertRepository.findByRequestId(customerServiceRequestId);
             if (!duplicateFdCdCertOptional.isPresent()){
                return  returnResponse();
             } else {
                 return new ResponseEntity<>(duplicateFdCdCertOptional,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.OTHER) {
-            Optional<OtherServiceRequest> otherFdCdRelatedRequestOptional=otherServiceRequestRepository.findByRequestId(serviceRequestId);
+            Optional<OtherServiceRequest> otherFdCdRelatedRequestOptional=otherServiceRequestRepository.findByRequestId(customerServiceRequestId);
             if (otherFdCdRelatedRequestOptional.isPresent()){
                 return returnResponse();
             } else {
@@ -670,4 +742,6 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         responsemodel.setStatus(false);
         return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
     }
+
+
 }

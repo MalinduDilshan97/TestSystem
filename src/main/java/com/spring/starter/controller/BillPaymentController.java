@@ -3,6 +3,7 @@ package com.spring.starter.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.starter.DTO.BillPaymentUpdateDTO;
 import com.spring.starter.model.BillPayment;
+import com.spring.starter.model.BillPaymentReferance;
 import com.spring.starter.service.BillPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,8 @@ public class BillPaymentController {
     public ResponseEntity<?> getBillPaymentRequest(){
 
         Date date = java.util.Calendar.getInstance().getTime();
+        BillPaymentReferance billPaymentReferance = new BillPaymentReferance();
+        billPaymentReferance.setBillPaymentReferanceId(1);
 
         BillPayment billPayment = new BillPayment();
         billPayment.setAccountName("lakith muthugala");
@@ -67,7 +70,7 @@ public class BillPaymentController {
         billPayment.setCurrencyIsCash(true);
         billPayment.setCurrencyIsChaque(false);
         billPayment.setCollectionAccountNo("1234567890");
-        billPayment.setReferanceNo("123213qwer");
+        billPayment.setBillPaymentReferance(billPaymentReferance);
         billPayment.setValueOf5000Notes(15000);
         billPayment.setValueOf2000Notes(18000);
         billPayment.setValueof1000Notes(10000);
@@ -81,5 +84,4 @@ public class BillPaymentController {
 
         return new ResponseEntity<>(billPayment,HttpStatus.OK);
     }
-
 }

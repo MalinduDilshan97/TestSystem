@@ -17,6 +17,8 @@ public class BillPaymentUpdateRecords {
     @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
     private String comment;
 
+    private String url;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "billpayment_update_error_id")
     private List<BillPaymentErrorRecords> billPaymentErrorRecords;
@@ -26,6 +28,15 @@ public class BillPaymentUpdateRecords {
     private CustomerTransactionRequest customerTransactionRequest;
 
     public BillPaymentUpdateRecords() {
+    }
+
+    public BillPaymentUpdateRecords(@NotNull @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String comment, String url,
+                                    List<BillPaymentErrorRecords> billPaymentErrorRecords,
+                                    CustomerTransactionRequest customerTransactionRequest) {
+        this.comment = comment;
+        this.url = url;
+        this.billPaymentErrorRecords = billPaymentErrorRecords;
+        this.customerTransactionRequest = customerTransactionRequest;
     }
 
     public BillPaymentUpdateRecords(@NotNull @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String comment,
@@ -66,5 +77,13 @@ public class BillPaymentUpdateRecords {
 
     public void setCustomerTransactionRequest(CustomerTransactionRequest customerTransactionRequest) {
         this.customerTransactionRequest = customerTransactionRequest;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

@@ -316,7 +316,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
                     responseModel.setStatus(false);
                     return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
                 } else {
-                    CashWithdrawal cashWithdrawal = new CashWithdrawal();
+                    CashWithdrawal cashWithdrawal = optional.get();
                     List<CashWithdrawalFile> cashWithdrawalFiles = optional.get().getCashWithdrawalFile();
                     if(cashWithdrawalFiles.isEmpty()){
                         cashWithdrawalFiles = new ArrayList<>();
