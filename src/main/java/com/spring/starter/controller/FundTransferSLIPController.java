@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class FundTransferSLIPController {
 
     @Autowired
-    FundTransferSLIPService fundTransferSLIPService;
+     FundTransferSLIPService fundTransferSLIPService;
 
     @PostMapping
     public ResponseEntity<?> addNewOtherBankSLIP(@RequestBody @Valid FundTransferSLIPS fundTransferSLIP , @RequestParam(name="requestId") int requestId) throws Exception {

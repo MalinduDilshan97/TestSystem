@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.starter.DTO.BillPaymentUpdateDTO;
 import com.spring.starter.model.BillPayment;
 import com.spring.starter.model.BillPaymentReferance;
+import com.spring.starter.model.Branch;
 import com.spring.starter.service.BillPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,11 +62,14 @@ public class BillPaymentController {
         BillPaymentReferance billPaymentReferance = new BillPaymentReferance();
         billPaymentReferance.setBillPaymentReferanceId(1);
 
+        Branch branch = new Branch();
+        branch.setBranch_id(1);
+
         BillPayment billPayment = new BillPayment();
         billPayment.setAccountName("lakith muthugala");
         billPayment.setBenificiaryName("Senila Muthugala");
         billPayment.setBenificiaryTelNo("0710873073");
-        billPayment.setBankAndBranch("Horana NDB");
+        billPayment.setBranch(branch);
         billPayment.setDate(date);
         billPayment.setCurrencyIsCash(true);
         billPayment.setCurrencyIsChaque(false);

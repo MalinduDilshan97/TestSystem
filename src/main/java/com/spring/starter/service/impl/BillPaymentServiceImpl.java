@@ -39,6 +39,9 @@ public class BillPaymentServiceImpl implements BillPaymentService {
     @Autowired
     private FileStorage fileStorage;
 
+    @Autowired
+    private BranchRepository branchRepository;
+
     @Override
     public ResponseEntity<?> saveBillPayment(BillPayment billPayment, int customerTransactionRequestId) {
         ResponseModel responseModel = new ResponseModel();
@@ -91,6 +94,16 @@ public class BillPaymentServiceImpl implements BillPaymentService {
            responseModel.setStatus(false);
            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
        }
+
+       Optional<Branch> branchOpt = branchRepository.findById(billPayment.getBranch().getBranch_id());
+       if(!branchOpt.isPresent()){
+           responseModel.setMessage("Incorrect bank branch details");
+           responseModel.setStatus(false);
+           return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+       } else {
+           billPayment.setBranch(branchOpt.get());
+       }
+
        try{
            responseModel.setMessage("saved successfully");
            responseModel.setStatus(true);
@@ -174,6 +187,15 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                             return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
                         }
 
+                        Optional<Branch> branchOpt = branchRepository.findById(billPayment.getBranch().getBranch_id());
+                        if(!branchOpt.isPresent()){
+                            responseModel.setMessage("Incorrect bank branch details.");
+                            responseModel.setStatus(false);
+                            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+                        } else {
+                            billPayment.setBranch(branchOpt.get());
+                        }
+
                         billPayment.setBillPaymentReferance(billPaymentReferanceOpt.get());
                         billPaymentRepository.save(billPayment);
                         responseModel.setMessage("Bill payment Updated successfully");
@@ -237,10 +259,10 @@ public class BillPaymentServiceImpl implements BillPaymentService {
             billPaymentErrorRecords = billPaymentErrorRecordsRepository.save(billPaymentErrorRecords);
             billPaymentErrorRecordslist.add(billPaymentErrorRecords);
         }
-        if(!billPaymentnew.getBankAndBranch().equals(billPaymentOld.getBankAndBranch())){
+        if(billPaymentnew.getBranch().getBranch_id() != billPaymentOld.getBranch().getBranch_id()){
             billPaymentErrorRecords = new BillPaymentErrorRecords();
-            billPaymentErrorRecords.setOldValue("{\"bankAndBranch\":\""+billPaymentOld.getBankAndBranch()+"\"}");
-            billPaymentErrorRecords.setNewValue("{\"bankAndBranch\":\""+billPaymentnew.getBankAndBranch()+"\"}");
+            billPaymentErrorRecords.setOldValue("{\"bankAndBranch\":\""+billPaymentOld.getBranch().getMx_branch_name()+"\"}");
+            billPaymentErrorRecords.setNewValue("{\"bankAndBranch\":\""+billPaymentnew.getBranch().getMx_branch_name()+"\"}");
             billPaymentErrorRecords.setBillPaymentUpdateRecords(billPaymentUpdateRecords);
             billPaymentErrorRecords = billPaymentErrorRecordsRepository.save(billPaymentErrorRecords);
             billPaymentErrorRecordslist.add(billPaymentErrorRecords);

@@ -1,5 +1,7 @@
 package com.spring.starter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
@@ -27,8 +29,11 @@ public class BillPayment {
     @Size(min = 9 , max = 10)
     @Pattern(regexp = "^([+0-9])*$")
     private String benificiaryTelNo;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branchId")
     @NotNull
-    private String bankAndBranch;
+    private Branch branch;
 
     @FutureOrPresent
     private Date date;
@@ -72,37 +77,6 @@ public class BillPayment {
     public BillPayment() {
     }
 
-    public BillPayment(@NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName,
-                       @NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String benificiaryName,
-                       @NotNull @Size(min = 9, max = 10) @Pattern(regexp = "^([+0-9])*$") String benificiaryTelNo,
-                       @NotNull String bankAndBranch, @FutureOrPresent Date date, boolean currencyIsCash,
-                       boolean currencyIsChaque, @NotNull String collectionAccountNo,
-                       BillPaymentReferance billPaymentReferance, int valueOf5000Notes, int valueOf2000Notes,
-                       int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes,
-                       int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total,
-                       CustomerTransactionRequest customerTransactionRequest) {
-        this.accountName = accountName;
-        this.benificiaryName = benificiaryName;
-        this.benificiaryTelNo = benificiaryTelNo;
-        this.bankAndBranch = bankAndBranch;
-        this.date = date;
-        this.currencyIsCash = currencyIsCash;
-        this.currencyIsChaque = currencyIsChaque;
-        this.collectionAccountNo = collectionAccountNo;
-        this.billPaymentReferance = billPaymentReferance;
-        this.valueOf5000Notes = valueOf5000Notes;
-        this.valueOf2000Notes = valueOf2000Notes;
-        this.valueof1000Notes = valueof1000Notes;
-        this.valueOf500Notes = valueOf500Notes;
-        this.valueOf100Notes = valueOf100Notes;
-        this.valueOf50Notes = valueOf50Notes;
-        this.valueOf20Notes = valueOf20Notes;
-        this.valueOf10Notes = valueOf10Notes;
-        this.valueOfcoins = valueOfcoins;
-        this.total = total;
-        this.customerTransactionRequest = customerTransactionRequest;
-    }
-
     public int getBillPaymentId() {
         return billPaymentId;
     }
@@ -135,12 +109,12 @@ public class BillPayment {
         this.benificiaryTelNo = benificiaryTelNo;
     }
 
-    public String getBankAndBranch() {
-        return bankAndBranch;
+    public Branch getBranch() {
+        return branch;
     }
 
-    public void setBankAndBranch(String bankAndBranch) {
-        this.bankAndBranch = bankAndBranch;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     public Date getDate() {
