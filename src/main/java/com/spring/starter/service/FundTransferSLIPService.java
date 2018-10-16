@@ -1,5 +1,6 @@
 package com.spring.starter.service;
 
+import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.model.FundTransferSLIPS;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,4 +14,8 @@ public interface FundTransferSLIPService {
     public ResponseEntity<?> addSignatureForSLIP(MultipartFile multipartFile, int customerTransactionRequestId);
 
     public ResponseEntity<?> addFileToSLIP(MultipartFile file , String fileType, int customerServiceRequestId);
+
+    public ResponseEntity<?> updateSLIP (FundTransferSLIPS fundTransferSLIPS,
+                                                int customerTransactionRequestId, DetailsUpdateDTO detailsUpdateDTO) throws Exception;
+
 }

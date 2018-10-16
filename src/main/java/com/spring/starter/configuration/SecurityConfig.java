@@ -141,6 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/Transaction-Request/fund-transaction-within-ndb/file-upload").permitAll()
                 .antMatchers("/Transaction-Request/fund-transaction-within-ndb/update").permitAll()
                 .antMatchers("/Transaction-Request/fund-transaction-within-ndb/signature").permitAll()
+                .antMatchers("/Transaction-Request/fundtrasnfet-other-slip/update").permitAll()
                 .anyRequest().authenticated();
 
 
