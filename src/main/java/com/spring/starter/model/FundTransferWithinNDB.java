@@ -18,9 +18,10 @@ public class FundTransferWithinNDB implements Serializable {
     private String currency;
     private double amount;
     private long toAccount;
+    private String signatureUrl;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BranchId")
-    private  NDBBranch ndbBranch;
+    @JoinColumn(name = "Branch_Id")
+    private  Branch branch;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
@@ -31,14 +32,15 @@ public class FundTransferWithinNDB implements Serializable {
     public FundTransferWithinNDB() {
     }
 
-    public FundTransferWithinNDB(Date date, long fromAccount, String fromAccountType, String currency, double amount, long toAccount, NDBBranch ndbBranch, CustomerTransactionRequest customerTransactionRequest, List<FundTransferWithinNDBFile> fundTransferWithinNDBFiles) {
+    public FundTransferWithinNDB(Date date, long fromAccount, String fromAccountType, String currency, double amount, long toAccount, String signatureUrl, Branch branch, CustomerTransactionRequest customerTransactionRequest, List<FundTransferWithinNDBFile> fundTransferWithinNDBFiles) {
         this.date = date;
         this.fromAccount = fromAccount;
         this.fromAccountType = fromAccountType;
         this.currency = currency;
         this.amount = amount;
         this.toAccount = toAccount;
-        this.ndbBranch = ndbBranch;
+        this.signatureUrl = signatureUrl;
+        this.branch = branch;
         this.customerTransactionRequest = customerTransactionRequest;
         this.fundTransferWithinNDBFiles = fundTransferWithinNDBFiles;
     }
@@ -99,12 +101,20 @@ public class FundTransferWithinNDB implements Serializable {
         this.toAccount = toAccount;
     }
 
-    public NDBBranch getNdbBranch() {
-        return ndbBranch;
+    public String getSignatureUrl() {
+        return signatureUrl;
     }
 
-    public void setNdbBranch(NDBBranch ndbBranch) {
-        this.ndbBranch = ndbBranch;
+    public void setSignatureUrl(String signatureUrl) {
+        this.signatureUrl = signatureUrl;
+    }
+
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     public CustomerTransactionRequest getCustomerTransactionRequest() {

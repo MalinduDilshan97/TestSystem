@@ -24,19 +24,19 @@ public class FundTransferWithinNDBDTO implements Serializable {
     @Min(value = 2,message = "Insert Valid Account Number To Continue")
     private long toAccount;
     @NotNull
-    private int ndbBranchId;
+    private int branchId;
 
     public FundTransferWithinNDBDTO() {
     }
 
-    public FundTransferWithinNDBDTO(@NotNull Date date, @NotNull @Min(value = 2, message = "Insert Valid Account Number To Continue") long fromAccount, @NotNull @Size(min = 2) String fromAccountType, @NotNull String currency, @NotNull double amount, @NotNull @Min(value = 2, message = "Insert Valid Account Number To Continue") long toAccount, @NotNull int ndbBranchId) {
+    public FundTransferWithinNDBDTO(@NotNull Date date, @NotNull @Min(value = 2, message = "Insert Valid Account Number To Continue") long fromAccount, @NotNull @Size(min = 2) String fromAccountType, @NotNull String currency, @NotNull double amount, @NotNull @Min(value = 2, message = "Insert Valid Account Number To Continue") long toAccount, @NotNull int branchId) {
         this.date = date;
         this.fromAccount = fromAccount;
         this.fromAccountType = fromAccountType;
         this.currency = currency;
         this.amount = amount;
         this.toAccount = toAccount;
-        this.ndbBranchId = ndbBranchId;
+        this.branchId = branchId;
     }
 
     public Date getDate() {
@@ -87,11 +87,11 @@ public class FundTransferWithinNDBDTO implements Serializable {
         this.toAccount = toAccount;
     }
 
-    public int getNdbBranchId() {
-        return ndbBranchId;
+    public int getBranchId() {
+        return branchId;
     }
 
-    public void setNdbBranchId(int ndbBranchId) {
-        this.ndbBranchId = ndbBranchId;
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
     }
 }
