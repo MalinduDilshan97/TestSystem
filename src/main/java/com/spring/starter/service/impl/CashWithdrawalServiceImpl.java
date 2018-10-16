@@ -289,7 +289,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
         Optional<CashWithdrawal> optional=cashWithdrawalRepository.getFormFromCSR(fileDTO
                 .getCustomerTransactionRequestId());
         if(!optional.isPresent()){
-            responseModel.setMessage("Invalied customer transaction id");
+            responseModel.setMessage("Invalid customer transaction id");
             responseModel.setStatus(false);
             return new ResponseEntity<>(responseModel, HttpStatus.NOT_FOUND);
         } else {
@@ -297,7 +297,7 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
                     +"/Customer Files");
             String url = fileStorage.fileSave(fileDTO.getFile(),location);
             if(url.equals("Failed")) {
-                responseModel.setMessage(" Failed To Upload Signature");
+                responseModel.setMessage(" Failed To Upload File");
                 responseModel.setStatus(false);
                 return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
             } else {

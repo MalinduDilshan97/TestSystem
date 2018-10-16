@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "fund_transfer_CEFT")
@@ -42,6 +43,10 @@ public class FundTransferCEFT {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fundTransferCEFTFiles")
+    private List<FundTransferCEFTFiles> fundTransferCEFTFiles;
 
     private String url;
 
@@ -131,5 +136,13 @@ public class FundTransferCEFT {
 
     public void setCustomerTransactionRequest(CustomerTransactionRequest customerTransactionRequest) {
         this.customerTransactionRequest = customerTransactionRequest;
+    }
+
+    public List<FundTransferCEFTFiles> getFundTransferCEFTFiles() {
+        return fundTransferCEFTFiles;
+    }
+
+    public void setFundTransferCEFTFiles(List<FundTransferCEFTFiles> fundTransferCEFTFiles) {
+        this.fundTransferCEFTFiles = fundTransferCEFTFiles;
     }
 }
