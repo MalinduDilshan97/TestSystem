@@ -21,7 +21,7 @@ public class FundTransferCEFTUpdateRecords {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "fund_trasnfer_CEFT_update_record_Id")
-    private List<FundTransferWithinNDBErrorRecords> fundTransferWithinNDBErrorRecords;
+    private List<FundTransferCEFTErrorRecords> fundTransferCEFTErrorRecords;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_service_request_id")
@@ -31,11 +31,11 @@ public class FundTransferCEFTUpdateRecords {
     }
 
     public FundTransferCEFTUpdateRecords(@NotNull @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String comment, String url,
-                                         List<FundTransferWithinNDBErrorRecords> fundTransferWithinNDBErrorRecords,
+                                         List<FundTransferCEFTErrorRecords> fundTransferCEFTErrorRecords,
                                          CustomerTransactionRequest customerTransactionRequest) {
         this.comment = comment;
         this.url = url;
-        this.fundTransferWithinNDBErrorRecords = fundTransferWithinNDBErrorRecords;
+        this.fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecords;
         this.customerTransactionRequest = customerTransactionRequest;
     }
 
@@ -63,12 +63,12 @@ public class FundTransferCEFTUpdateRecords {
         this.url = url;
     }
 
-    public List<FundTransferWithinNDBErrorRecords> getFundTransferWithinNDBErrorRecords() {
-        return fundTransferWithinNDBErrorRecords;
+    public List<FundTransferCEFTErrorRecords> getFundTransferCEFTErrorRecords() {
+        return fundTransferCEFTErrorRecords;
     }
 
-    public void setFundTransferWithinNDBErrorRecords(List<FundTransferWithinNDBErrorRecords> fundTransferWithinNDBErrorRecords) {
-        this.fundTransferWithinNDBErrorRecords = fundTransferWithinNDBErrorRecords;
+    public void setFundTransferCEFTErrorRecords(List<FundTransferCEFTErrorRecords> fundTransferCEFTErrorRecords) {
+        this.fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecords;
     }
 
     public CustomerTransactionRequest getCustomerTransactionRequest() {

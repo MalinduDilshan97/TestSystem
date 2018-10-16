@@ -56,16 +56,16 @@ public class FundTransferCEFTController {
         return fundTransferCEFTService.uploadFilesToFundTransfers(fileDTO);
     }
 
- /*   @PutMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<?> updateCashWithDrawal(@RequestParam MultipartFile file,
-                                                  @RequestParam String fundTransferCEFTDTO,
+                                                  @RequestParam String fundTransferCEFT,
                                                   @RequestParam int customerServiceRequestId,
                                                   @RequestParam(required = false) String comment) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        FundTransferCEFTDTO fundTransferCEFTDTO1 = mapper.readValue(fundTransferCEFTDTO, FundTransferCEFTDTO.class);
+        FundTransferCEFT transferCEFT = mapper.readValue(fundTransferCEFT, FundTransferCEFT.class);
 
-        return fundTransferCEFTService.updateFundTransferCEFTService(file,fundTransferCEFTDTO1,customerServiceRequestId, comment);
-    }*/
+        return fundTransferCEFTService.updateFundTransferCEFTService(file,transferCEFT,customerServiceRequestId, comment);
+    }
 
     @GetMapping("/{OtherbankServiceCEFTId}")
     public ResponseEntity<?> getOtherbankServiceCEFT(@PathVariable int OtherbankServiceCEFTId){

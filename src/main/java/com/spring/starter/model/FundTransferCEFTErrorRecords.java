@@ -8,7 +8,7 @@ public class FundTransferCEFTErrorRecords {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int billPaymentErrorRecords;
+    private int fundTransferCEFTErrorRecordsId;
 
     private String oldValue;
 
@@ -16,23 +16,23 @@ public class FundTransferCEFTErrorRecords {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_payment_update_records")
-    private BillPaymentUpdateRecords billPaymentUpdateRecords;
+    private FundTransferCEFTUpdateRecords fundTransferCEFTUpdateRecords;
 
     public FundTransferCEFTErrorRecords() {
     }
 
-    public FundTransferCEFTErrorRecords(String oldValue, String newValue, BillPaymentUpdateRecords billPaymentUpdateRecords) {
+    public FundTransferCEFTErrorRecords(String oldValue, String newValue, FundTransferCEFTUpdateRecords fundTransferCEFTUpdateRecords) {
         this.oldValue = oldValue;
         this.newValue = newValue;
-        this.billPaymentUpdateRecords = billPaymentUpdateRecords;
+        this.fundTransferCEFTUpdateRecords = fundTransferCEFTUpdateRecords;
     }
 
-    public int getBillPaymentErrorRecords() {
-        return billPaymentErrorRecords;
+    public int getFundTransferCEFTErrorRecordsId() {
+        return fundTransferCEFTErrorRecordsId;
     }
 
-    public void setBillPaymentErrorRecords(int billPaymentErrorRecords) {
-        this.billPaymentErrorRecords = billPaymentErrorRecords;
+    public void setFundTransferCEFTErrorRecordsId(int fundTransferCEFTErrorRecordsId) {
+        this.fundTransferCEFTErrorRecordsId = fundTransferCEFTErrorRecordsId;
     }
 
     public String getOldValue() {
@@ -51,11 +51,11 @@ public class FundTransferCEFTErrorRecords {
         this.newValue = newValue;
     }
 
-    public BillPaymentUpdateRecords getBillPaymentUpdateRecords() {
-        return billPaymentUpdateRecords;
+    public FundTransferCEFTUpdateRecords getFundTransferCEFTUpdateRecords() {
+        return fundTransferCEFTUpdateRecords;
     }
 
-    public void setBillPaymentUpdateRecords(BillPaymentUpdateRecords billPaymentUpdateRecords) {
-        this.billPaymentUpdateRecords = billPaymentUpdateRecords;
+    public void setFundTransferCEFTUpdateRecords(FundTransferCEFTUpdateRecords fundTransferCEFTUpdateRecords) {
+        this.fundTransferCEFTUpdateRecords = fundTransferCEFTUpdateRecords;
     }
 }
