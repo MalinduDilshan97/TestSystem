@@ -138,6 +138,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/Branch/delete/**").permitAll()
                 .antMatchers("/Branch/search-branch-by-bank/**").permitAll()
                 .antMatchers("/Branch/search-branch/**").permitAll()
+                .antMatchers("/Transaction-Request/fund-transaction-within-ndb/file-upload").permitAll()
+                .antMatchers("/Transaction-Request/fund-transaction-within-ndb/update").permitAll()
+                .antMatchers("/Transaction-Request/fund-transaction-within-ndb/signature").permitAll()
                 .anyRequest().authenticated();
 
 

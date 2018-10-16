@@ -7,6 +7,7 @@ import com.spring.starter.service.FundTransferSLIPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -15,7 +16,7 @@ import javax.validation.Valid;
 public class FundTransferSLIPController {
 
     @Autowired
-    FundTransferSLIPService fundTransferSLIPService;
+     FundTransferSLIPService fundTransferSLIPService;
 
     @PostMapping
     public ResponseEntity<?> addNewOtherBankSLIP(@RequestBody @Valid FundTransferSLIPS fundTransferSLIP , @RequestParam(name="requestId") int requestId) throws Exception {
@@ -30,6 +31,20 @@ public class FundTransferSLIPController {
     @GetMapping("/{OtherbankServiceCEFTId}")
     public ResponseEntity<?> getOtherbankServiceSLIP(@PathVariable int OtherbankServiceCEFTId){
         return fundTransferSLIPService.getFundTransferSlipRequest(OtherbankServiceCEFTId);
+    }
+
+    @PutMapping("/add-signaute-and-update")
+    public ResponseEntity<?> addSignatureForSLIP(@RequestParam MultipartFile file,
+                                                 @RequestParam int customerTrasactionRequestId,
+                                                 @RequestParam(required = false) String message) {
+        return fundTransferSLIPService.addSignatureForSLIP(file,customerTrasactionRequestId);
+    }
+
+    @PutMapping("/add-files")
+    public ResponseEntity<?> addFilesForSLIP(@RequestParam MultipartFile file,
+                                             @RequestParam int customerTrasactionRequestId,
+                                             @RequestParam String fileType){
+        return fundTransferSLIPService.addFileToSLIP(file,fileType,customerTrasactionRequestId);
     }
 
 }

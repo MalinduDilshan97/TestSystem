@@ -21,7 +21,7 @@ public class CashDepositUpdateRecords implements Serializable {
     private CustomerTransactionRequest customerTransactionRequest;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cash_withdrawal_record_error_id")
+    @JoinColumn(name = "cash_deposit_record_error_id")
     private List<CashDepositErrorRecords> cashDepositErrorRecords;
 
     public CashDepositUpdateRecords() {
