@@ -17,5 +17,6 @@ public interface FundTransferCEFTService {
 
     ResponseEntity<?> uploadFilesToFundTransfers(FileDTO fileDTO) throws Exception;
 
-   // ResponseEntity<?> updateFundTransferCEFTService(MultipartFile file, FundTransferCEFTDTO fundTransferCEFTDTO1, int customerServiceRequestId, String comment) throws Exception;
+    public ResponseEntity<?> updateFundTransferCEFTService(MultipartFile file, FundTransferCEFT fundTransferCEFT,
+                                                           int customerServiceRequestId, String comment) throws Exception;
 }

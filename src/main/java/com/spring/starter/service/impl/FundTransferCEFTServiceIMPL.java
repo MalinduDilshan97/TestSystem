@@ -36,10 +36,18 @@ public class FundTransferCEFTServiceIMPL implements FundTransferCEFTService {
 
     @Autowired
     BranchRepository branchRepository;
+
     @Autowired
     FileStorage fileStorage;
+
     @Autowired
     FundTransferCEFTFileRepository fundTransferCEFTFileRepository;
+
+    @Autowired
+    FundTransferCEFTUpdateRecordsRepository fundTransferCEFTUpdateRecordsRepository;
+
+    @Autowired
+    FundTransferCEFTErrorRecordsRepository fundTransferCEFTErrorRecordsRepository;
 
 
     @Override
@@ -250,10 +258,10 @@ public class FundTransferCEFTServiceIMPL implements FundTransferCEFTService {
         }
     }
 
-/*    @Override
-    public ResponseEntity<?> updateFundTransferCEFTService(MultipartFile file, FundTransferCEFTDTO fundTransferCEFTDTO, int customerServiceRequestId, String comment) throws Exception {
+    @Override
+    public ResponseEntity<?> updateFundTransferCEFTService(MultipartFile file, FundTransferCEFT fundTransferCEFT,
+                                                           int customerServiceRequestId, String comment) throws Exception {
         ResponseModel responseModel=new ResponseModel();
-        FundTransferCEFT fundTransferCEFT=new FundTransferCEFT();
         Optional<FundTransferCEFT> optional;
         Optional<CustomerTransactionRequest> customerTransactionRequest;
         try {
@@ -286,56 +294,53 @@ public class FundTransferCEFTServiceIMPL implements FundTransferCEFTService {
             return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
         }
 
-        Optional<Bank> bank = bankRepository.findById(fundTransferCEFTDTO.getBankId());
+        Optional<Bank> bank = bankRepository.findById(fundTransferCEFT.getBank().getMx_bank_code());
         if(!bank.isPresent()){
             responseModel.setMessage("Invalid bank details!");
             responseModel.setStatus(false);
             return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
-        } else {
-            fundTransferCEFT.setBank(bank.get());
         }
 
-        Optional<Branch> branch = branchRepository.findById(fundTransferCEFT.getBranch().getBranch_id());
-        if(!branch.isPresent()){
-            responseModel.setMessage("Invalid bank branch details!");
-            responseModel.setStatus(false);
-            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
-        }  else {
-            fundTransferCEFT.setBranch(branch.get());
-        }
-        fundTransferCEFT.setReason(fundTransferCEFTDTO.getReason());
-        fundTransferCEFT.setAmmount(fundTransferCEFTDTO.getAmmount());
-        fundTransferCEFT.setAccountName(fundTransferCEFTDTO.getAccountName());
+        fundTransferCEFT.setFundTransferCEFTId(optional.get().getFundTransferCEFTId());
         fundTransferCEFT.setCustomerTransactionRequest(customerTransactionRequest.get());
+
+        FundTransferCEFTUpdateRecords fundTransferCEFTUpdateRecords = new FundTransferCEFTUpdateRecords();
+
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
 
         String extention = file.getOriginalFilename();
         extention = FilenameUtils.getExtension(extention);
 
-        String location =  ("/fund_Transfer_CEFT/signatures/update_record_verifications/" + customerServiceRequestId );
-        String filename = ""+customerServiceRequestId + "_uuid-"+ randomUUIDString+extention;
+        String location =  ("/fund_transfer_ceft/signatures/update_record_verifications/" + customerServiceRequestId );
+        String filename = customerServiceRequestId + "_uuid-"+ randomUUIDString+"."+extention;
         String url = fileStorage.fileSaveWithRenaming(file,location,filename);
-        location = ""+location+"/"+filename;
+        location = location+"/"+filename;
         if(url.equals("Failed")) {
             responseModel.setMessage(" Failed To Upload Signature");
             responseModel.setStatus(false);
             return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
         } else {
+            fundTransferCEFTUpdateRecords.setComment(comment);
+            fundTransferCEFTUpdateRecords.setUrl(location);
+            fundTransferCEFTUpdateRecords.setCustomerTransactionRequest(customerTransactionRequest.get());
 
-            fundTransferCEFT.setUrl(location);
+            fundTransferCEFTUpdateRecords=fundTransferCEFTUpdateRecordsRepository.save(fundTransferCEFTUpdateRecords);
+            List<FundTransferCEFTErrorRecords> fundTransferCEFTErrorRecords = new ArrayList<>();
+            fundTransferCEFTErrorRecords = getAllSlipsRecordErrors(optional.get(),fundTransferCEFT,fundTransferCEFTUpdateRecords);
 
-            fundTransferCEFT = fundTransferCEFTRepository.save(fundTransferCEFT);
+            fundTransferCEFTUpdateRecords.setFundTransferCEFTErrorRecords(fundTransferCEFTErrorRecords);
 
+            fundTransferCEFTUpdateRecords=fundTransferCEFTUpdateRecordsRepository.save(fundTransferCEFTUpdateRecords);
 
-            if(fundTransferCEFT == null){
-                responseModel.setMessage("Something went wrong with the database connection!");
+            if (fundTransferCEFTUpdateRecords==null){
+                responseModel.setMessage("Something went wrong with the database connection.");
                 responseModel.setStatus(false);
                 return new ResponseEntity<>(responseModel, HttpStatus.SERVICE_UNAVAILABLE);
-            } else {
+            }else{
                 try {
-                    cashWithdrawalRepository.save(cashWithdrawal);
-                    responseModel.setMessage("Cash withdrawal updated successfully");
+                    fundTransferCEFTRepository.save(fundTransferCEFT);
+                    responseModel.setMessage("Fund Transfer SLIPS updated successfully.");
                     responseModel.setStatus(true);
                     return new ResponseEntity<>(responseModel,HttpStatus.CREATED);
                 } catch (Exception e) {
@@ -344,7 +349,64 @@ public class FundTransferCEFTServiceIMPL implements FundTransferCEFTService {
             }
         }
 
-    }*/
+    }
+
+    private List<FundTransferCEFTErrorRecords> getAllSlipsRecordErrors(FundTransferCEFT fundTransferCEFTOld,FundTransferCEFT fundTransferCEFTNew,FundTransferCEFTUpdateRecords fundTransferCEFTUpdateRecords){
+
+        List<FundTransferCEFTErrorRecords> records= new ArrayList<>();
+        FundTransferCEFTErrorRecords fundTransferCEFTErrorRecords;
+
+        if(!fundTransferCEFTOld.getCreditAccountNo().equals(fundTransferCEFTNew.getCreditAccountNo())){
+            fundTransferCEFTErrorRecords = new FundTransferCEFTErrorRecords();
+            fundTransferCEFTErrorRecords.setOldValue("{\" Credit_Card_Account_Number \":\""+fundTransferCEFTOld.getCreditAccountNo()+"\"}");
+            fundTransferCEFTErrorRecords.setNewValue("{\" Credit_Card_Account_Number \":\""+fundTransferCEFTNew.getCreditAccountNo()+"\"}");
+            fundTransferCEFTErrorRecords.setFundTransferCEFTUpdateRecords(fundTransferCEFTUpdateRecords);
+            fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecordsRepository.save(fundTransferCEFTErrorRecords);
+            records.add(fundTransferCEFTErrorRecords);
+        }
+        if(!fundTransferCEFTOld.getAccountName().equals(fundTransferCEFTNew.getAccountName())){
+            fundTransferCEFTErrorRecords = new FundTransferCEFTErrorRecords();
+            fundTransferCEFTErrorRecords.setOldValue("{\" Account_Holder_Name \":\""+fundTransferCEFTOld.getAccountName()+"\"}");
+            fundTransferCEFTErrorRecords.setNewValue("{\" Account_Holder_Name \":\""+fundTransferCEFTNew.getAccountName()+"\"}");
+            fundTransferCEFTErrorRecords.setFundTransferCEFTUpdateRecords(fundTransferCEFTUpdateRecords);
+            fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecordsRepository.save(fundTransferCEFTErrorRecords);
+            records.add(fundTransferCEFTErrorRecords);
+        }
+        if(fundTransferCEFTOld.getAmmount() != fundTransferCEFTNew.getAmmount()){
+            fundTransferCEFTErrorRecords = new FundTransferCEFTErrorRecords();
+            fundTransferCEFTErrorRecords.setOldValue("{\"Amount \":\""+fundTransferCEFTOld.getAmmount()+"\"}");
+            fundTransferCEFTErrorRecords.setNewValue("{\"Amount \":\""+fundTransferCEFTNew.getAmmount()+"\"}");
+            fundTransferCEFTErrorRecords.setFundTransferCEFTUpdateRecords(fundTransferCEFTUpdateRecords);
+            fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecordsRepository.save(fundTransferCEFTErrorRecords);
+            records.add(fundTransferCEFTErrorRecords);
+        }
+        if(fundTransferCEFTOld.getBank().getMx_bank_code() != fundTransferCEFTNew.getBank().getMx_bank_code()){
+            fundTransferCEFTErrorRecords = new FundTransferCEFTErrorRecords();
+            fundTransferCEFTErrorRecords.setOldValue("{\" Bank_Details \":\""+fundTransferCEFTOld.getBank().getMx_bank_code()+"\"}");
+            fundTransferCEFTErrorRecords.setNewValue("{\" Bank_Details \":\""+fundTransferCEFTNew.getBank().getMx_bank_code()+"\"}");
+            fundTransferCEFTErrorRecords.setFundTransferCEFTUpdateRecords(fundTransferCEFTUpdateRecords);
+            fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecordsRepository.save(fundTransferCEFTErrorRecords);
+            records.add(fundTransferCEFTErrorRecords);
+        }
+        if(fundTransferCEFTOld.getBranch().getBranch_id() != fundTransferCEFTNew.getBranch().getBranch_id()){
+            fundTransferCEFTErrorRecords = new FundTransferCEFTErrorRecords();
+            fundTransferCEFTErrorRecords.setOldValue("{\" Branch_Details \":\""+fundTransferCEFTOld.getBranch().getBranch_id()+"\"}");
+            fundTransferCEFTErrorRecords.setNewValue("{\" Branch_Details \":\""+fundTransferCEFTNew.getBranch().getBranch_id()+"\"}");
+            fundTransferCEFTErrorRecords.setFundTransferCEFTUpdateRecords(fundTransferCEFTUpdateRecords);
+            fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecordsRepository.save(fundTransferCEFTErrorRecords);
+            records.add(fundTransferCEFTErrorRecords);
+        }
+        if(!fundTransferCEFTOld.getReason().equals(fundTransferCEFTNew.getReason())){
+            fundTransferCEFTErrorRecords = new FundTransferCEFTErrorRecords();
+            fundTransferCEFTErrorRecords.setOldValue("{\"Reason \":\""+fundTransferCEFTOld.getReason()+"\"}");
+            fundTransferCEFTErrorRecords.setNewValue("{\"Reason \":\""+fundTransferCEFTNew.getReason()+"\"}");
+            fundTransferCEFTErrorRecords.setFundTransferCEFTUpdateRecords(fundTransferCEFTUpdateRecords);
+            fundTransferCEFTErrorRecords = fundTransferCEFTErrorRecordsRepository.save(fundTransferCEFTErrorRecords);
+            records.add(fundTransferCEFTErrorRecords);
+        }
+        return records;
+
+    }
 
 
 }

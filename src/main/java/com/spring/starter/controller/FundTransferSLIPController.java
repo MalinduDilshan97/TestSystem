@@ -21,12 +21,14 @@ public class FundTransferSLIPController {
      FundTransferSLIPService fundTransferSLIPService;
 
     @PostMapping
-    public ResponseEntity<?> addNewOtherBankSLIP(@RequestBody @Valid FundTransferSLIPS fundTransferSLIP , @RequestParam(name="requestId") int requestId) throws Exception {
+    public ResponseEntity<?> addNewOtherBankSLIP(@RequestBody @Valid FundTransferSLIPS fundTransferSLIP ,
+                                                 @RequestParam(name="requestId") int requestId) throws Exception {
         return fundTransferSLIPService.addNewFundTransferSlipRequest(fundTransferSLIP,requestId);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateNewOtherBankSLIP(@RequestBody @Valid FundTransferSLIPS fundTransferSLIPS, @RequestParam(name="requestId") int requestId) throws Exception {
+    public ResponseEntity<?> updateNewOtherBankSLIP(@RequestBody @Valid FundTransferSLIPS fundTransferSLIPS,
+                                                    @RequestParam(name="requestId") int requestId) throws Exception {
         return fundTransferSLIPService.addNewFundTransferSlipRequest(fundTransferSLIPS,requestId);
     }
 
