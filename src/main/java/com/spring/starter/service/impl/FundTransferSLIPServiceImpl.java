@@ -1,5 +1,6 @@
 package com.spring.starter.service.impl;
 
+import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.Exception.CustomException;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.TransactionIdConfig;
@@ -40,6 +41,12 @@ public class FundTransferSLIPServiceImpl implements FundTransferSLIPService {
 
     @Autowired
     private FundTransferSLIPSFilesRepository fundTransferSLIPSFilesRepository;
+    @Autowired
+    private FundTransferSLIPSErrorRecordsRepository fundTransferSLIPSErrorRecordsRepository;
+    @Autowired
+    private FundTransferSLIPSUpdateRecordRepository fundTransferSLIPSUpdateRecordRepository;
+
+    private ResponseModel responseModel = new ResponseModel();
 
     @Override
     public ResponseEntity<?> addNewFundTransferSlipRequest(FundTransferSLIPS fundTransferSLIPS, int customerTransactionRequestId) throws Exception {
@@ -159,6 +166,150 @@ public class FundTransferSLIPServiceImpl implements FundTransferSLIPService {
 
         }
         return  null;
+    }
+
+    @Override
+    public ResponseEntity<?> updateSLIP(FundTransferSLIPS fundTransferSLIPS, int customerTransactionRequestId, DetailsUpdateDTO detailsUpdateDTO) throws Exception {
+        Optional<CustomerTransactionRequest> customerTransactionRequest;
+
+        try {
+            customerTransactionRequest = customerTransactionRequestRepository.findById(customerTransactionRequestId);
+        } catch (Exception e) {
+            throw  new Exception(e.getMessage());
+        }
+        if (!customerTransactionRequest.isPresent()) {
+            responseModel.setMessage("Invalid Transaction Request");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+        }
+        int id = customerTransactionRequest.get().getTransactionRequest().getDigiFormId();
+        if(id != TransactionIdConfig.FUND_TRANSFER_TO_OTHER_BANKS_SLIP){
+            responseModel.setMessage("Invalid Transaction Request Id");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<FundTransferSLIPS> optionalTransferSLIPS;
+
+        try {
+            optionalTransferSLIPS= fundTransferSLIPRepository.getFormFromCSR(customerTransactionRequestId);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+        if (!optionalTransferSLIPS.isPresent()){
+            responseModel.setMessage("There is no record to update");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+        }
+
+        fundTransferSLIPS.setFundTransferSLIPSId(optionalTransferSLIPS.get().getFundTransferSLIPSId());
+        fundTransferSLIPS.setCustomerTransactionRequest(customerTransactionRequest.get());
+
+        FundTransferSLIPSUpdateRecord fundTransferSLIPSUpdateRecord= new FundTransferSLIPSUpdateRecord();
+
+        UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
+
+        String extention = detailsUpdateDTO.getFile().getOriginalFilename();
+        extention = FilenameUtils.getExtension(extention);
+
+        String location =  ("/fund_transfer_slips/signatures/update_record_verifications/" + customerTransactionRequestId );
+        String filename = ""+customerTransactionRequestId + "_uuid-"+ randomUUIDString+extention;
+        String url = fileStorage.fileSaveWithRenaming(detailsUpdateDTO.getFile(),location,filename);
+        location = ""+location+"/"+filename;
+        if(url.equals("Failed")) {
+            responseModel.setMessage(" Failed To Upload Signature");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+        } else {
+
+            fundTransferSLIPSUpdateRecord.setSignatureUrl(location);
+            fundTransferSLIPSUpdateRecord.setComment(detailsUpdateDTO.getComment());
+            fundTransferSLIPSUpdateRecord.setCustomerTransactionRequest(customerTransactionRequest.get());
+
+            fundTransferSLIPSUpdateRecord=fundTransferSLIPSUpdateRecordRepository.save(fundTransferSLIPSUpdateRecord);
+
+            List<FundTransferSLIPSErrorRecords> fundTransferSLIPSErrorRecords= new ArrayList<>();
+            fundTransferSLIPSErrorRecords=getAllSlipsRecordErrors(optionalTransferSLIPS.get(),fundTransferSLIPS,fundTransferSLIPSUpdateRecord);
+
+            fundTransferSLIPSUpdateRecord.setFundTransferSLIPSErrorRecords(fundTransferSLIPSErrorRecords);
+
+            fundTransferSLIPSUpdateRecord=fundTransferSLIPSUpdateRecordRepository.save(fundTransferSLIPSUpdateRecord);
+
+            if (fundTransferSLIPSUpdateRecord==null){
+                responseModel.setMessage("Something went wrong with the database connection");
+                responseModel.setStatus(false);
+                return new ResponseEntity<>(responseModel, HttpStatus.SERVICE_UNAVAILABLE);
+            }else{
+                try {
+                    fundTransferSLIPRepository.save(fundTransferSLIPS);
+                    responseModel.setMessage("Fund Transfer SLIPS updated successfully");
+                    responseModel.setStatus(true);
+                    return new ResponseEntity<>(responseModel,HttpStatus.CREATED);
+                } catch (Exception e) {
+                    throw new Exception(e.getMessage());
+                }
+            }
+
+        }
+    }
+
+    private List<FundTransferSLIPSErrorRecords> getAllSlipsRecordErrors(FundTransferSLIPS fundTransferSLIPSOLD,FundTransferSLIPS fundTransferSLIPSNew,FundTransferSLIPSUpdateRecord fundTransferSLIPSUpdateRecord){
+
+        List<FundTransferSLIPSErrorRecords> records= new ArrayList<>();
+        FundTransferSLIPSErrorRecords fundTransferSLIPSErrorRecords;
+
+        if(!fundTransferSLIPSOLD.getCreditAccountNo().equals(fundTransferSLIPSNew.getCreditAccountNo())){
+            fundTransferSLIPSErrorRecords = new FundTransferSLIPSErrorRecords();
+            fundTransferSLIPSErrorRecords.setOldValue("{\" Credit Card Account Number \":\""+fundTransferSLIPSOLD.getCreditAccountNo()+"\"}");
+            fundTransferSLIPSErrorRecords.setNewValue("{\" Credit Card Account Number \":\""+fundTransferSLIPSNew.getCreditAccountNo()+"\"}");
+            fundTransferSLIPSErrorRecords.setFundTransferSLIPSUpdateRecord(fundTransferSLIPSUpdateRecord);
+            fundTransferSLIPSErrorRecords = fundTransferSLIPSErrorRecordsRepository.save(fundTransferSLIPSErrorRecords);
+            records.add(fundTransferSLIPSErrorRecords);
+        }
+        if(!fundTransferSLIPSOLD.getAccountName().equals(fundTransferSLIPSNew.getAccountName())){
+            fundTransferSLIPSErrorRecords = new FundTransferSLIPSErrorRecords();
+            fundTransferSLIPSErrorRecords.setOldValue("{\" Account Holder Name \":\""+fundTransferSLIPSOLD.getAccountName()+"\"}");
+            fundTransferSLIPSErrorRecords.setNewValue("{\" Account Holder Name \":\""+fundTransferSLIPSNew.getAccountName()+"\"}");
+            fundTransferSLIPSErrorRecords.setFundTransferSLIPSUpdateRecord(fundTransferSLIPSUpdateRecord);
+            fundTransferSLIPSErrorRecords = fundTransferSLIPSErrorRecordsRepository.save(fundTransferSLIPSErrorRecords);
+            records.add(fundTransferSLIPSErrorRecords);
+        }
+        if(fundTransferSLIPSOLD.getAmmount() != fundTransferSLIPSNew.getAmmount()){
+            fundTransferSLIPSErrorRecords = new FundTransferSLIPSErrorRecords();
+            fundTransferSLIPSErrorRecords.setOldValue("{\" Amount \":\""+fundTransferSLIPSOLD.getAmmount()+"\"}");
+            fundTransferSLIPSErrorRecords.setNewValue("{\" Amount \":\""+fundTransferSLIPSNew.getAmmount()+"\"}");
+            fundTransferSLIPSErrorRecords.setFundTransferSLIPSUpdateRecord(fundTransferSLIPSUpdateRecord);
+            fundTransferSLIPSErrorRecords = fundTransferSLIPSErrorRecordsRepository.save(fundTransferSLIPSErrorRecords);
+            records.add(fundTransferSLIPSErrorRecords);
+        }
+        if(fundTransferSLIPSOLD.getBank().getMx_bank_code() != fundTransferSLIPSNew.getBank().getMx_bank_code()){
+            fundTransferSLIPSErrorRecords = new FundTransferSLIPSErrorRecords();
+            fundTransferSLIPSErrorRecords.setOldValue("{\" Bank Details \":\""+fundTransferSLIPSOLD.getBank().getMx_bank_code()+"\"}");
+            fundTransferSLIPSErrorRecords.setNewValue("{\" Bank Details \":\""+fundTransferSLIPSNew.getBank().getMx_bank_code()+"\"}");
+            fundTransferSLIPSErrorRecords.setFundTransferSLIPSUpdateRecord(fundTransferSLIPSUpdateRecord);
+            fundTransferSLIPSErrorRecords = fundTransferSLIPSErrorRecordsRepository.save(fundTransferSLIPSErrorRecords);
+            records.add(fundTransferSLIPSErrorRecords);
+        }
+        if(fundTransferSLIPSOLD.getBranch().getBranch_id() != fundTransferSLIPSNew.getBranch().getBranch_id()){
+            fundTransferSLIPSErrorRecords = new FundTransferSLIPSErrorRecords();
+            fundTransferSLIPSErrorRecords.setOldValue("{\" Branch Details \":\""+fundTransferSLIPSOLD.getBranch().getBranch_id()+"\"}");
+            fundTransferSLIPSErrorRecords.setNewValue("{\" Branch Details \":\""+fundTransferSLIPSNew.getBranch().getBranch_id()+"\"}");
+            fundTransferSLIPSErrorRecords.setFundTransferSLIPSUpdateRecord(fundTransferSLIPSUpdateRecord);
+            fundTransferSLIPSErrorRecords = fundTransferSLIPSErrorRecordsRepository.save(fundTransferSLIPSErrorRecords);
+            records.add(fundTransferSLIPSErrorRecords);
+        }
+        if(!fundTransferSLIPSOLD.getReason().equals(fundTransferSLIPSNew.getReason())){
+            fundTransferSLIPSErrorRecords = new FundTransferSLIPSErrorRecords();
+            fundTransferSLIPSErrorRecords.setOldValue("{\" Reason \":\""+fundTransferSLIPSOLD.getReason()+"\"}");
+            fundTransferSLIPSErrorRecords.setNewValue("{\" Reason \":\""+fundTransferSLIPSNew.getReason()+"\"}");
+            fundTransferSLIPSErrorRecords.setFundTransferSLIPSUpdateRecord(fundTransferSLIPSUpdateRecord);
+            fundTransferSLIPSErrorRecords = fundTransferSLIPSErrorRecordsRepository.save(fundTransferSLIPSErrorRecords);
+            records.add(fundTransferSLIPSErrorRecords);
+        }
+        return records;
+
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.spring.starter.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.model.FundTransferCEFT;
 import com.spring.starter.model.FundTransferSLIPS;
 import com.spring.starter.service.FundTransferCEFTService;
@@ -45,6 +47,22 @@ public class FundTransferSLIPController {
                                              @RequestParam int customerTrasactionRequestId,
                                              @RequestParam String fileType){
         return fundTransferSLIPService.addFileToSLIP(file,fileType,customerTrasactionRequestId);
+    }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCashDeposit(@RequestParam MultipartFile file,
+                                               @RequestParam String fundTransfer,
+                                               @RequestParam int customerServiceRequestId,
+                                               @RequestParam(required = false) String comment) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        FundTransferSLIPS fundTransferSLIPS = mapper.readValue(fundTransfer, FundTransferSLIPS.class);
+
+        DetailsUpdateDTO detailsUpdateDTO = new DetailsUpdateDTO();
+        detailsUpdateDTO.setComment(comment);
+        detailsUpdateDTO.setFile(file);
+
+        return fundTransferSLIPService.updateSLIP(fundTransferSLIPS,customerServiceRequestId, detailsUpdateDTO);
     }
 
 }
