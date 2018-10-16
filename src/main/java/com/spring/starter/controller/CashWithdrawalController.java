@@ -46,11 +46,11 @@ public class CashWithdrawalController {
 
     @PutMapping("/signature")
     public ResponseEntity<?> addMethodSignature(@RequestParam MultipartFile file,
-                                                @RequestParam int customerServiceRequestId,
-                                                @RequestParam String message) throws Exception {
+                                                @RequestParam int customerTrasactionRequestId,
+                                                @RequestParam(required = false) String message) throws Exception {
 
         TransactionSignatureDTO transactionSignatureDTO = new TransactionSignatureDTO();
-        transactionSignatureDTO.setCustomerTransactionId(customerServiceRequestId);
+        transactionSignatureDTO.setCustomerTransactionId(customerTrasactionRequestId);
         transactionSignatureDTO.setMessage(message);
         transactionSignatureDTO.setFile(file);
 

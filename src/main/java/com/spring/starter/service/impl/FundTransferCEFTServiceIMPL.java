@@ -1,11 +1,11 @@
 package com.spring.starter.service.impl;
 
+import com.spring.starter.Repository.BankRepository;
+import com.spring.starter.Repository.BranchRepository;
 import com.spring.starter.Repository.CustomerTransactionRequestRepository;
 import com.spring.starter.Repository.FundTransferCEFTRepository;
 import com.spring.starter.configuration.TransactionIdConfig;
-import com.spring.starter.model.CustomerTransactionRequest;
-import com.spring.starter.model.FundTransferCEFT;
-import com.spring.starter.model.ResponseModel;
+import com.spring.starter.model.*;
 import com.spring.starter.service.FundTransferCEFTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,12 @@ public class FundTransferCEFTServiceIMPL implements FundTransferCEFTService {
 
     @Autowired
     FundTransferCEFTRepository fundTransferCEFTRepository;
+
+    @Autowired
+    BankRepository bankRepository;
+
+    @Autowired
+    BranchRepository branchRepository;
 
 
     @Override
@@ -46,6 +52,25 @@ public class FundTransferCEFTServiceIMPL implements FundTransferCEFTService {
         if(optionalTransferCEFT.isPresent()){
             fundTransferCEFT.setFundTransferCEFTId(optionalTransferCEFT.get().getFundTransferCEFTId());
         }
+
+        Optional<Bank> bank = bankRepository.findById(fundTransferCEFT.getBank().getMx_bank_code());
+        if(!bank.isPresent()){
+            responseModel.setMessage("invalied bank details");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+        } else {
+            fundTransferCEFT.setBank(bank.get());
+        }
+
+        Optional<Branch> branch = branchRepository.findById(fundTransferCEFT.getBranch().getBranch_id());
+        if(!branch.isPresent()){
+            responseModel.setMessage("invalied bank branch details");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+        }  else {
+            fundTransferCEFT.setBranch(branch.get());
+        }
+
         fundTransferCEFT.setCustomerTransactionRequest(customerTransactionRequest.get());
         try{
             fundTransferCEFT = fundTransferCEFTRepository.save(fundTransferCEFT);

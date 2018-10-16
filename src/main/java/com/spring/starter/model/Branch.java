@@ -21,7 +21,6 @@ public class Branch implements Serializable {
     private boolean ceft;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id")
-    @JsonIgnore
     private Bank bank;
 
     public Branch() {
