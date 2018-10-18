@@ -21,29 +21,34 @@ public class InternetBankingController {
 	private InternetBankingService internetBankingService;
 	
 	@PostMapping("/reissue-password")
-	public ResponseEntity<?> reissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
+	public ResponseEntity<?> reissuePassword(@RequestBody @Valid ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
 		//return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
 		return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
 	}
 
 	@PutMapping("/reissue-password")
-	public ResponseEntity<?> updateReissuePassword(@RequestBody ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
+	public ResponseEntity<?> updateReissuePassword(@RequestBody @Valid ReissueLoginPasswordDTO loginPasswordModel,@RequestParam(name="requestId") int requestId){
 		//return new ResponseEntity<>(loginPasswordModel,HttpStatus.OK);
 		return internetBankingService.reissuePasswordService(loginPasswordModel, requestId);
 	}
 	
 	@PostMapping("/link-JointAccounts")
-	public ResponseEntity<?> linkJointAccounts(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+	public ResponseEntity<?> linkJointAccounts(@RequestBody @Valid LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
 		return internetBankingService.linkJointAccounts(accountDTO, requestId);
 	}
 
 	@PutMapping("/link-JointAccounts")
-	public ResponseEntity<?> updateLinkJointAccounts(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+	public ResponseEntity<?> updateLinkJointAccounts(@RequestBody @Valid LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
 		return internetBankingService.linkJointAccounts(accountDTO, requestId);
 	}
 	
 	@PostMapping("/exclude-accounts")
-	public ResponseEntity<?> excludeAccountNo(@RequestBody LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+	public ResponseEntity<?> excludeAccountNo(@RequestBody @Valid LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
+		return internetBankingService.excludeAccountNo(accountDTO, requestId);
+	}
+
+	@PutMapping("/exclude-accounts")
+	public ResponseEntity<?> updateexcludeAccountNo(@RequestBody @Valid LinkAccountDTO accountDTO,@RequestParam(name="requestId") int requestId){
 		return internetBankingService.excludeAccountNo(accountDTO, requestId);
 	}
 	
@@ -57,7 +62,6 @@ public class InternetBankingController {
 	@PutMapping("/other-service")
 	public ResponseEntity<?> updateServices(@RequestBody @Valid InternetBanking internetBanking, @RequestParam(name="requestId") int requestId){
 		//return new ResponseEntity<>(internetBanking,HttpStatus.OK);
-
 		return internetBankingService.internetOtherService(internetBanking, requestId);
 	}
 	

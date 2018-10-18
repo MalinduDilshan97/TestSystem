@@ -1,14 +1,17 @@
 package com.spring.starter.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -29,13 +32,19 @@ public class Customer {
 	@NonNull
 	private String mobileNo;
 
+	@NotNull
+	private Date date;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name="customerId")
 	private List<CustomerAccountNo> accountNo;
 	
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name="customerServiceRequestsId")
+	@JsonIgnore
 	private List<CustomerServiceRequest> customerServiceRequests;
+
+	private int status;
 
 	public Customer() {
 		super();
@@ -117,6 +126,20 @@ public class Customer {
 	public void setCustomerServiceRequests(List<CustomerServiceRequest> customerServiceRequests) {
 		this.customerServiceRequests = customerServiceRequests;
 	}
-	
 
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }

@@ -42,6 +42,10 @@ public class BillPayment {
 
     private boolean currencyIsChaque = false;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currencyId")
+    private Currency currency;
+
     @NotNull
     private String collectionAccountNo;
 
@@ -235,6 +239,14 @@ public class BillPayment {
 
     public void setCustomerTransactionRequest(CustomerTransactionRequest customerTransactionRequest) {
         this.customerTransactionRequest = customerTransactionRequest;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public BillPaymentReferance getBillPaymentReferance() {

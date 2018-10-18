@@ -1,9 +1,8 @@
 package com.spring.starter.service.impl;
 
 import com.spring.starter.Exception.CustomException;
-import com.spring.starter.Repository.CustomerTransactionRequestRepository;
-import com.spring.starter.Repository.TrancsactionRequestServiceRepository;
-import com.spring.starter.Repository.TransactionCustomerRepository;
+import com.spring.starter.Repository.*;
+import com.spring.starter.configuration.TransactionIdConfig;
 import com.spring.starter.model.*;
 import com.spring.starter.service.TrancsactionRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,24 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
     @Autowired
     CustomerTransactionRequestRepository customerTransactionRequestRepository;
 
+    @Autowired
+    CashdepositRepositiry cashdepositRepositiry;
+
+    @Autowired
+    CashWithdrawalRepository cashWithdrawalRepository;
+
+    @Autowired
+    BillPaymentRepository billPaymentRepository;
+
+    @Autowired
+    FundTransferCEFTRepository fundTransferCEFTRepository;
+
+    @Autowired
+    FundTransferSLIPRepository fundTransferSLIPRepository;
+
+    @Autowired
+    FundTransferWithinNDBRepository fundTransferWithinNDBRepository;
+
 
     @Override
     public ResponseEntity<?> addNewServiceRequest(TransactionRequest transactionRequest) {
@@ -50,6 +67,25 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
         responseModel.setStatus(true);
 
         return new ResponseEntity<>(transactionRequest,HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<?> viewTransactionRequest (int customerTransactionRequest) {
+        ResponseModel responseModel = new ResponseModel();
+        Optional<CustomerTransactionRequest> optionalCustomerTransactionRequest = customerTransactionRequestRepository
+                .findById(customerTransactionRequest);
+        if(!optionalCustomerTransactionRequest.isPresent()){
+            responseModel.setMessage("There is No such service Available");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel, HttpStatus.NO_CONTENT);
+        }
+        int transactionRequrstId = optionalCustomerTransactionRequest.get().getTransactionRequest().getDigiFormId();
+        if(transactionRequrstId == TransactionIdConfig.DEPOSITS) {
+            Optional<CashDeposit> cashDeposit = cashdepositRepositiry.getFormFromCSR(customerTransactionRequest);
+            if(cashDeposit.isPresent()){
+                return null;
+            }
+        }
+        return null;
     }
 
     @Override

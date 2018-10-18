@@ -48,4 +48,8 @@ public interface ServiceRequestService {
 
     public ResponseEntity<?> getTifs(String date) throws Exception;
 
+    public ResponseEntity<?> getFIleTypes(int customerRequestId);
+
+    public ResponseEntity<?> getCustomerDetailsByDate(String date);
+
 }

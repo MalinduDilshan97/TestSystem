@@ -5,6 +5,7 @@ import com.spring.starter.DTO.FileDTO;
 import com.spring.starter.DTO.DetailsUpdateDTO;
 import com.spring.starter.DTO.TransactionSignatureDTO;
 import com.spring.starter.model.CashDeposit;
+import com.spring.starter.model.Currency;
 import com.spring.starter.service.CashDepositService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,10 @@ public class CashDepositController {
 
     @GetMapping ("/test")
     public ResponseEntity<?> test(){
+
+        Currency currency = new Currency();
+        currency.setCurrency_id(1);
+
         CashDeposit cashDeposit = new CashDeposit();
         cashDeposit.setAccountNumber("Lakith Muthugala");
         cashDeposit.setAccountNumber("123456789");
@@ -91,7 +96,7 @@ public class CashDepositController {
         cashDeposit.setAmmountInWords("five thousand only");
         cashDeposit.setPhoneNumberAndExtn("0342252011");
         cashDeposit.setDate(java.util.Calendar.getInstance().getTime());
-        cashDeposit.setCurrency("LKR");
+        cashDeposit.setCurrency(currency);
         cashDeposit.setValueOf5000Notes(15000);
         cashDeposit.setValueOf2000Notes(18000);
         cashDeposit.setValueof1000Notes(10000);

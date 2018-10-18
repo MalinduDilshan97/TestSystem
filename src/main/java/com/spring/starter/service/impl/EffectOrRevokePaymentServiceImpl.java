@@ -21,10 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 
 @Transactional
 @Service
@@ -70,12 +67,23 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
             return new ResponseEntity<>(responsemodel, HttpStatus.BAD_REQUEST);
         }
 
+
+        List<EffectOrRevokePaymentDetails> effectOrRevokePaymentDetails = new ArrayList<>();
+
         Optional<EffectOrRevokePayment> optionalPayment = effectOrRevokePaymentRepository
                 .getFormFromCSR(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
         EffectOrRevokePayment effectOrRevokePayment = new EffectOrRevokePayment();
         if(optionalPayment.isPresent()){
             effectOrRevokePayment.setEffectOrRevokePaymentId(optionalPayment.get().getEffectOrRevokePaymentId());
+
+            if(!optionalPayment.get().getEffectOrRevokePaymentDetails().isEmpty()){
+                effectOrRevokePaymentDetails =  optionalPayment.get().getEffectOrRevokePaymentDetails();
+            } else {
+                effectOrRevokePaymentDetails = new ArrayList<>();
+            }
         }
+
+
 
         CustomerServiceRequest customerServiceRequest = customerServiceRequestOpt.get();
 
@@ -85,6 +93,9 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
         effectOrRevokePayment.setStatus(effectOrRevokePaymentDTO.getStatus());
 
         EffectOrRevokePayment payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
+
+
+
 
         if (payment != null) {
             for (EffectOrRevokePaymentDetailsDTO dto : effectOrRevokePaymentDTO.getList()) {
@@ -99,12 +110,18 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
                             dto.getReason(),
                             payment);
 
-                    effectOrRevokePaymentDetailsRepository.save(details);
+                    details =  effectOrRevokePaymentDetailsRepository.save(details);
+                    effectOrRevokePaymentDetails.add(details);
 
                 } catch (ParseException e) {
-                    throw new CustomException("Failed TO Save The Request... Operation Unsuccessful Input Date To This Format (YYYY-MM-DD)");
+                    throw new CustomException("Failed TO Save The Request... Operation Unsuccessful" +
+                            " Input Date To This Format (YYYY-MM-DD)");
                 }
             }
+
+            payment.setEffectOrRevokePaymentDetails(effectOrRevokePaymentDetails);
+
+
 
             serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
             serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());
@@ -122,10 +139,10 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
                 serviceRequestFormLog.setMessage("Request Form Successfully Saved To The System");
                 serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
             }
-
+            payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
             res.setMessage(" Request Form Successfully Saved To The System");
             res.setStatus(true);
-            return new ResponseEntity<>(res, HttpStatus.CREATED);
+            return new ResponseEntity<>(payment, HttpStatus.CREATED);
 
         } else {
 

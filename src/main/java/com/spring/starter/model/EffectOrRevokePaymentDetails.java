@@ -1,5 +1,7 @@
 package com.spring.starter.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -16,7 +18,8 @@ public class EffectOrRevokePaymentDetails {
     private Date dateOfCheque;
     private String reason;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EffectOrRevokePaymentId")
+    @JoinColumn(name = "effect_revoke_details_id")
+    @JsonIgnore
     private EffectOrRevokePayment effectOrRevokePayment;
 
     public EffectOrRevokePaymentDetails() {

@@ -4,6 +4,7 @@ import com.spring.starter.DTO.BillPaymentUpdateDTO;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.TransactionIdConfig;
 import com.spring.starter.model.*;
+import com.spring.starter.model.Currency;
 import com.spring.starter.service.BillPaymentService;
 import com.spring.starter.util.FileStorage;
 import org.apache.commons.io.FilenameUtils;
@@ -42,6 +43,9 @@ public class BillPaymentServiceImpl implements BillPaymentService {
     @Autowired
     private BranchRepository branchRepository;
 
+    @Autowired
+    CurrencyRepository currencyRepository;
+
     @Override
     public ResponseEntity<?> saveBillPayment(BillPayment billPayment, int customerTransactionRequestId) {
         ResponseModel responseModel = new ResponseModel();
@@ -73,6 +77,14 @@ public class BillPaymentServiceImpl implements BillPaymentService {
 
        billPayment.setBillPaymentReferance(billPaymentReferanceOpt.get());
 
+        Optional<Currency> currency = currencyRepository.findById(billPayment.getCurrency().getCurrency_id());
+        if(!currency.isPresent()){
+            responseModel.setMessage("Invalied Currency details");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+        }else {
+            billPayment.setCurrency(currency.get());
+        }
        billPayment.setCustomerTransactionRequest(customerTransactionRequest.get());
        if(billPayment.isCurrencyIsCash()) {
            if (billPayment.getValueOf10Notes() == 0 && billPayment.getValueOf20Notes() == 0 &&
@@ -169,8 +181,6 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                 }
                 billPaymentUpdateRecords.setBillPaymentErrorRecords(billPaymentErrorRecords);
 
-
-
                 billPaymentUpdateRecords = billPaymentUpdateRecordsRepository.save(billPaymentUpdateRecords);
 
                 if(billPaymentUpdateRecords == null) {
@@ -194,6 +204,15 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                             return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
                         } else {
                             billPayment.setBranch(branchOpt.get());
+                        }
+
+                        Optional<Currency> currency = currencyRepository.findById(billPayment.getCurrency().getCurrency_id());
+                        if(!currency.isPresent()){
+                            responseModel.setMessage("Invalied Currency details.");
+                            responseModel.setStatus(false);
+                            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+                        }else {
+                            billPayment.setCurrency(currency.get());
                         }
 
                         billPayment.setBillPaymentReferance(billPaymentReferanceOpt.get());
@@ -366,12 +385,19 @@ public class BillPaymentServiceImpl implements BillPaymentService {
         if(billPaymentnew.getBillPaymentReferance().getBillPaymentReferanceId() != billPaymentOld.getBillPaymentReferance().getBillPaymentReferanceId()){
             billPaymentErrorRecords= new BillPaymentErrorRecords();
             billPaymentErrorRecords.setOldValue("{\"referance\":\""+billPaymentOld.getBillPaymentReferance().getBillPaymentReferanceId()+"\"}");
-            billPaymentErrorRecords.setOldValue("{\"referance\":\""+billPaymentnew.getBillPaymentReferance().getBillPaymentReferanceId()+"\"}");
+            billPaymentErrorRecords.setNewValue("{\"referance\":\""+billPaymentnew.getBillPaymentReferance().getBillPaymentReferanceId()+"\"}");
             billPaymentErrorRecords.setBillPaymentUpdateRecords(billPaymentUpdateRecords);
             billPaymentErrorRecords = billPaymentErrorRecordsRepository.save(billPaymentErrorRecords);
             billPaymentErrorRecordslist.add(billPaymentErrorRecords);
         }
-
+        if(billPaymentnew.getCurrency().getCurrency_id() != billPaymentOld.getCurrency().getCurrency_id()){
+            billPaymentErrorRecords= new BillPaymentErrorRecords();
+            billPaymentErrorRecords.setOldValue("{\"currency\":\""+billPaymentOld.getCurrency().getCurrency_id()+"\"}");
+            billPaymentErrorRecords.setNewValue("{\"currency\":\""+billPaymentnew.getCurrency().getCurrency_id()+"\"}");
+            billPaymentErrorRecords.setBillPaymentUpdateRecords(billPaymentUpdateRecords);
+            billPaymentErrorRecords = billPaymentErrorRecordsRepository.save(billPaymentErrorRecords);
+            billPaymentErrorRecordslist.add(billPaymentErrorRecords);
+        }
         return billPaymentErrorRecordslist;
     }
 }

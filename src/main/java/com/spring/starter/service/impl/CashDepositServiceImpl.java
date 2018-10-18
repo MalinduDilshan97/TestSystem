@@ -7,6 +7,7 @@ import com.spring.starter.Exception.CustomException;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.TransactionIdConfig;
 import com.spring.starter.model.*;
+import com.spring.starter.model.Currency;
 import com.spring.starter.service.CashDepositService;
 import com.spring.starter.util.FileStorage;
 import org.apache.commons.io.FilenameUtils;
@@ -36,6 +37,10 @@ public class CashDepositServiceImpl implements CashDepositService {
     private CashDepositUpdateRecordsRepository cashDepositUpdateRecordsRepository;
     @Autowired
     private CashDepositErrorRecordsRepository cashDepositErrorRecordsRepository;
+
+    @Autowired
+    private CurrencyRepository currencyRepository;
+
     private ResponseModel responseModel = new ResponseModel();
 
     @Override
@@ -59,6 +64,15 @@ public class CashDepositServiceImpl implements CashDepositService {
             cashDeposit.setCashDepositId(cashDepositOpt.get().getCashDepositId());
         }
         cashDeposit.setCustomerTransactionRequest(customerTransactionRequest.get());
+
+        Optional<Currency> currency = currencyRepository.findById(cashDeposit.getCurrency().getCurrency_id());
+        if(!currency.isPresent()){
+            responseModel.setMessage("Invalied Currency details");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+        } else {
+            cashDeposit.setCurrency(currency.get());
+        }
 
         if (cashDeposit.getValueOf10Notes() == 0 && cashDeposit.getValueOf20Notes() == 0 &&
                 cashDeposit.getValueOf50Notes() == 0 && cashDeposit.getValueOf100Notes() == 0 &&
@@ -241,6 +255,14 @@ public class CashDepositServiceImpl implements CashDepositService {
                 return new ResponseEntity<>(responseModel, HttpStatus.SERVICE_UNAVAILABLE);
             } else {
                 try {
+                    Optional<Currency> currency = currencyRepository.findById(cashDeposit.getCurrency().getCurrency_id());
+                    if(!currency.isPresent()){
+                        responseModel.setMessage("Invalied Currency details.");
+                        responseModel.setStatus(false);
+                        return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+                    } else {
+                        cashDeposit.setCurrency(currency.get());
+                    }
                     cashdepositRepositiry.save(cashDeposit);
                     responseModel.setMessage("Cash Deposit updated successfully");
                     responseModel.setStatus(true);
@@ -480,17 +502,23 @@ public class CashDepositServiceImpl implements CashDepositService {
             cashDepositErrorRecord = cashDepositErrorRecordsRepository.save(cashDepositErrorRecord);
             listOfCashDepositErrorRecords.add(cashDepositErrorRecord);
         }
+        if(cashDepositNew.getCurrency().getCurrency_id() != cashDepositOld.getCurrency().getCurrency_id()){
+            cashDepositErrorRecord = new CashDepositErrorRecords();
+            cashDepositErrorRecord.setOldValue("{\" currency \":\""+cashDepositOld.getCurrency().getCurrency()+"\"}");
+            cashDepositErrorRecord.setNewValue("{\" currency \":\""+cashDepositNew.getCurrency().getCurrency()+"\"}");
+            cashDepositErrorRecord.setCashDepositUpdateRecords(cashDepositUpdateRecords);
+            cashDepositErrorRecord = cashDepositErrorRecordsRepository.save(cashDepositErrorRecord);
+            listOfCashDepositErrorRecords.add(cashDepositErrorRecord);
+        }
         return listOfCashDepositErrorRecords;
-
     }
-
 
     @Override
     public ResponseEntity<?> getCashDepositRequest(int cashDepositId) {
         Optional<CashDeposit> cashDeposit = cashdepositRepositiry.findById(cashDepositId);
         if (!cashDeposit.isPresent()) {
             ResponseModel responseModel = new ResponseModel();
-            responseModel.setMessage("There is no record for that Id");
+            responseModel.setMessage("There is no record exits for that Id.");
             responseModel.setStatus(false);
             return new ResponseEntity<>(responseModel, HttpStatus.NO_CONTENT);
         } else {

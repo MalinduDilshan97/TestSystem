@@ -110,10 +110,10 @@ public class FdorCdServiceImpl implements FdorCdService {
         otherFdCdRelatedRequest.setCustomerServiceRequest(customerServiceRequest.get());
 
         try {
-            otherFdCdRelatedRequestRepository.save(otherFdCdRelatedRequest);
+            otherFdCdRelatedRequest = otherFdCdRelatedRequestRepository.save(otherFdCdRelatedRequest);
             responsemodel.setMessage("Successfully created");
             responsemodel.setStatus(true);
-            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+            return new ResponseEntity<>(otherFdCdRelatedRequest, HttpStatus.CREATED);
         }catch (Exception e){
             responsemodel.setMessage("Error  in creating requests");
             responsemodel.setStatus(false);
@@ -146,10 +146,10 @@ public class FdorCdServiceImpl implements FdorCdService {
         duplicateFdCdCert.setDate(new Date());
         duplicateFdCdCert.setCustomerServiceRequest(customerServiceRequest.get());
         try{
-            duplicateFdCdCertRepository.save(duplicateFdCdCert);
+            duplicateFdCdCert = duplicateFdCdCertRepository.save(duplicateFdCdCert);
             responsemodel.setMessage("Successfully added duplicate fd/cd");
             responsemodel.setStatus(true);
-            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+            return new ResponseEntity<>(duplicateFdCdCert, HttpStatus.CREATED);
         }catch (Exception e){
         responsemodel.setMessage("Error  in creating duplicate fd/cd");
         responsemodel.setStatus(false);

@@ -5,6 +5,7 @@ import com.spring.starter.DTO.BillPaymentUpdateDTO;
 import com.spring.starter.model.BillPayment;
 import com.spring.starter.model.BillPaymentReferance;
 import com.spring.starter.model.Branch;
+import com.spring.starter.model.Currency;
 import com.spring.starter.service.BillPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,14 @@ public class BillPaymentController {
     BillPaymentService billPaymentService;
 
     @PostMapping
-    public ResponseEntity<?> saveBillPaymentRequest(@RequestBody @Valid BillPayment billPayment, @RequestParam(name="requestId") int requestId) {
+    public ResponseEntity<?> saveBillPaymentRequest(@RequestBody @Valid BillPayment billPayment,
+                                                    @RequestParam(name="requestId") int requestId) {
        return billPaymentService.saveBillPayment(billPayment,requestId);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateBillPaymentRequest(@RequestBody @Valid BillPayment billPayment,@RequestParam(name="requestId") int requestId) {
+    public ResponseEntity<?> updateBillPaymentRequest(@RequestBody @Valid BillPayment billPayment,
+                                                      @RequestParam(name="requestId") int requestId) {
         return billPaymentService.saveBillPayment(billPayment,requestId);
     }
 
@@ -42,7 +45,8 @@ public class BillPaymentController {
     public ResponseEntity<?>updateBillPaymentWithSignatures(@RequestParam  MultipartFile file,
                                                             @RequestParam  String billPaymentString,
                                                             @RequestParam int customerServiceRequestId,
-                                                            @RequestParam(required = false) String comment) throws Exception {
+                                                            @RequestParam(required = false) String comment)
+                                                            throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
         BillPayment billPayment = mapper.readValue(billPaymentString,BillPayment.class);
@@ -65,12 +69,16 @@ public class BillPaymentController {
         Branch branch = new Branch();
         branch.setBranch_id(1);
 
+        Currency currency = new Currency();
+        currency.setCurrency_id(1);
+
         BillPayment billPayment = new BillPayment();
         billPayment.setAccountName("lakith muthugala");
         billPayment.setBenificiaryName("Senila Muthugala");
         billPayment.setBenificiaryTelNo("0710873073");
         billPayment.setBranch(branch);
         billPayment.setDate(date);
+        billPayment.setCurrency(currency);
         billPayment.setCurrencyIsCash(true);
         billPayment.setCurrencyIsChaque(false);
         billPayment.setCollectionAccountNo("1234567890");

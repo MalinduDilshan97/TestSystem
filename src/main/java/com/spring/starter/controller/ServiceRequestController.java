@@ -67,6 +67,11 @@ public class ServiceRequestController {
         return serviceRequestService.getAllServiceRequests(customerId, date);
     }
 
+    @GetMapping("/getCustomerRequestsFilterByDate")
+    public ResponseEntity<?> getCustomerDetailsFiilterBydate(@RequestParam("date") String date){
+        return serviceRequestService.getCustomerDetailsByDate(date);
+    }
+
     @GetMapping("/getAllCustomerRequests")
     public ResponseEntity<?> getAllCustomerDetails(@RequestParam(name = "customerId") int customerId) {
         return serviceRequestService.getAllCustomerRequests(customerId);
@@ -107,9 +112,14 @@ public class ServiceRequestController {
 
     @GetMapping("/tif-image")
     public ResponseEntity<?> getTif(@RequestParam String date) throws Exception {
-
         return serviceRequestService.getTifs(date);
     }
+
+    @GetMapping("getDocumentTypes/{customerServiceRequestId}")
+    public ResponseEntity<?> getDocuments(@PathVariable int customerServiceRequestId) {
+        return serviceRequestService.getFIleTypes(customerServiceRequestId);
+    }
+
 
     @GetMapping("/test")
     public ResponseEntity<?> testModel() {

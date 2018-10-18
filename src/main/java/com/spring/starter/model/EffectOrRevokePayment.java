@@ -3,6 +3,7 @@ package com.spring.starter.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "effect_or_revoke_payment")
@@ -17,6 +18,10 @@ public class EffectOrRevokePayment {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_service_request_id")
     private CustomerServiceRequest customerServiceRequest;
+
+    @OneToMany
+    @JoinColumn(name = "effect_revoke_details_id")
+    private List<EffectOrRevokePaymentDetails> effectOrRevokePaymentDetails;
 
     public EffectOrRevokePayment() {
     }
@@ -57,5 +62,13 @@ public class EffectOrRevokePayment {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public List<EffectOrRevokePaymentDetails> getEffectOrRevokePaymentDetails() {
+        return effectOrRevokePaymentDetails;
+    }
+
+    public void setEffectOrRevokePaymentDetails(List<EffectOrRevokePaymentDetails> effectOrRevokePaymentDetails) {
+        this.effectOrRevokePaymentDetails = effectOrRevokePaymentDetails;
     }
 }

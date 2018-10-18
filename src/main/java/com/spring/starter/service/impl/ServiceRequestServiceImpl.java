@@ -9,6 +9,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import com.spring.starter.DTO.DocumentDTO;
 import com.spring.starter.DTO.SignatureDTO;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.ServiceRequestIdConfig;
@@ -124,6 +125,9 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     @Autowired
     ServiceRequestTifRepository serviceRequestTifRepository;
 
+    @Autowired
+    private EffectOrRevokePaymentRepository effectOrRevokePaymentRepository;
+
 
 
     @Override
@@ -160,6 +164,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         customer.setIdentification(customerDTO.getIdentification());
         customer.setName(customerDTO.getName());
         customer.setMobileNo(customerDTO.getMobileNo());
+        customer.setDate(java.util.Calendar.getInstance().getTime());
         Customer customer_new;
         try {
             customer_new = customerRepository.save(customer);
@@ -359,37 +364,47 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
     public ResponseEntity<?> completeAllCustomerRequests(Principal principal, int customerId) {
         ResponseModel responsemodel = new ResponseModel();
-        List<CustomerServiceRequest> allCustomers = customerServiceRequestRepository.getAllCustomerRequest(customerId);
-        Optional<StaffUser> staffUser = staffUserRepository.findById(Integer.parseInt(principal.getName()));
-        if(!staffUser.isPresent()){
-            responsemodel.setMessage("Unauthorized user");
-            responsemodel.setStatus(false);
-            return new ResponseEntity<>(responsemodel, HttpStatus.UNAUTHORIZED);
-        }
-
-        for (CustomerServiceRequest customerServiceRequest : allCustomers) {
-            List<StaffUser> staffHandled;
-            CustomerServiceRequest request = customerServiceRequest;
-            request.setStatus(true);
-            if (customerServiceRequest.getStaffUser().isEmpty()) {
-                staffHandled = new ArrayList<>();
-            } else {
-                staffHandled = customerServiceRequest.getStaffUser();
-            }
-            staffHandled.add(staffUser.get());
-            request.setStaffUser(staffHandled);
-            try {
-                customerServiceRequestRepository.save(request);
-
-            } catch (Exception e) {
-                responsemodel.setMessage("Something Went Wrong With the Connection");
+        Optional<Customer> customerOpt = customerRepository.findById(customerId);
+        if(customerOpt.isPresent()) {
+            List<CustomerServiceRequest> allCustomers = customerServiceRequestRepository.getAllCustomerRequest(customerId);
+            Optional<StaffUser> staffUser = staffUserRepository.findById(Integer.parseInt(principal.getName()));
+            if (!staffUser.isPresent()) {
+                responsemodel.setMessage("Unauthorized user");
                 responsemodel.setStatus(false);
-                return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
+                return new ResponseEntity<>(responsemodel, HttpStatus.UNAUTHORIZED);
             }
+
+            for (CustomerServiceRequest customerServiceRequest : allCustomers) {
+                List<StaffUser> staffHandled;
+                CustomerServiceRequest request = customerServiceRequest;
+                request.setStatus(true);
+                if (customerServiceRequest.getStaffUser().isEmpty()) {
+                    staffHandled = new ArrayList<>();
+                } else {
+                    staffHandled = customerServiceRequest.getStaffUser();
+                }
+                staffHandled.add(staffUser.get());
+                request.setStaffUser(staffHandled);
+
+                try {
+                    customerServiceRequestRepository.save(request);
+
+                } catch (Exception e) {
+                    responsemodel.setMessage("Something Went Wrong With the Connection");
+                    responsemodel.setStatus(false);
+                    return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
+                }
+
+            }
+            Customer customer = customerOpt.get();
+            customer.setStatus(1);
+            customer = customerRepository.save(customer);
+            return new ResponseEntity<>(customer, HttpStatus.OK);
         }
-        responsemodel.setMessage("All the request of " + customerId + " get updated successfully");
-        responsemodel.setStatus(true);
-        return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+         else  {
+            ResponseModel responseModel = new ResponseModel();
+            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+        }
     }
 
     public Optional<Customer> getCustomer() {
@@ -619,7 +634,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
                 return new ResponseEntity<>(smsAlertForCreditCardOpt,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
-            Optional<CustomerServiceRequest> changeNicPassportOpt=customerServiceRequestRepository.findById(customerServiceRequestId);
+            Optional<IdentificationForm> changeNicPassportOpt=changeIdentificationFormRepository.getFormFromCSR(customerServiceRequestId);
             if (!changeNicPassportOpt.isPresent()){
                 return returnResponse();
             } else {
@@ -628,10 +643,10 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
         } else if(serviceRequestId == ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
             Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(customerServiceRequestId);
-            if (request.isPresent()){
+            if (!request.isPresent()){
                 return returnResponse();
             } else {
-                return new ResponseEntity<>(contactDetailsRepository,HttpStatus.OK);
+                return new ResponseEntity<>(request,HttpStatus.OK);
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD){
             Optional<AccountStatementIssueRequest> accountStatementIssueRequestOpt=accountStatementIssueRequestRepository.getFormFromCSR(customerServiceRequestId);
@@ -685,19 +700,26 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.OTHER) {
             Optional<OtherServiceRequest> otherFdCdRelatedRequestOptional=otherServiceRequestRepository.findByRequestId(customerServiceRequestId);
-            if (otherFdCdRelatedRequestOptional.isPresent()){
+            if (!otherFdCdRelatedRequestOptional.isPresent()){
                 return returnResponse();
             } else {
                 return new ResponseEntity<>(otherFdCdRelatedRequestOptional,HttpStatus.OK);
             }
         } else if(serviceRequestId == ServiceRequestIdConfig.STOP_REVOKE_PAYMENT){
-            /***************Fill this*************************/
+            Optional<EffectOrRevokePayment> effectOrRevokePaymentOptional = effectOrRevokePaymentRepository.getFormFromCSR(customerServiceRequestId);
+            if(!effectOrRevokePaymentOptional.isPresent()){
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(effectOrRevokePaymentOptional,HttpStatus.OK);
+            }
         }
             responsemodel.setMessage("Invalied Request");
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel, HttpStatus.OK);
 
     }
+
+
 
     @Override
     public ResponseEntity<?> saveSignature(SignatureDTO signatureDTO) {
@@ -736,6 +758,70 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getCustomerDetailsByDate(String date){
+        ResponseModel responsemodel = new ResponseModel();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date requestDate;
+        List<CustomerServiceRequest> customerServiceRequests = new ArrayList<>();
+        try {
+            requestDate = df.parse(date);
+            List<Customer> customers = customerRepository.getCustomerRequestDetails(requestDate);
+            return new ResponseEntity<>(customers,HttpStatus.OK);
+
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            responsemodel.setStatus(false);
+            responsemodel.setMessage("pass the date in a correct format");
+            return new ResponseEntity<>(responsemodel,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
+
+    @Override
+    public ResponseEntity<?> getFIleTypes(int customerRequestId) {
+
+        Optional<Customer> customer = customerRepository.findById(customerRequestId);
+
+        List<ServiceRequest> serviceRequests = new ArrayList<>();
+
+        if(customer.isPresent()) {
+            List<CustomerServiceRequest> customerSserviceRequests  = customer.get().getCustomerServiceRequests();
+            for(CustomerServiceRequest customerServiceRequest : customerSserviceRequests) {
+                ServiceRequest serviceRequest = new ServiceRequest();
+                serviceRequest = customerServiceRequest.getServiceRequest();
+                serviceRequests.add(serviceRequest);
+            }
+        } else {
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setMessage("Invalied customer request id");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+        }
+
+        List<DocumentDTO> documentNames = new ArrayList<>();
+
+        for(ServiceRequest serviceRequest : serviceRequests){
+            String doc = getFormTipes(serviceRequest.getDigiFormId());
+            if(doc != null){
+                DocumentDTO documentDTO = new DocumentDTO();
+                documentDTO.setDigiformId(serviceRequest.getDigiFormId());
+                documentDTO.setDocument(doc);
+                documentNames.add(documentDTO);
+            }
+        }
+
+        if(documentNames.isEmpty()){
+            return new ResponseEntity<>("No Documents to display",HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(documentNames,HttpStatus.OK);
+        }
+
+    }
+
     private ResponseEntity<?> returnResponse(){
         ResponseModel responsemodel = new ResponseModel();
         responsemodel.setMessage("Customer Havent fill the form yet");
@@ -743,5 +829,65 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
     }
 
+    private String getFormTipes(int serviceRequestId){
+
+        String document;
+
+        if (serviceRequestId == ServiceRequestIdConfig.CARD_REQUEST) {
+            return null;
+        }else if (serviceRequestId == ServiceRequestIdConfig.RE_ISSUE_A_PIN){
+            return null;
+        } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.INCREASE_POS_LIMIT_OF_DEBIT_CARD){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.LINK_NEW_ACCAUNTS_TO_D13EBIT_ATM_CARD){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PRIMARY_ACCOUNT) {
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_MAILING_ADDRESS){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PERMENT_ADDRESS){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.REISSUE_LOGIN_PASSWORD){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.LINK_FOLLOWING_JOINT_ACCOUNTS){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY) {
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_INTERNET_BANKING_SERVICES){
+            return null;
+        } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERT_CREDIT_CARD) {
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
+            document = "Coppy of Nic Or Passport";
+            return document;
+        } else if(serviceRequestId == ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.PASSBOOK_DUPLICATE_PASSBOOK_REQUEST) {
+            document = "Indimatly duly should be submitted";
+            return document;
+
+        } else if(serviceRequestId == ServiceRequestIdConfig.PI_ACTIVE_CACEL_ESTATEMENT_FACILITY_FOR_ACCOUNTS){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS){
+            return null;
+        } else if (serviceRequestId == ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE) {
+            document = "Indimatly duly should be submitted";
+            return document;
+
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER) {
+            return null;
+        } else if(serviceRequestId == ServiceRequestIdConfig.STOP_REVOKE_PAYMENT){
+            return null;
+        }
+         return null;
+    }
 
 }

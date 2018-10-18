@@ -59,7 +59,9 @@ public class CashDeposit {
     private Date date;
 
     @NotNull
-    private String currency;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "currencyId")
+    private Currency currency;
 
     private int valueOf5000Notes;
 
@@ -95,7 +97,11 @@ public class CashDeposit {
     public CashDeposit() {
     }
 
-    public CashDeposit(@NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountHolderName, @NotNull @Size(min = 6) @Pattern(regexp = "^[0-9]*$") String accountNumber, @NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String nameOfDepositor, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String address, @NotNull String identification, @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String purposeOfDeposit, @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String ammountInWords, @NotNull @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String phoneNumberAndExtn, @FutureOrPresent Date date, @NotNull String currency, int valueOf5000Notes, int valueOf2000Notes, int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes, int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total, String signatureUrl, CustomerTransactionRequest customerTransactionRequest, List<CashDepositFile> cashDepositFiles) {
+    public CashDeposit(@NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
+                               String accountHolderName, @NotNull @Size(min = 6) @Pattern(regexp = "^[0-9]*$")
+            String accountNumber, @NotNull @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String nameOfDepositor, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String address, @NotNull String identification,
+                       @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String purposeOfDeposit,
+                       @NotNull @Size(min = 5) @Pattern(regexp = "^([A-Za-z.,\\s])*$") String ammountInWords, @NotNull @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String phoneNumberAndExtn, @FutureOrPresent Date date, @NotNull Currency currency, int valueOf5000Notes, int valueOf2000Notes, int valueof1000Notes, int valueOf500Notes, int valueOf100Notes, int valueOf50Notes, int valueOf20Notes, int valueOf10Notes, double valueOfcoins, @NotNull double total, String signatureUrl, CustomerTransactionRequest customerTransactionRequest, List<CashDepositFile> cashDepositFiles) {
         this.accountHolderName = accountHolderName;
         this.accountNumber = accountNumber;
         this.nameOfDepositor = nameOfDepositor;
@@ -193,11 +199,11 @@ public class CashDeposit {
         this.date = date;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 

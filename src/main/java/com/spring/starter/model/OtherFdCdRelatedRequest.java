@@ -7,14 +7,23 @@ import java.util.Date;
 
 @Entity
 public class OtherFdCdRelatedRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int relatedReqId;
+
+    @NotNull
+    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
+    private String accountNo;
+
     private String request;
+
     private Date date;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="csrId")
     private CustomerServiceRequest customerServiceRequest;
+
     @NotNull
     @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'")
     private String accountType;
@@ -68,5 +77,13 @@ public class OtherFdCdRelatedRequest {
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
     }
 }
