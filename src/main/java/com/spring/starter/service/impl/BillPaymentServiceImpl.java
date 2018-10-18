@@ -120,7 +120,7 @@ public class BillPaymentServiceImpl implements BillPaymentService {
            responseModel.setMessage("saved successfully");
            responseModel.setStatus(true);
            billPayment = billPaymentRepository.save(billPayment);
-           return new ResponseEntity<>(responseModel,HttpStatus.CREATED);
+           return new ResponseEntity<>(billPayment,HttpStatus.CREATED);
        } catch (Exception e) {
            responseModel.setMessage("Something Went wrong");
            responseModel.setStatus(false);

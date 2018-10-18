@@ -28,6 +28,7 @@ mylogfile.log
 mylogfile.log
 
 *.gz
+*.tmp
 
 .gz
 /File Storage/

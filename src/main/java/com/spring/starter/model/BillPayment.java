@@ -20,7 +20,7 @@ public class BillPayment {
     @Size(min = 2)
     @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
     private String accountName;
-    @NotNull
+
     @NotNull
     @Size(min = 2)
     @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.starter.service.AtmOrDebitCardService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,12 +26,12 @@ public class AtmOrDebitCardController {
     private AtmOrDebitCardService atmOrDebitCardService;
 
     @PostMapping("/request")
-    public ResponseEntity<?> addAtmOrDebitRequest(@RequestBody AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
+    public ResponseEntity<?> addAtmOrDebitRequest(@RequestBody @Valid AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
         return atmOrDebitCardService.atmOrDebitCardRequest(atmOrDebitCardRequestDTO, request);
     }
 
     @PutMapping("/request")
-    public ResponseEntity<?> addAtmOrDebitRequestUpdate(@RequestBody AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
+    public ResponseEntity<?> addAtmOrDebitRequestUpdate(@RequestBody @Valid AtmOrDebitCardRequestDTO atmOrDebitCardRequestDTO, HttpServletRequest request) {
         return atmOrDebitCardService.atmOrDebitCardRequest(atmOrDebitCardRequestDTO, request);
     }
 

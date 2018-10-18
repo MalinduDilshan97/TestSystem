@@ -156,6 +156,13 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             customer = new Customer();
         }*/
 
+        if(customerDTO.getName() == null || customerDTO.getIdentification() == null){
+            responsemodel.setMessage("please fill the data");
+            responsemodel.setStatus(false);
+            return new ResponseEntity<>(responsemodel,HttpStatus.BAD_REQUEST);
+        }
+
+
         ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
         serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
         serviceRequestCustomerLog.setIdentification(customerDTO.getIdentification());
@@ -295,12 +302,40 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         }
 
         Optional<StaffUser> staffUser = staffUserRepository.findById(Integer.parseInt(principal.getName()));
+        if(!staffUser.isPresent()){
+            responsemodel.setMessage("Identified as a Malicious login");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        }
+
+        if(customerServiceRequest.getUrl() == null || customerServiceRequest.getUrl().isEmpty()){
+            responsemodel.setMessage("Plese complete the signature before completing the request");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+        }
+
+        if(checkFormexists(customerServiceRequest.getServiceRequest().getDigiFormId(),requestId)){
+            responsemodel.setMessage("Please complete the form before verifying");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        }
+
+        if(customerServiceRequest.isStatus()){
+            responsemodel.setMessage("Request is already varified");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.I_AM_A_TEAPOT);
+        }
+
         staffHandled.add(staffUser.get());
         customerServiceRequest.setStatus(true);
         customerServiceRequest.setStaffUser(staffHandled);
+        customerServiceRequest.setRequestCompleteDate(java.util.Calendar.getInstance().getTime());
+
+        customerServiceRequest = customerServiceRequestRepository.save(customerServiceRequest);
+
         responsemodel.setMessage("User Request updated successfully");
         responsemodel.setStatus(true);
-        return new ResponseEntity<>(responsemodel, HttpStatus.CREATED);
+        return new ResponseEntity<>(customerServiceRequest, HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> forceCompleteARequest(Principal principal, int requestId) {
@@ -828,6 +863,182 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         responsemodel.setStatus(false);
         return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
     }
+
+    private boolean checkFormexists(int serviceRequestId,int customerServiceRequestId ){
+        if (serviceRequestId == ServiceRequestIdConfig.CARD_REQUEST) {
+            Optional<AtmOrDebitCardRequest> aodOptional = atmOrDebitCardRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!aodOptional.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.RE_ISSUE_A_PIN){
+            Optional<ReIssuePinRequest> request= reIssuePinRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!request.isPresent()){
+                return false;
+            } else {
+               return true;
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS){
+            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(customerServiceRequestId);
+            if (!subscription.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.INCREASE_POS_LIMIT_OF_DEBIT_CARD){
+            Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(customerServiceRequestId);
+            if (!pos.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.LINK_NEW_ACCAUNTS_TO_D13EBIT_ATM_CARD){
+            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(customerServiceRequestId);
+            if (!account.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PRIMARY_ACCOUNT) {
+            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(customerServiceRequestId);
+            if (!primaryAccount.isPresent()){
+                return false;
+            } else{
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_MAILING_ADDRESS){
+            Optional<ChangeMailingMailModel> changeMailingMailOpt = changeMailingMailModelRepository.getFormFromCSR(customerServiceRequestId);
+            if(!changeMailingMailOpt.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PERMENT_ADDRESS){
+            Optional<ChangePermanentMail> changePermanentMailOpt = changePermanentMailRepository.getFormFromCSR(customerServiceRequestId);
+            if(!changePermanentMailOpt.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.REISSUE_LOGIN_PASSWORD){
+            Optional<ReissueLoginPasswordModel> reissueLoginPasswordOpt = loginPasswordModelRepository.getFormFromCSR(customerServiceRequestId);
+            if(!reissueLoginPasswordOpt.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.LINK_FOLLOWING_JOINT_ACCOUNTS){
+            Optional<LinkAccountModel> linkAccountOPT = linkAccountModelRepository.getFormFromCSR(customerServiceRequestId);
+            if(!linkAccountOPT.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY) {
+            Optional<ExcludeInternetAccount> excludeAccountOPT = excludeInternetAccountRepository.getFormFromCSR(customerServiceRequestId);
+            if(excludeAccountOPT.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_INTERNET_BANKING_SERVICES){
+            Optional<InternetBanking> internetBankingOpt = internetBankingRepository.getFormFromCSR(customerServiceRequestId);
+            if(!internetBankingOpt.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERT_CREDIT_CARD) {
+            Optional<SMSAlertsForCreditCard> smsAlertForCreditCardOpt = AlertsForCreditCardRepository.getFormFromCSR(customerServiceRequestId);
+            if(!smsAlertForCreditCardOpt.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
+            Optional<IdentificationForm> changeNicPassportOpt=changeIdentificationFormRepository.getFormFromCSR(customerServiceRequestId);
+            if (!changeNicPassportOpt.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+
+        } else if(serviceRequestId == ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
+            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(customerServiceRequestId);
+            if (!request.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD){
+            Optional<AccountStatementIssueRequest> accountStatementIssueRequestOpt=accountStatementIssueRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!accountStatementIssueRequestOpt.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+
+        } else if (serviceRequestId == ServiceRequestIdConfig.PASSBOOK_DUPLICATE_PASSBOOK_REQUEST) {
+            Optional<DuplicatePassBookRequest> bookRequestOpt = duplicatePassBookRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!bookRequestOpt.isPresent()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.PI_ACTIVE_CACEL_ESTATEMENT_FACILITY_FOR_ACCOUNTS){
+            Optional<EstatementFacility> estatementFacilityOpt = estatementFacilityRepository.getFormFromCSR(customerServiceRequestId);
+            if (!estatementFacilityOpt.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO){
+            Optional<StatementFrequency> statementFrequencyOpt = statementFrequencyRepository.getFormFromCSR(customerServiceRequestId);
+            if(!statementFrequencyOpt.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE){
+            Optional<WithholdingFdCd> fdCdNumbersOptional=withholdingFdCdRepository.findByRequestId(customerServiceRequestId);
+            if (!fdCdNumbersOptional.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS){
+            Optional<OtherFdCdRelatedRequest> otherFdCdRelatedRequestOptional=otherFdCdRelatedRequestRepository.findByRequestId(customerServiceRequestId);
+            if (!otherFdCdRelatedRequestOptional.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE) {
+            Optional<DuplicateFdCdCert> duplicateFdCdCertOptional=duplicateFdCdCertRepository.findByRequestId(customerServiceRequestId);
+            if (!duplicateFdCdCertOptional.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER) {
+            Optional<OtherServiceRequest> otherFdCdRelatedRequestOptional=otherServiceRequestRepository.findByRequestId(customerServiceRequestId);
+            if (!otherFdCdRelatedRequestOptional.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.STOP_REVOKE_PAYMENT){
+            Optional<EffectOrRevokePayment> effectOrRevokePaymentOptional = effectOrRevokePaymentRepository.getFormFromCSR(customerServiceRequestId);
+            if(!effectOrRevokePaymentOptional.isPresent()){
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private String getFormTipes(int serviceRequestId){
 

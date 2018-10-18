@@ -1,12 +1,22 @@
 package com.spring.starter.DTO;
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 public class AtmOrDebitCardRequestDTO implements Serializable {
 
+    @NotNull
     private int atmOrDebitRequestId;
+    @NotNull
+    @Min(2)
     private long cardNumber;
+    @NotNull
+    @NotEmpty
+    @Size(min = 2)
+    @Pattern(regexp = "^(123|124|125)$")
     private String requestType;
+
+    @NotNull
     private int customerServiceRequestId;
 
     public AtmOrDebitCardRequestDTO() {

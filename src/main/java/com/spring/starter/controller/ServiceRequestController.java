@@ -36,7 +36,7 @@ public class ServiceRequestController {
     ServiceRequestService serviceRequestService;
 
     @PostMapping("/addNewBankService")
-    public ResponseEntity<?> addNewServiceRequest(@RequestBody @Valid ServiceRequest serviceRequest) {
+    public ResponseEntity<?> addNewServiceRequest(@RequestBody ServiceRequest serviceRequest) {
         return serviceRequestService.addNewServiceRequest(serviceRequest);
     }
 
@@ -46,14 +46,14 @@ public class ServiceRequestController {
     }
 
     @PostMapping("/addNewCustomer")
-    public ResponseEntity<?> addANewCustomer(@RequestBody CustomerDTO customerDTO) {
+    public ResponseEntity<?> addANewCustomer(@RequestBody @Valid CustomerDTO customerDTO) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         return serviceRequestService.addNewCustomer(customerDTO,request);
         //return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
 
     @PostMapping("/addNewServiceToACustomer")
-    public ResponseEntity<?> addNewServiceToACustomer(@RequestBody CustomerRequestDTO customerRequestDTO) {
+    public ResponseEntity<?> addNewServiceToACustomer(@RequestBody @Valid CustomerRequestDTO customerRequestDTO) {
         return serviceRequestService.addAServiceToACustomer(customerRequestDTO.getCutomerId(), customerRequestDTO.getServiceRequestId());
     }
 

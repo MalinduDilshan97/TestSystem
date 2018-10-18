@@ -41,7 +41,6 @@ public class Customer {
 	
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name="customerServiceRequestsId")
-	@JsonIgnore
 	private List<CustomerServiceRequest> customerServiceRequests;
 
 	private int status;

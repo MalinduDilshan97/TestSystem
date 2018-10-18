@@ -35,6 +35,7 @@ public class CustomerServiceRequest {
     @JoinColumn(name = "staffUserId")
     private List<StaffUser> staffUser;
     private Date requestDate;
+    private Date requestCompleteDate;
     private String url;
 
     public CustomerServiceRequest() {
@@ -95,5 +96,13 @@ public class CustomerServiceRequest {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
     }
 }

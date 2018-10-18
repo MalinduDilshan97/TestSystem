@@ -94,6 +94,8 @@ public class CashDeposit {
     @JoinColumn(name = "cash_deposit_relation_file_id")
     private List<CashDepositFile> cashDepositFiles;
 
+    private boolean status = false;
+
     public CashDeposit() {
     }
 
@@ -317,5 +319,13 @@ public class CashDeposit {
 
     public void setSignatureUrl(String signatureUrl) {
         this.signatureUrl = signatureUrl;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

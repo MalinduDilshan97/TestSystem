@@ -28,6 +28,8 @@ public class CustomerTransactionRequest {
 
     private Date requestDate;
 
+    private Date requestCompleteDate;
+
     public CustomerTransactionRequest() {
     }
 
@@ -86,5 +88,13 @@ public class CustomerTransactionRequest {
 
     public void setRequestDate(Date requestDate) {
         this.requestDate = requestDate;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
     }
 }

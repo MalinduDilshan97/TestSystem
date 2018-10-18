@@ -44,6 +44,8 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
     private ServiceRequestFormLogService serviceRequestFormLogService;
     @Autowired
     private Card_Validation card_validation;
+    @Autowired
+    private BranchRepository branchRepository;
 
     private ResponseModel res = new ResponseModel();
     private ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
@@ -159,13 +161,13 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
-            Optional<NDBBranch> ndbBranchOpt = ndbBranchRepository.findById(reIssuePinRequestDTO.getBranch());
+            Optional<Branch> ndbBranchOpt = branchRepository.findById(reIssuePinRequestDTO.getBranch());
             if(!ndbBranchOpt.isPresent()){
                 res.setMessage("Invalied Branch Details");
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
-            reIssuePinRequest.setNdbBranch(ndbBranchOpt.get());
+            reIssuePinRequest.setBranch(ndbBranchOpt.get());
         }
 
             reIssuePinRequest.setCurrespondingAddress(reIssuePinRequestDTO.isAvCurrespondingAddress());

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +51,9 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
     @Autowired
     FundTransferWithinNDBRepository fundTransferWithinNDBRepository;
 
+    @Autowired
+    StaffUserRepository staffUserRepository;
+
 
     @Override
     public ResponseEntity<?> addNewServiceRequest(TransactionRequest transactionRequest) {
@@ -69,6 +73,7 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
         return new ResponseEntity<>(transactionRequest,HttpStatus.CREATED);
     }
 
+    @Override
     public ResponseEntity<?> viewTransactionRequest (int customerTransactionRequest) {
         ResponseModel responseModel = new ResponseModel();
         Optional<CustomerTransactionRequest> optionalCustomerTransactionRequest = customerTransactionRequestRepository
@@ -81,12 +86,59 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
         int transactionRequrstId = optionalCustomerTransactionRequest.get().getTransactionRequest().getDigiFormId();
         if(transactionRequrstId == TransactionIdConfig.DEPOSITS) {
             Optional<CashDeposit> cashDeposit = cashdepositRepositiry.getFormFromCSR(customerTransactionRequest);
-            if(cashDeposit.isPresent()){
-                return null;
+            if(!cashDeposit.isPresent()){
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(cashDeposit,HttpStatus.OK);
+            }
+        } else if (transactionRequrstId == TransactionIdConfig.WITHDRAWALS){
+            Optional<CashWithdrawal> cashWithdrawal = cashWithdrawalRepository.getFormFromCSR(customerTransactionRequest);
+            if(!cashWithdrawal.isPresent()){
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(cashWithdrawal,HttpStatus.OK);
+            }
+        } else if (transactionRequrstId == TransactionIdConfig.BILLPAYMENT){
+            Optional<BillPayment> billPayment = billPaymentRepository.getFormFromCSR(customerTransactionRequest);
+            if(!billPayment.isPresent()) {
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(billPayment,HttpStatus.OK);
+            }
+        } else if(transactionRequrstId == TransactionIdConfig.FUND_TRANSFER_WITHIN_NDB) {
+            Optional<FundTransferWithinNDB> fundTransferWithinNDB = fundTransferWithinNDBRepository.getFormFromCSR(customerTransactionRequest);
+            if(!fundTransferWithinNDB.isPresent()){
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(fundTransferWithinNDB,HttpStatus.OK);
+            }
+        } else if(transactionRequrstId == TransactionIdConfig.FUND_TRANSFER_TO_OTHER_BANKS_CEFT) {
+            Optional<FundTransferCEFT> optionalTransferCEFT = fundTransferCEFTRepository.getFormFromCSR(customerTransactionRequest);
+            if(!optionalTransferCEFT.isPresent()) {
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(optionalTransferCEFT,HttpStatus.OK);
+            }
+        } else if(transactionRequrstId == TransactionIdConfig.FUND_TRANSFER_TO_OTHER_BANKS_SLIP){
+            Optional<FundTransferSLIPS> optionalTransferSLIPS = fundTransferSLIPRepository.getFormFromCSR(customerTransactionRequest);
+            if(!optionalTransferSLIPS.isPresent()){
+                return returnResponse();
+            } else {
+                return new ResponseEntity<>(optionalTransferSLIPS,HttpStatus.OK);
             }
         }
-        return null;
+        responseModel.setMessage("Invalied Request");
+        responseModel.setStatus(false);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
     }
+
+    private ResponseEntity<?> returnResponse(){
+        ResponseModel responsemodel = new ResponseModel();
+        responsemodel.setMessage("Customer Havent fill the form yet");
+        responsemodel.setStatus(false);
+        return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+    }
+
 
     @Override
     public ResponseEntity<?> getBankServices() {
@@ -287,6 +339,60 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
             return new ResponseEntity<>(customerTransactionRequests,HttpStatus.OK);
         }
     }
+
+/*    public ResponseEntity<?> completeTransactionRequest(int transactionCustomerRequest, Principal principal) {
+        ResponseModel responseModel = new ResponseModel();
+        Optional<CustomerTransactionRequest> customerTransactionRequest = customerTransactionRequestRepository.findById(transactionCustomerRequest);
+
+        if(!customerTransactionRequest.isPresent()){
+            responseModel.setMessage("");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+        }
+
+        int transactionRequrstId = customerTransactionRequest.get().getTransactionRequest().getDigiFormId();
+
+        if(transactionRequrstId == TransactionIdConfig.DEPOSITS) {
+            Optional<CashDeposit> cashDeposit = cashdepositRepositiry.getFormFromCSR(transactionCustomerRequest);
+            if(!cashDeposit.isPresent()){
+                return returnResponse();
+            } else {
+                CashDeposit cashDeposit1 = cashDeposit.get();
+                if(cashDeposit1.getSignatureUrl() == null || cashDeposit1.getSignatureUrl().isEmpty()) {
+                    responseModel.setMessage("Without providing the signature you cannot complete the request");
+                    responseModel.setStatus(false);
+                    return new ResponseEntity<>(responseModel,HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+                } else {
+                    Optional<StaffUser> staffUserOpt = staffUserRepository.findById(Integer.parseInt(principal.getName()));
+                    if(!staffUserOpt.isPresent()){
+                        responseModel.setMessage("Identified as a unauthorized action");
+                        responseModel.setStatus(false);
+                        return new ResponseEntity<>(responseModel,HttpStatus.FORBIDDEN);
+                    } else {
+                        cashDeposit1.setStatus(true);
+                        CustomerTransactionRequest customerTransactionRequest1 = customerTransactionRequest.get();
+                        customerTransactionRequest1.setRequestCompleteDate();
+                    }
+                }
+            }
+        } else if (transactionRequrstId == TransactionIdConfig.WITHDRAWALS){
+            Optional<CashWithdrawal> cashWithdrawal = cashWithdrawalRepository.getFormFromCSR(transactionCustomerRequest);
+
+        } else if (transactionRequrstId == TransactionIdConfig.BILLPAYMENT){
+            Optional<BillPayment> billPayment = billPaymentRepository.getFormFromCSR(transactionCustomerRequest);
+
+        } else if(transactionRequrstId == TransactionIdConfig.FUND_TRANSFER_WITHIN_NDB) {
+            Optional<FundTransferWithinNDB> fundTransferWithinNDB = fundTransferWithinNDBRepository.getFormFromCSR(transactionCustomerRequest);
+
+        } else if(transactionRequrstId == TransactionIdConfig.FUND_TRANSFER_TO_OTHER_BANKS_CEFT) {
+            Optional<FundTransferCEFT> optionalTransferCEFT = fundTransferCEFTRepository.getFormFromCSR(transactionRequrstId);
+
+        } else if(transactionRequrstId == TransactionIdConfig.FUND_TRANSFER_TO_OTHER_BANKS_SLIP){
+            Optional<FundTransferSLIPS> optionalTransferSLIPS = fundTransferSLIPRepository.getFormFromCSR(transactionRequrstId);
+
+        }
+
+    }*/
 
     @Override
     public ResponseEntity<?> getAllCustomerTransactionRequestsFilterByDate(int customerId, String date){

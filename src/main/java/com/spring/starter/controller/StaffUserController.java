@@ -3,6 +3,7 @@ package com.spring.starter.controller;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class StaffUserController {
 	StaffUserService staffUserService; 
 	
 	@PostMapping(produces=MediaType.APPLICATION_JSON_VALUE,path="/addNewUser")
-	public ResponseEntity<?> saveNewStaffUser(@RequestBody StaffUserDTO staffUserDTO, Principal principal){
+	public ResponseEntity<?> saveNewStaffUser(@RequestBody @Valid StaffUserDTO staffUserDTO, Principal principal){
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		return staffUserService.saveStaffUser(staffUserDTO,request,principal);
 	}
@@ -47,20 +48,20 @@ public class StaffUserController {
 	}
 	
 	@PostMapping(produces=MediaType.APPLICATION_JSON_VALUE,path="/login")
-	public ResponseEntity<?> StaffUserLogin(@RequestBody LoginDTO loginDTO)
+	public ResponseEntity<?> StaffUserLogin(@RequestBody @Valid LoginDTO loginDTO)
 	{
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		return staffUserService.staffUserLogin(loginDTO,request);
 	}
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE,path="/activete/{staffId}")
-	public ResponseEntity<?> setAnUserToActive(@PathVariable int staffId,Principal principal){
+	public ResponseEntity<?> setAnUserToActive(@PathVariable @Valid int staffId,Principal principal){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		return staffUserService.makeUserActive(staffId,principal,request);
 	}
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON_VALUE,path="/deactive/{staffId}")
-	public ResponseEntity<?> setAnUserToDeactive(@PathVariable int staffId,Principal principal){
+	public ResponseEntity<?> setAnUserToDeactive(@PathVariable @Valid int staffId,Principal principal){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		return staffUserService.makeUserDeactivate(staffId,principal,request);
 	}
@@ -97,7 +98,7 @@ public class StaffUserController {
 	}
 	
 	@PostMapping("/addStaffUserFirstTime")
-	public ResponseEntity<?> saveStaffUserFirstTime(@RequestBody StaffUserDTO staffUserDTO)
+	public ResponseEntity<?> saveStaffUserFirstTime(@RequestBody @Valid StaffUserDTO staffUserDTO)
 	{
 		return staffUserService.saveStaffUserFirstTime(staffUserDTO);
 	}	

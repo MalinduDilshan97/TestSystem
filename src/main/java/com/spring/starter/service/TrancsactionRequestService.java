@@ -30,4 +30,6 @@ public interface TrancsactionRequestService {
     public ResponseEntity<?> getAllCustomerTransactionRequests(int customerId);
 
     public ResponseEntity<?> getAllCustomerTransactionRequestsFilterByDate(int customerId, String date);
+
+    public ResponseEntity<?> viewTransactionRequest (int customerTransactionRequest);
 }

@@ -80,4 +80,9 @@ public class TransactionRequestController {
         return trancsactionRequestService.getAllCustomerTransactionRequestsFilterByDate(customerId,date);
     }
 
+    @GetMapping("/get-form-of-a-transactionRequest")
+    public ResponseEntity<?> getTransactionRequestView(@RequestParam("customerRequestId") int customerId){
+        return trancsactionRequestService.viewTransactionRequest(customerId);
+    }
+
 }

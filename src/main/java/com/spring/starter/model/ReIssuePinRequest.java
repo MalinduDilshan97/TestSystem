@@ -13,7 +13,7 @@ public class ReIssuePinRequest  {
     private boolean isBranch = false;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branchId")
-    private NDBBranch ndbBranch;
+    private Branch branch;
     private boolean isAddress= false;
     private String Address;
     private boolean isCurrespondingAddress= false;
@@ -25,18 +25,17 @@ public class ReIssuePinRequest  {
     public ReIssuePinRequest() {
     }
 
-    public NDBBranch getNdbBranch() {
-        return ndbBranch;
+    public Branch getBranch() {
+        return branch;
     }
 
-    public void setNdbBranch(NDBBranch ndbBranch) {
-        this.ndbBranch = ndbBranch;
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
-
-    public ReIssuePinRequest(boolean isBranch, NDBBranch ndbBranch, boolean isAddress, String address, boolean isCurrespondingAddress, CustomerServiceRequest customerServiceRequest) {
+    public ReIssuePinRequest(boolean isBranch, Branch branch, boolean isAddress, String address, boolean isCurrespondingAddress, CustomerServiceRequest customerServiceRequest) {
         this.isBranch = isBranch;
-        this.ndbBranch = ndbBranch;
+        this.branch = branch;
         this.isAddress = isAddress;
         Address = address;
         this.isCurrespondingAddress = isCurrespondingAddress;

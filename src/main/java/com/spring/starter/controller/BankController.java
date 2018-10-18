@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/Bank")
 public class BankController {
@@ -14,12 +16,12 @@ public class BankController {
     private BankService bankService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveBank(@RequestBody Bank bank){
+    public ResponseEntity<?> saveBank(@RequestBody @Valid Bank bank){
         return bankService.saveBank(bank);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateBank(@RequestBody Bank bank){
+    public ResponseEntity<?> updateBank(@RequestBody @Valid Bank bank){
         return bankService.updateBank(bank);
     }
 
