@@ -33,6 +33,8 @@ public class SMSAlertsForCreditCard {
 	@JoinColumn(name="csrId")
 	private CustomerServiceRequest customerServiceRequest;
 
+	private boolean softReject = false;
+
 	public SMSAlertsForCreditCard() {
 		super();
 	}
@@ -77,5 +79,12 @@ public class SMSAlertsForCreditCard {
 	public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
 		this.customerServiceRequest = customerServiceRequest;
 	}
-	
+
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
+	}
 }

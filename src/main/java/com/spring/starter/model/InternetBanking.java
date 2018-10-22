@@ -35,6 +35,8 @@ public class InternetBanking {
 	@JoinColumn(name="csrId")
 	private CustomerServiceRequest customerServiceRequest;
 
+	private boolean  softReject = false;
+
 	public InternetBanking() {
 		super();
 	}
@@ -96,5 +98,12 @@ public class InternetBanking {
 	public void setInternetBankingUserId(String internetBankingUserId) {
 		this.internetBankingUserId = internetBankingUserId;
 	}
-	
+
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
+	}
 }

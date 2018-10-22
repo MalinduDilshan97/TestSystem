@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/Transaction-Request")
@@ -83,6 +84,16 @@ public class TransactionRequestController {
     @GetMapping("/get-form-of-a-transactionRequest")
     public ResponseEntity<?> getTransactionRequestView(@RequestParam("customerRequestId") int customerId){
         return trancsactionRequestService.viewTransactionRequest(customerId);
+    }
+
+    @GetMapping("/get-uncompleted-requests")
+    public ResponseEntity<?> getAllUncompleteRequests(@RequestParam("date") String date){
+        return trancsactionRequestService.getAllUncompleteRequests(date);
+    }
+
+    @GetMapping("complete-a-transaction-request")
+    public ResponseEntity<?> completeATransactionRequest(@RequestParam(name="requestId") int requestId, Principal principal){
+        return trancsactionRequestService.completeTransactionRequest(requestId,principal);
     }
 
 }

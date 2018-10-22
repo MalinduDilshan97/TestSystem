@@ -1,13 +1,6 @@
 package com.spring.starter.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -45,6 +38,13 @@ public class StaffUser {
 	private String password;
 	
 	private int active = 0;
+
+	@Column(unique=true)
+	private String epfNumber;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "branchId")
+	private Branch branch;
 	
 	@NonNull
 	@OneToOne
@@ -135,5 +135,20 @@ public class StaffUser {
 	public void setStaffRole(StaffRole staffRole) {
 		this.staffRole = staffRole;
 	}
-		
+
+	public Branch getBranch() {
+		return branch;
+	}
+
+	public void setBranch(Branch branch) {
+		this.branch = branch;
+	}
+
+	public String getEpfNumber() {
+		return epfNumber;
+	}
+
+	public void setEpfNumber(String epfNumber) {
+		this.epfNumber = epfNumber;
+	}
 }

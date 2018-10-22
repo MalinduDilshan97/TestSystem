@@ -17,6 +17,8 @@ public class LinkedAccount implements Serializable {
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject= false;
+
     public LinkedAccount() {
     }
 
@@ -66,6 +68,14 @@ public class LinkedAccount implements Serializable {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 }
 

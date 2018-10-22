@@ -23,6 +23,8 @@ public class DuplicateFdCdCert {
     @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'")
     private String accountType;
 
+    private boolean softReject = false;
+
     public DuplicateFdCdCert(@NotNull String fdCdDepositNo, Date date, CustomerServiceRequest customerServiceRequest, @NotNull @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'") String accountType) {
         this.fdCdDepositNo = fdCdDepositNo;
         this.date = date;
@@ -33,6 +35,13 @@ public class DuplicateFdCdCert {
     public DuplicateFdCdCert() {
     }
 
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
+    }
 
     public String getFdCdDepositNo() {
         return fdCdDepositNo;

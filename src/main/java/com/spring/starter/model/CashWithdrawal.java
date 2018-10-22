@@ -32,6 +32,10 @@ public class CashWithdrawal implements Serializable {
 
     private String signatureUrl;
 
+    private boolean status;
+
+    private Date requestCompleteDate;
+
     public CashWithdrawal() {
     }
 
@@ -146,5 +150,21 @@ public class CashWithdrawal implements Serializable {
 
     public void setSignatureUrl(String signatureUrl) {
         this.signatureUrl = signatureUrl;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
     }
 }

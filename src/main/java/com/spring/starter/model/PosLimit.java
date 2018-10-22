@@ -16,6 +16,9 @@ public class PosLimit implements Serializable {
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject = false;
+
+
     public PosLimit() {
     }
 
@@ -56,5 +59,13 @@ public class PosLimit implements Serializable {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 }

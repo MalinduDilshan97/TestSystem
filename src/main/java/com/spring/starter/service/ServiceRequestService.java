@@ -52,4 +52,6 @@ public interface ServiceRequestService {
 
     public ResponseEntity<?> getCustomerDetailsByDate(String date);
 
+    public ResponseEntity<?> rejectCustomerServiceRequest(int requestId);
+
 }

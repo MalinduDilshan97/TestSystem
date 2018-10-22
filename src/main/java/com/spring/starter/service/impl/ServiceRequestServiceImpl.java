@@ -794,6 +794,19 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     }
 
     @Override
+    public ResponseEntity<?> rejectCustomerServiceRequest(int requestId){
+       Optional<CustomerServiceRequest> customerServiceRequestOpt = customerServiceRequestRepository.findById(requestId);
+       CustomerServiceRequest customerServiceRequest = customerServiceRequestOpt.get();
+       customerServiceRequest.setSoftReject(true);
+       customerServiceRequest.setRequestCompleteDate(java.util.Calendar.getInstance().getTime());
+       customerServiceRequest.setStatus(true);
+       customerServiceRequest = customerServiceRequestRepository.save(customerServiceRequest);
+       int serviceRequestID = customerServiceRequest.getServiceRequest().getServiceRequestId();
+       int customerRequestId = customerServiceRequest.getCustomerServiceRequestId();
+       return setSoftReject(serviceRequestID,customerRequestId,customerServiceRequest);
+    }
+
+    @Override
     public ResponseEntity<?> getCustomerDetailsByDate(String date){
         ResponseModel responsemodel = new ResponseModel();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -857,6 +870,287 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
     }
 
+    private ResponseEntity<?> invaliedRequest() {
+        ResponseModel responseModel = new ResponseModel();
+        responseModel.setMessage("Invalid requestId");
+        responseModel.setStatus(false);
+        return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<?> setSoftReject(int serviceRequestId,int customerServiceRequestId,CustomerServiceRequest customerServiceRequest){
+        if (serviceRequestId == ServiceRequestIdConfig.CARD_REQUEST) {
+            Optional<AtmOrDebitCardRequest> aodOptional = atmOrDebitCardRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!aodOptional.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                AtmOrDebitCardRequest atmOrDebitCardRequest = aodOptional.get();
+                atmOrDebitCardRequest.setSoftReject(true);
+                atmOrDebitCardRequest.setCustomerServiceRequest(customerServiceRequest);
+                atmOrDebitCardRequest = atmOrDebitCardRequestRepository.save(atmOrDebitCardRequest);
+                return new ResponseEntity<>(atmOrDebitCardRequest, HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.RE_ISSUE_A_PIN){
+            Optional<ReIssuePinRequest> request= reIssuePinRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!request.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                ReIssuePinRequest reIssuePinRequest= request.get();
+                reIssuePinRequest.setSoftReject(true);
+                reIssuePinRequest.setCustomerServiceRequest(customerServiceRequest);
+                reIssuePinRequest = reIssuePinRequestRepository.save(reIssuePinRequest);
+                return new ResponseEntity<>(reIssuePinRequest,HttpStatus.OK);
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS){
+            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(customerServiceRequestId);
+            if (!subscription.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                SmsSubscription  smsSubscription = subscription.get();
+                smsSubscription.setSoftReject(true);
+                smsSubscription.setCustomerServiceRequest(customerServiceRequest);
+                smsSubscription = smsSubscriptionRepository.save(smsSubscription);
+                return new ResponseEntity<>(smsSubscription,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.INCREASE_POS_LIMIT_OF_DEBIT_CARD){
+            Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(customerServiceRequestId);
+            if (!pos.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                PosLimit posLimit = pos.get();
+                posLimit.setSoftReject(true);
+                posLimit.setCustomerServiceRequest(customerServiceRequest);
+                posLimit = posLimitRepository.save(posLimit);
+                return new ResponseEntity<>(posLimit,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.LINK_NEW_ACCAUNTS_TO_D13EBIT_ATM_CARD){
+            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(customerServiceRequestId);
+            if (!account.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                LinkedAccount linkedAccount = account.get();
+                linkedAccount.setSoftReject(true);
+                linkedAccount.setCustomerServiceRequest(customerServiceRequest);
+                linkedAccount = linkedAccountRepository.save(linkedAccount);
+                return new ResponseEntity<>(linkedAccount, HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PRIMARY_ACCOUNT) {
+            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(customerServiceRequestId);
+            if (!primaryAccount.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else{
+                ChangePrimaryAccount changePrimaryAccount = primaryAccount.get();
+                changePrimaryAccount.setSoftReject(false);
+                changePrimaryAccount.setCustomerServiceRequest(customerServiceRequest);
+                changePrimaryAccount = changePrimaryAccountRepository.save(changePrimaryAccount);
+                return new ResponseEntity<>(changePrimaryAccount,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_MAILING_ADDRESS){
+            Optional<ChangeMailingMailModel> changeMailingMailOpt = changeMailingMailModelRepository.getFormFromCSR(customerServiceRequestId);
+            if(!changeMailingMailOpt.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                ChangeMailingMailModel changeMailingMailModel = changeMailingMailOpt.get();
+                changeMailingMailModel.setSoftReject(true);
+                changeMailingMailModel.setCustomerServiceRequest(customerServiceRequest);
+                changeMailingMailModel = changeMailingMailModelRepository.save(changeMailingMailModel);
+                return new ResponseEntity<>(changeMailingMailModel,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_PERMENT_ADDRESS){
+            Optional<ChangePermanentMail> changePermanentMailOpt = changePermanentMailRepository.getFormFromCSR(customerServiceRequestId);
+            if(!changePermanentMailOpt.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                ChangePermanentMail changePermanentMail = changePermanentMailOpt.get();
+                changePermanentMail.setSoftReject(true);
+                changePermanentMail.setCustomerServiceRequest(customerServiceRequest);
+                changePermanentMail = changePermanentMailRepository.save(changePermanentMail);
+                return new ResponseEntity<>(changePermanentMail,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.REISSUE_LOGIN_PASSWORD){
+            Optional<ReissueLoginPasswordModel> reissueLoginPasswordOpt = loginPasswordModelRepository.getFormFromCSR(customerServiceRequestId);
+            if(!reissueLoginPasswordOpt.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                ReissueLoginPasswordModel reissueLoginPasswordModel = reissueLoginPasswordOpt.get();
+                reissueLoginPasswordModel.setSoftReject(true);
+                reissueLoginPasswordModel.setCustomerServiceRequest(customerServiceRequest);
+                reissueLoginPasswordModel = loginPasswordModelRepository.save(reissueLoginPasswordModel);
+                return new ResponseEntity<>(reissueLoginPasswordModel,HttpStatus.OK);
+
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.LINK_FOLLOWING_JOINT_ACCOUNTS){
+            Optional<LinkAccountModel> linkAccountOPT = linkAccountModelRepository.getFormFromCSR(customerServiceRequestId);
+            if(!linkAccountOPT.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                LinkAccountModel linkAccountModel = new LinkAccountModel();
+                linkAccountModel.setSoftReject(true);
+                linkAccountModel.setCustomerServiceRequest(customerServiceRequest);
+                linkAccountModel = linkAccountModelRepository.save(linkAccountModel);
+                return new ResponseEntity<>(linkAccountModel,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY) {
+            Optional<ExcludeInternetAccount> excludeAccountOPT = excludeInternetAccountRepository.getFormFromCSR(customerServiceRequestId);
+            if(excludeAccountOPT.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                ExcludeInternetAccount excludeInternetAccount = excludeAccountOPT.get();
+                excludeInternetAccount.setSoftReject(true);
+                excludeInternetAccount.setCustomerServiceRequest(customerServiceRequest);
+                excludeInternetAccount = excludeInternetAccountRepository.save(excludeInternetAccount);
+                return new ResponseEntity<>(excludeInternetAccount,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_INTERNET_BANKING_SERVICES){
+            Optional<InternetBanking> internetBankingOpt = internetBankingRepository.getFormFromCSR(customerServiceRequestId);
+            if(!internetBankingOpt.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                InternetBanking internetBanking = internetBankingOpt.get();
+                internetBanking.setSoftReject(true);
+                internetBanking.setCustomerServiceRequest(customerServiceRequest);
+                internetBanking = internetBankingRepository.save(internetBanking);
+                return new ResponseEntity<>(internetBanking,HttpStatus.OK);
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERT_CREDIT_CARD) {
+            Optional<SMSAlertsForCreditCard> smsAlertForCreditCardOpt = AlertsForCreditCardRepository.getFormFromCSR(customerServiceRequestId);
+            if(!smsAlertForCreditCardOpt.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                SMSAlertsForCreditCard smsAlertsForCreditCard = smsAlertForCreditCardOpt.get();
+                smsAlertsForCreditCard.setSoftReject(true);
+                smsAlertsForCreditCard.setCustomerServiceRequest(customerServiceRequest);
+                smsAlertsForCreditCard = AlertsForCreditCardRepository.save(smsAlertsForCreditCard);
+                return new ResponseEntity<>(smsAlertsForCreditCard,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_NIC_PASPORT_NO) {
+            Optional<IdentificationForm> changeNicPassportOpt=changeIdentificationFormRepository.getFormFromCSR(customerServiceRequestId);
+            if (!changeNicPassportOpt.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                IdentificationForm identificationForm = changeNicPassportOpt.get();
+                identificationForm.setSoftReject(true);
+                identificationForm.setCustomerServiceRequest(customerServiceRequest);
+                identificationForm = changeIdentificationFormRepository.save(identificationForm);
+                return new ResponseEntity<>(identificationForm,HttpStatus.OK);
+            }
+
+        } else if(serviceRequestId == ServiceRequestIdConfig.CHANGE_OF_TELEPHONE_NO){
+            Optional<ContactDetails> request=contactDetailsRepository.getFormFromCSR(customerServiceRequestId);
+            if (!request.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                ContactDetails contactDetails = request.get();
+                contactDetails.setSoftReject(true);
+                contactDetails.setCustomerServiceRequest(customerServiceRequest);
+                contactDetails = contactDetailsRepository.save(contactDetails);
+                return new ResponseEntity<>(contactDetails,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.ISSUE_ACCAUNT_STATEMENT_FOR_PERIOD){
+            Optional<AccountStatementIssueRequest> accountStatementIssueRequestOpt=accountStatementIssueRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!accountStatementIssueRequestOpt.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                AccountStatementIssueRequest accountStatementIssueRequest = accountStatementIssueRequestOpt.get();
+                accountStatementIssueRequest.setSoftReject(true);
+                accountStatementIssueRequest.setCustomerServiceRequest(customerServiceRequest);
+                accountStatementIssueRequest = accountStatementIssueRequestRepository.save(accountStatementIssueRequest);
+                return new ResponseEntity<>(accountStatementIssueRequest,HttpStatus.OK);
+            }
+
+        } else if (serviceRequestId == ServiceRequestIdConfig.PASSBOOK_DUPLICATE_PASSBOOK_REQUEST) {
+            Optional<DuplicatePassBookRequest> bookRequestOpt = duplicatePassBookRequestRepository.getFormFromCSR(customerServiceRequestId);
+            if (!bookRequestOpt.isPresent()) {
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                DuplicatePassBookRequest duplicatePassBookRequest= bookRequestOpt.get();
+                duplicatePassBookRequest.setSoftReject(true);
+                duplicatePassBookRequest.setCustomerServiceRequest(customerServiceRequest);
+                duplicatePassBookRequest = duplicatePassBookRequestRepository.save(duplicatePassBookRequest);
+                return new ResponseEntity<>(duplicatePassBookRequest,HttpStatus.OK);
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.PI_ACTIVE_CACEL_ESTATEMENT_FACILITY_FOR_ACCOUNTS){
+            Optional<EstatementFacility> estatementFacilityOpt = estatementFacilityRepository.getFormFromCSR(customerServiceRequestId);
+            if (!estatementFacilityOpt.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                EstatementFacility estatementFacility = estatementFacilityOpt.get();
+                estatementFacility.setSoftReject(true);
+                estatementFacility.setCustomerServiceRequest(customerServiceRequest);
+                estatementFacility = estatementFacilityRepository.save(estatementFacility);
+                return new ResponseEntity<>(estatementFacility,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.CHANGE_STATEMENT_FREQUENCY_TO){
+            Optional<StatementFrequency> statementFrequencyOpt = statementFrequencyRepository.getFormFromCSR(customerServiceRequestId);
+            if(!statementFrequencyOpt.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                StatementFrequency statementFrequency = statementFrequencyOpt.get();
+                statementFrequency.setSoftReject(true);
+                statementFrequency.setCustomerServiceRequest(customerServiceRequest);
+                statementFrequency = statementFrequencyRepository.save(statementFrequency);
+                return new ResponseEntity<>(statementFrequency,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.WITHHOLDING_TAX_DEDUCTION_CERTIFICATE){
+            Optional<WithholdingFdCd> fdCdNumbersOptional=withholdingFdCdRepository.findByRequestId(customerServiceRequestId);
+            if (!fdCdNumbersOptional.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                WithholdingFdCd withholdingFdCd = fdCdNumbersOptional.get();
+                withholdingFdCd.setSoftReject(true);
+                withholdingFdCd.setCustomerServiceRequest(customerServiceRequest);
+                withholdingFdCd = withholdingFdCdRepository.save(withholdingFdCd);
+                return new ResponseEntity<>(withholdingFdCd,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER_FD_CD_RELATED_REQUESTS){
+            Optional<OtherFdCdRelatedRequest> otherFdCdRelatedRequestOptional=otherFdCdRelatedRequestRepository.findByRequestId(customerServiceRequestId);
+            if (!otherFdCdRelatedRequestOptional.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                OtherFdCdRelatedRequest otherFdCdRelatedRequest= otherFdCdRelatedRequestOptional.get();
+                otherFdCdRelatedRequest.setSoftReject(true);
+                otherFdCdRelatedRequest.setCustomerServiceRequest(customerServiceRequest);
+                otherFdCdRelatedRequest = otherFdCdRelatedRequestRepository.save(otherFdCdRelatedRequest);
+                return new ResponseEntity<>(otherFdCdRelatedRequest,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.DUPLICATE_FD_CD_CERTIFICATE) {
+            Optional<DuplicateFdCdCert> duplicateFdCdCertOptional=duplicateFdCdCertRepository.findByRequestId(customerServiceRequestId);
+            if (!duplicateFdCdCertOptional.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                DuplicateFdCdCert duplicateFdCdCert = duplicateFdCdCertOptional.get();
+                duplicateFdCdCert.setSoftReject(true);
+                duplicateFdCdCert.setCustomerServiceRequest(customerServiceRequest);
+                duplicateFdCdCert = duplicateFdCdCertRepository.save(duplicateFdCdCert);
+                return new ResponseEntity<>(duplicateFdCdCert,HttpStatus.OK);
+            }
+        } else if (serviceRequestId == ServiceRequestIdConfig.OTHER) {
+            Optional<OtherServiceRequest> otherServiceRequest=otherServiceRequestRepository.findByRequestId(customerServiceRequestId);
+            if (!otherServiceRequest.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                OtherServiceRequest otherServiceRequest1 = otherServiceRequest.get();
+                otherServiceRequest1.setSoftReject(true);
+                otherServiceRequest1.setCustomerServiceRequest(customerServiceRequest);
+                otherServiceRequest1 = otherServiceRequestRepository.save(otherServiceRequest1);
+                return new ResponseEntity<>(otherServiceRequest1,HttpStatus.OK);
+            }
+        } else if(serviceRequestId == ServiceRequestIdConfig.STOP_REVOKE_PAYMENT){
+            Optional<EffectOrRevokePayment> effectOrRevokePaymentOptional = effectOrRevokePaymentRepository.getFormFromCSR(customerServiceRequestId);
+            if(!effectOrRevokePaymentOptional.isPresent()){
+                return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+            } else {
+                EffectOrRevokePayment effectOrRevokePayment = effectOrRevokePaymentOptional.get();
+                effectOrRevokePayment.setSoftReject(true);
+                effectOrRevokePayment.setCustomerServiceRequest(customerServiceRequest);
+                effectOrRevokePayment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
+                return new ResponseEntity<>(effectOrRevokePayment,HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(invaliedRequest(),HttpStatus.BAD_REQUEST);
+    }
+
+
+
     private ResponseEntity<?> returnResponse(){
         ResponseModel responsemodel = new ResponseModel();
         responsemodel.setMessage("Customer Havent fill the form yet");
@@ -877,7 +1171,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             if (!request.isPresent()){
                 return false;
             } else {
-               return true;
+                return true;
             }
         } else if(serviceRequestId == ServiceRequestIdConfig.SUBSCRIBE_TO_SMS_ALERTS_FOR_CARD_TRANSACTIONS){
             Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(customerServiceRequestId);

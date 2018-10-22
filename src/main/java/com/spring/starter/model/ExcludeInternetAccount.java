@@ -36,6 +36,8 @@ public class ExcludeInternetAccount {
 	@JoinColumn(name="csrId")
 	private CustomerServiceRequest customerServiceRequest;
 
+	private boolean softReject;
+
 	public ExcludeInternetAccount() {
 		super();
 	}
@@ -94,5 +96,13 @@ public class ExcludeInternetAccount {
 
 	public void setBankingExcludeAccountNumbers(List<InternetBankingExcludeAccountNumbers> bankingExcludeAccountNumbers) {
 		this.bankingExcludeAccountNumbers = bankingExcludeAccountNumbers;
+	}
+
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
 	}
 }

@@ -27,6 +27,16 @@ public class IdentificationForm {
     @JoinColumn(name = "csrId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject = false;
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
+    }
+
     public IdentificationForm() {
         super();
     }

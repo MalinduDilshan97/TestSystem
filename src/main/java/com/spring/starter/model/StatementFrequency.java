@@ -26,6 +26,9 @@ public class StatementFrequency {
 
     private boolean biAnnaully = false;
 
+    private boolean softReject = false;
+
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="csrId")
     private CustomerServiceRequest customerServiceRequest;
@@ -41,6 +44,14 @@ public class StatementFrequency {
         this.monthly = monthly;
         this.biAnnaully = biAnnaully;
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 
     public int getStatementFrequency() {

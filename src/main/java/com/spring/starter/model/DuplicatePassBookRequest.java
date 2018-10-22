@@ -15,6 +15,16 @@ public class DuplicatePassBookRequest implements Serializable {
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject = false;
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
+    }
+
     public DuplicatePassBookRequest() {
     }
 

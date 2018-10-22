@@ -33,6 +33,8 @@ public class ReissueLoginPasswordModel {
 	@JoinColumn(name="csrId")
 	private CustomerServiceRequest customerServiceRequest;
 
+	private boolean softReject;
+
 	public ReissueLoginPasswordModel() {
 		super();
 	}
@@ -124,8 +126,13 @@ public class ReissueLoginPasswordModel {
 
 	public void setPostToAddress(boolean postToAddress) {
 		this.postToAddress = postToAddress;
-	} 
-	
-	
-	
+	}
+
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
+	}
 }

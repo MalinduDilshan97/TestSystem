@@ -28,6 +28,8 @@ public class OtherFdCdRelatedRequest {
     @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'")
     private String accountType;
 
+    private boolean softReject = false;
+
 
     public OtherFdCdRelatedRequest(String request, Date date, CustomerServiceRequest customerServiceRequest, @NotNull @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'") String accountType) {
         this.request = request;
@@ -37,6 +39,14 @@ public class OtherFdCdRelatedRequest {
     }
 
     public OtherFdCdRelatedRequest() {
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 
     public int getRelatedReqId() {

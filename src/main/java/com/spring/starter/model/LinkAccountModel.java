@@ -35,6 +35,8 @@ public class LinkAccountModel {
 	@JoinColumn(name="csrId")
 	private CustomerServiceRequest customerServiceRequest;
 
+	private boolean softReject= false;
+
 	public LinkAccountModel() {
 		super();
 	}
@@ -57,6 +59,14 @@ public class LinkAccountModel {
 		this.linkAccountModelId = linkAccountModelId;
 		this.existingBankingUserId = existingBankingUserId;
 		this.internetBankingLinkAccountNumbers = internetBankingLinkAccountNumbers;
+	}
+
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
 	}
 
 	public int getLinkAccountModelId() {

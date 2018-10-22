@@ -14,6 +14,7 @@ public class AtmOrDebitCardRequest {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
+    private boolean softReject = false;
 
     public AtmOrDebitCardRequest() {
     }
@@ -55,5 +56,13 @@ public class AtmOrDebitCardRequest {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 }

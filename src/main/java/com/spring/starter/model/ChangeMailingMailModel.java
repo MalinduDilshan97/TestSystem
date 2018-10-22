@@ -41,6 +41,8 @@ public class ChangeMailingMailModel {
 	@NotEmpty
 	private String stateOrProvince;
 
+	private boolean softReject;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ChangeMailingMailId")
 	private List<MailingMailAccountNumbers> mailingMailAccountNo;
@@ -120,6 +122,14 @@ public class ChangeMailingMailModel {
 
 	public String getPostalCode() {
 		return postalCode;
+	}
+
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
 	}
 
 	public void setPostalCode(String postalCode) {

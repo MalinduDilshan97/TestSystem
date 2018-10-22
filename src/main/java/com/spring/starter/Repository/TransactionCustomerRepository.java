@@ -20,4 +20,6 @@ public interface TransactionCustomerRepository extends JpaRepository <Transactio
     @Query("SELECT tc FROM TransactionCustomer tc WHERE date(tc.date) = 1")
     List<TransactionCustomer> getTransactionsOfadate(Date requestDate);
 
+
+
 }

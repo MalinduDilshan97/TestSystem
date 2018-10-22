@@ -8,6 +8,9 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import com.spring.starter.DTO.LoginDisplayDTO;
+import com.spring.starter.Repository.*;
+import com.spring.starter.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,27 +22,9 @@ import com.spring.starter.DTO.AuthToken;
 import com.spring.starter.DTO.LoginDTO;
 import com.spring.starter.DTO.StaffUserDTO;
 import com.spring.starter.Exception.CustomException;
-import com.spring.starter.Repository.DeactivateLogRepository;
-import com.spring.starter.Repository.JwtTokenLogRepository;
-import com.spring.starter.Repository.JwtTokensRepository;
-import com.spring.starter.Repository.LoginlogsRepository;
-import com.spring.starter.Repository.SetActiveLogRepository;
-import com.spring.starter.Repository.StaffRoleRepository;
-import com.spring.starter.Repository.StaffUserRepository;
-import com.spring.starter.Repository.StaffUserSaveLogRepository;
-import com.spring.starter.Repository.ViewUsersLogRepository;
 import com.spring.starter.configuration.ApiParameters;
 import com.spring.starter.configuration.JwtAuthenticationConfig;
 import com.spring.starter.jwt.JwtGenerator;
-import com.spring.starter.model.DeactivateLog;
-import com.spring.starter.model.JwtTokenLog;
-import com.spring.starter.model.JwtTokens;
-import com.spring.starter.model.Loginlogs;
-import com.spring.starter.model.SetActiveLog;
-import com.spring.starter.model.StaffRole;
-import com.spring.starter.model.StaffUser;
-import com.spring.starter.model.StaffUserSaveLog;
-import com.spring.starter.model.ViewUsersLog;
 import com.spring.starter.service.StaffUserService;
 
 @Service
@@ -77,7 +62,10 @@ public class StaffUserServiceImpl implements StaffUserService {
     private StaffUserSaveLogRepository staffUserSaveLogRepository;
 	
     @Autowired
-    private ViewUsersLogRepository viewUsersLogRepository; 
+    private ViewUsersLogRepository viewUsersLogRepository;
+
+    @Autowired
+	private BranchRepository branchRepository;
     
 	public ResponseEntity<?> getAllStaffUsers()
 	{
@@ -170,6 +158,7 @@ public class StaffUserServiceImpl implements StaffUserService {
 	
 	public ResponseEntity<?> saveStaffUser(StaffUserDTO staffUserDTO,HttpServletRequest request,Principal principal)
 	{
+		ResponseModel responseModel = new ResponseModel();
 		StaffUserSaveLog saveLog = new StaffUserSaveLog();
 		if(staffUserRepository.getUserByUsernameForSignUp(staffUserDTO.getUsername()).isPresent()) 
 		{
@@ -190,6 +179,14 @@ public class StaffUserServiceImpl implements StaffUserService {
 			saveUserSaveLog(saveLog, request, principal);
 			return new ResponseEntity<>("{\"Error\":\"Invalied Staff Role Details\",\"Status\":"+false+"}",HttpStatus.BAD_REQUEST);
 		}
+		Optional<Branch> optionalBranch = branchRepository.findById(staffUserDTO.getBranchId());
+		if(!optionalBranch.isPresent()){
+			saveLog.setMessage("User tries to enter an invalid branch id");
+			saveUserSaveLog(saveLog, request, principal);
+			responseModel.setMessage("Invalid Branch Id");
+			responseModel.setStatus(false);
+			return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+		}
 		
 		String encryptedPassword = bCryptPasswordEncoder.encode(staffUserDTO.getPassword());
 		
@@ -199,6 +196,8 @@ public class StaffUserServiceImpl implements StaffUserService {
 		staffUser.setUsername(staffUserDTO.getUsername());
 		staffUser.setPassword(encryptedPassword);
 		staffUser.setStaffRole(staffRole.get());
+		staffUser.setBranch(optionalBranch.get());
+		staffUser.setEpfNumber(staffUserDTO.getEpfNumber());
 		try {
 		staffUserRepository.save(staffUser);
 		saveLog.setMessage("User added Successfully");
@@ -252,7 +251,12 @@ public class StaffUserServiceImpl implements StaffUserService {
 		jwtTokens.setLoginlogs(loginlogs2);
 		jwtTokensRepository.save(jwtTokens);
 		authToken.setAccessToken(accessToken);
-		return new ResponseEntity<>(authToken,HttpStatus.OK);
+
+			LoginDisplayDTO loginDisplayDTO = new LoginDisplayDTO();
+			loginDisplayDTO.setAuthToken(accessToken);
+			loginDisplayDTO.setBranch(staffUserOpt.get().getBranch());
+
+		return new ResponseEntity<>(loginDisplayDTO,HttpStatus.OK);
 		}else 
 		{
 			String status = "Invalied Password Entered";
@@ -306,6 +310,7 @@ public class StaffUserServiceImpl implements StaffUserService {
 	
 	public ResponseEntity<?> saveStaffUserFirstTime(StaffUserDTO staffUserDTO)
 	{
+		ResponseModel responseModel = new ResponseModel();
 		Optional<StaffRole> staffRole = staffRoleRepository.findById(staffUserDTO.getStaffRole());
 		System.out.println(staffUserDTO.getStaffRole());
 		if(!staffRole.isPresent()) 
@@ -314,6 +319,14 @@ public class StaffUserServiceImpl implements StaffUserService {
 		}
 		
 		String encryptedPassword = bCryptPasswordEncoder.encode(staffUserDTO.getPassword());
+
+		Optional<Branch> optionalBranch = branchRepository.findById(staffUserDTO.getBranchId());
+		if(!optionalBranch.isPresent()){
+
+			responseModel.setMessage("Invalid Branch Id");
+			responseModel.setStatus(false);
+			return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+		}
 		
 		StaffUser staffUser = new StaffUser();
 		staffUser.setName(staffUserDTO.getName());
@@ -322,6 +335,8 @@ public class StaffUserServiceImpl implements StaffUserService {
 		staffUser.setPassword(encryptedPassword);
 		staffUser.setStaffRole(staffRole.get());
 		staffUser.setActive(1);
+		staffUser.setBranch(optionalBranch.get());
+		staffUser.setEpfNumber(staffUserDTO.getEpfNumber());
 		try {
 		staffUserRepository.save(staffUser);
 		return new ResponseEntity<>("{\"message\":\"User Added Successfully\",\"Status\":"+true+"}",HttpStatus.CREATED);

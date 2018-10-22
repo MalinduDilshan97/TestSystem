@@ -16,6 +16,8 @@ public class SmsSubscription  {
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject  =false;
+
     public SmsSubscription() {
     }
 
@@ -56,5 +58,13 @@ public class SmsSubscription  {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 }

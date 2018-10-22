@@ -15,6 +15,8 @@ public class ChangePrimaryAccount {
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject= false;
+
     public ChangePrimaryAccount() {
     }
 
@@ -55,5 +57,13 @@ public class ChangePrimaryAccount {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 }

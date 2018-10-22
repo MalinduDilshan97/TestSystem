@@ -26,6 +26,8 @@ public class WithholdingFdCd {
     @JoinColumn(name="csrId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject = false;
+
     public WithholdingFdCd(Date maturityDate, @NotNull @Pattern(regexp = "^(FD|CD)$", message = "Input must be 'FD' or 'CD'") String accountType, List<FdCdNumbers> fdCdNumbers, CustomerServiceRequest customerServiceRequest) {
         this.maturityDate = maturityDate;
         this.accountType = accountType;
@@ -34,6 +36,14 @@ public class WithholdingFdCd {
     }
 
     public WithholdingFdCd() {
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 
     public int getWithholdingFdId() {

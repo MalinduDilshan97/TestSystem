@@ -33,6 +33,13 @@ public class StaffUserDTO {
 	@NonNull
 	private int staffRole;
 
+	@NotNull
+	private int branchId;
+
+	@NotNull
+	@NotEmpty
+	private String epfNumber;
+
 	public StaffUserDTO() {
 		super();
 	}
@@ -87,5 +94,20 @@ public class StaffUserDTO {
 	public void setStaffRole(int staffRole) {
 		this.staffRole = staffRole;
 	}
-	
+
+	public int getBranchId() {
+		return branchId;
+	}
+
+	public void setBranchId(int branchId) {
+		this.branchId = branchId;
+	}
+
+	public String getEpfNumber() {
+		return epfNumber;
+	}
+
+	public void setEpfNumber(String epfNumber) {
+		this.epfNumber = epfNumber;
+	}
 }

@@ -5,6 +5,8 @@ import com.spring.starter.model.TransactionCustomer;
 import com.spring.starter.model.TransactionRequest;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Principal;
+
 public interface TrancsactionRequestService {
 
     public ResponseEntity<?> addNewServiceRequest(TransactionRequest transactionRequest);
@@ -32,4 +34,11 @@ public interface TrancsactionRequestService {
     public ResponseEntity<?> getAllCustomerTransactionRequestsFilterByDate(int customerId, String date);
 
     public ResponseEntity<?> viewTransactionRequest (int customerTransactionRequest);
+
+    public ResponseEntity<?> getAllUncompleteRequests(String date);
+
+    public ResponseEntity<?> completeTransactionRequest(int transactionCustomerRequest, Principal principal);
+
+
+
 }

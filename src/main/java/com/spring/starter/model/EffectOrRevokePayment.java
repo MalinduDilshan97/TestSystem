@@ -23,6 +23,9 @@ public class EffectOrRevokePayment {
     @JoinColumn(name = "effect_revoke_details_id")
     private List<EffectOrRevokePaymentDetails> effectOrRevokePaymentDetails;
 
+    private boolean softReject = false;
+
+
     public EffectOrRevokePayment() {
     }
 
@@ -30,6 +33,14 @@ public class EffectOrRevokePayment {
         this.status = status;
         this.customerAccountNo = customerAccountNo;
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 
     public int getEffectOrRevokePaymentId() {

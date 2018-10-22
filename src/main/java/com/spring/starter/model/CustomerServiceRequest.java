@@ -37,6 +37,7 @@ public class CustomerServiceRequest {
     private Date requestDate;
     private Date requestCompleteDate;
     private String url;
+    private boolean softReject = false;
 
     public CustomerServiceRequest() {
 
@@ -100,6 +101,14 @@ public class CustomerServiceRequest {
 
     public Date getRequestCompleteDate() {
         return requestCompleteDate;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 
     public void setRequestCompleteDate(Date requestCompleteDate) {

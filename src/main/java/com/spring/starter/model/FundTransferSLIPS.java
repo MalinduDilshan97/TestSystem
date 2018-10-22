@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -49,6 +50,10 @@ public class FundTransferSLIPS {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "fundTransferSLIPSFiles")
     private List<FundTransferSLIPSFiles> fundTransferSLIPSIds;
+
+    private Date requestCompleteDate;
+
+    private boolean status;
 
     public FundTransferSLIPS() {
     }
@@ -144,5 +149,21 @@ public class FundTransferSLIPS {
 
     public void setFundTransferSLIPSIds(List<FundTransferSLIPSFiles> fundTransferSLIPSIds) {
         this.fundTransferSLIPSIds = fundTransferSLIPSIds;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

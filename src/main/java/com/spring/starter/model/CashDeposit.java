@@ -96,6 +96,8 @@ public class CashDeposit {
 
     private boolean status = false;
 
+    private Date requestCompleteDate;
+
     public CashDeposit() {
     }
 
@@ -327,5 +329,13 @@ public class CashDeposit {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
     }
 }

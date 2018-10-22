@@ -18,6 +18,8 @@ public class FundTransferWithinNDB implements Serializable {
     private String currency;
     private double amount;
     private long toAccount;
+    private Date requestCompleteDate;
+    private boolean status;
     private String signatureUrl;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Branch_Id")
@@ -131,5 +133,21 @@ public class FundTransferWithinNDB implements Serializable {
 
     public void setFundTransferWithinNDBFiles(List<FundTransferWithinNDBFile> fundTransferWithinNDBFiles) {
         this.fundTransferWithinNDBFiles = fundTransferWithinNDBFiles;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

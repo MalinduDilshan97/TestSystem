@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -49,6 +50,10 @@ public class FundTransferCEFT {
     private List<FundTransferCEFTFiles> fundTransferCEFTFiles;
 
     private String url;
+
+    private boolean status;
+
+    private Date requestCompleteDate;
 
     public FundTransferCEFT(@NotNull String creditAccountNo, @NotNull @Size(min = 3) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String accountName, @NotNull double ammount, Bank bank, Branch branch, @NotNull @Size(min = 2) @Pattern(regexp = "^([A-Za-z0-9_\\s])*$") String reason, CustomerTransactionRequest customerTransactionRequest, String url) {
         this.creditAccountNo = creditAccountNo;
@@ -144,5 +149,21 @@ public class FundTransferCEFT {
 
     public void setFundTransferCEFTFiles(List<FundTransferCEFTFiles> fundTransferCEFTFiles) {
         this.fundTransferCEFTFiles = fundTransferCEFTFiles;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
     }
 }

@@ -152,4 +152,9 @@ public class ServiceRequestController {
         SignatureDTO signatureDTO = new SignatureDTO(customerServiceRequestId, file);
         return serviceRequestService.saveSignature(signatureDTO);
     }
+
+    @PutMapping("/softReject")
+    public ResponseEntity<?> softReject(@RequestParam(name = "requestId") int requestId){
+        return serviceRequestService.rejectCustomerServiceRequest(requestId);
+    }
 }

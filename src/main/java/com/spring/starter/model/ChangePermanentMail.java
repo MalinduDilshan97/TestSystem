@@ -37,7 +37,9 @@ public class ChangePermanentMail {
 	private String issuingAuthority;
 	
 	private String placeOfIssue;
-	
+
+	private boolean softReject = false;
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="csrId")
 	private CustomerServiceRequest customerServiceRequest;
@@ -169,4 +171,11 @@ public class ChangePermanentMail {
 		this.customerServiceRequest = customerServiceRequest;
 	}
 
+	public boolean isSoftReject() {
+		return softReject;
+	}
+
+	public void setSoftReject(boolean softReject) {
+		this.softReject = softReject;
+	}
 }

@@ -22,6 +22,8 @@ public class ReIssuePinRequest  {
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject = false;
+
     public ReIssuePinRequest() {
     }
 
@@ -88,5 +90,13 @@ public class ReIssuePinRequest  {
 
     public void setCustomerServiceRequest(CustomerServiceRequest customerServiceRequest) {
         this.customerServiceRequest = customerServiceRequest;
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 }

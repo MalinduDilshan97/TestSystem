@@ -74,6 +74,12 @@ public class BillPayment {
     @NotNull
     private double total;
 
+    private String signatureUrl;
+
+    private Date requestCompleteDate;
+
+    private boolean status;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerTransactionRequestId")
     private CustomerTransactionRequest customerTransactionRequest;
@@ -255,5 +261,29 @@ public class BillPayment {
 
     public void setBillPaymentReferance(BillPaymentReferance billPaymentReferance) {
         this.billPaymentReferance = billPaymentReferance;
+    }
+
+    public String getSignatureUrl() {
+        return signatureUrl;
+    }
+
+    public void setSignatureUrl(String signatureUrl) {
+        this.signatureUrl = signatureUrl;
+    }
+
+    public Date getRequestCompleteDate() {
+        return requestCompleteDate;
+    }
+
+    public void setRequestCompleteDate(Date requestCompleteDate) {
+        this.requestCompleteDate = requestCompleteDate;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

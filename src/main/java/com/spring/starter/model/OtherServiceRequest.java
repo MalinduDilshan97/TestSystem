@@ -22,7 +22,19 @@ public class OtherServiceRequest {
     @JoinColumn(name="csrId")
     private CustomerServiceRequest customerServiceRequest;
 
+    private boolean softReject = false;
+
+
+
     public OtherServiceRequest() {
+    }
+
+    public boolean isSoftReject() {
+        return softReject;
+    }
+
+    public void setSoftReject(boolean softReject) {
+        this.softReject = softReject;
     }
 
     public int getOtherid() {
