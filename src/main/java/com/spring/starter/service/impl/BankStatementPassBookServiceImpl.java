@@ -73,7 +73,7 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
         List<BankStatementAccountNo> bankStatementAccountNolist = new ArrayList<>();
         if (estatementFacilityOpt.isPresent()) {
             estatementFacility.setEstatementFacilityID(estatementFacilityOpt.get().getEstatementFacilityID());
-            List<BankStatementAccountNo> bankStatementAccountNos = new ArrayList<>();
+            List<BankStatementAccountNo> bankStatementAccountNos = estatementFacilityOpt.get().getBankStatementAccountNo();
             for (BankStatementAccountNo accountNo : bankStatementAccountNos) {
                 bankStatementAccountNoRepository.delete(accountNo);
             }
@@ -120,12 +120,11 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                 res.setStatus(false);
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
-            Optional<DuplicatePassBookRequest> bookRequest = duplicatePassBookRequestRepository.getFormFromCSR(serviceRequestId);
+            Optional<DuplicatePassBookRequest> bookRequest = duplicatePassBookRequestRepository.getFormFromCSR(duplicatePassBookRequestDTO.getCustomerServiceRequestId());
             if (bookRequest.isPresent()) {
                 duplicatePassBookRequest.setDuplicatePassBookRequestId(bookRequest.get().getDuplicatePassBookRequestId());
             }
 
-            duplicatePassBookRequest.setAccountNumber(duplicatePassBookRequestDTO.getAccountNumber());
             duplicatePassBookRequest.setCustomerServiceRequest(customerServiceRequest);
 
             if (duplicatePassBookRequestRepository.save(duplicatePassBookRequest) != null) {
@@ -242,7 +241,8 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
                 }
 
-                Optional<AccountStatementIssueRequest> issueRequest = accountStatementIssueRequestRepository.getFormFromCSR(serviceRequestId);
+                Optional<AccountStatementIssueRequest> issueRequest = accountStatementIssueRequestRepository
+                        .getFormFromCSR(accountStatementIssueRequestDTO.getCustomerServiceRequestId());
                 if (issueRequest.isPresent()) {
                     accountStatementIssueRequest.setAccountStatementIssueRequestId(issueRequest.get().getAccountStatementIssueRequestId());
                 }
@@ -267,6 +267,8 @@ public class BankStatementPassBookServiceImpl implements BankStatementPassBookSe
                     res.setMessage(" Request Successfully Saved In The System");
                     res.setStatus(true);
                     return new ResponseEntity<>(res, HttpStatus.CREATED);
+
+
                 } else {
                     serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
                     serviceRequestCustomerLog.setIdentification(customerServiceRequest.getCustomer().getIdentification());

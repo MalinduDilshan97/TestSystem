@@ -24,6 +24,11 @@ public class FundTransferSLIPS {
     private String accountName;
 
     @NotNull
+    @Size(min = 2)
+    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
+    private String accountNumber;
+
+    @NotNull
     private double ammount;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -165,5 +170,13 @@ public class FundTransferSLIPS {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

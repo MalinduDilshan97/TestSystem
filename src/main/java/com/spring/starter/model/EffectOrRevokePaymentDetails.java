@@ -11,22 +11,22 @@ public class EffectOrRevokePaymentDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int EffectOrRevokePaymentDetailsId;
+    private int effectOrRevokePaymentDetailsId;
     private String chequeNumber;
     private double value;
     private String payeeName;
     private Date dateOfCheque;
     private String reason;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "effect_revoke_details_id")
+    @JoinColumn(name = "effectOrRevokePaymentId")
     @JsonIgnore
     private EffectOrRevokePayment effectOrRevokePayment;
 
     public EffectOrRevokePaymentDetails() {
     }
 
-    public EffectOrRevokePaymentDetails(int effectOrRevokePaymentDetailsId, String chequeNumber, double value, String payeeName, Date dateOfCheque, String reason, EffectOrRevokePayment effectOrRevokePayment) {
-        EffectOrRevokePaymentDetailsId = effectOrRevokePaymentDetailsId;
+    public EffectOrRevokePaymentDetails(String chequeNumber, double value, String payeeName, Date dateOfCheque, String reason, EffectOrRevokePayment effectOrRevokePayment) {
         this.chequeNumber = chequeNumber;
         this.value = value;
         this.payeeName = payeeName;
@@ -36,11 +36,11 @@ public class EffectOrRevokePaymentDetails {
     }
 
     public int getEffectOrRevokePaymentDetailsId() {
-        return EffectOrRevokePaymentDetailsId;
+        return effectOrRevokePaymentDetailsId;
     }
 
     public void setEffectOrRevokePaymentDetailsId(int effectOrRevokePaymentDetailsId) {
-        EffectOrRevokePaymentDetailsId = effectOrRevokePaymentDetailsId;
+        this.effectOrRevokePaymentDetailsId = effectOrRevokePaymentDetailsId;
     }
 
     public String getChequeNumber() {

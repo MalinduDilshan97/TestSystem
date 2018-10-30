@@ -1,9 +1,6 @@
 package com.spring.starter.service.impl;
 
-import com.spring.starter.DTO.CashWithdrawalDTO;
-import com.spring.starter.DTO.FileDTO;
-import com.spring.starter.DTO.DetailsUpdateDTO;
-import com.spring.starter.DTO.TransactionSignatureDTO;
+import com.spring.starter.DTO.*;
 import com.spring.starter.Repository.*;
 import com.spring.starter.configuration.TransactionIdConfig;
 import com.spring.starter.model.*;
@@ -340,8 +337,49 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
     }
 
     @Override
-    public ResponseEntity<?> test (){
-       return new ResponseEntity<>(cashWithdrawalUpdateRecordsRepository.findById(14),HttpStatus.OK);
+    public ResponseEntity<?> getCashWithdrawalUpdateRecords(int requestId){
+       Optional<CashWithdrawalUpdateRecords> cashWithdrawalUpdateRecords =cashWithdrawalUpdateRecordsRepository
+               .getFormFromCSR(requestId);
+
+       if(!cashWithdrawalUpdateRecords.isPresent()) {
+           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+       } else {
+           UpdateRecordsCashWithdrawal updateRecordsCashWithdrawal = new UpdateRecordsCashWithdrawal();
+           updateRecordsCashWithdrawal.setCashWithdrawalUpdateRecordsId(cashWithdrawalUpdateRecords.get().getCashWithdrawalUpdateRecordsId());
+           updateRecordsCashWithdrawal.setSignatureUrl(cashWithdrawalUpdateRecords.get().getSignatureUrl());
+           updateRecordsCashWithdrawal.setComment(cashWithdrawalUpdateRecords.get().getComment());
+           updateRecordsCashWithdrawal.setCustomerTransactionRequest(cashWithdrawalUpdateRecords.get().getCustomerTransactionRequest());
+
+           List<UpdateRecordsDto> updateRecordsDtos = new ArrayList<>();
+
+           for(CashWithDrawalRecordErrors recordErrors: cashWithdrawalUpdateRecords.get().getCashWithDrawalRecordErrors()){
+                String value = recordErrors.getOldValue();
+               String[] parts = value.split(":");
+
+
+               ErrorRecordsView oldErrorRecordsView = new ErrorRecordsView();
+               oldErrorRecordsView.setValueType(parts[0]);
+               oldErrorRecordsView.setValue(parts[1]);
+
+               value = recordErrors.getNewValue();
+               parts = value.split(":");
+
+               ErrorRecordsView newErrorRecordsView = new ErrorRecordsView();
+               newErrorRecordsView.setValueType(parts[0]);
+               newErrorRecordsView.setValue(parts[1]);
+
+               UpdateRecordsDto updateRecordsDto = new UpdateRecordsDto();
+               updateRecordsDto.setOldValue(oldErrorRecordsView);
+               updateRecordsDto.setNewValue(oldErrorRecordsView);
+
+               updateRecordsDtos.add(updateRecordsDto);
+           }
+
+           updateRecordsCashWithdrawal.setCashWithDrawalRecordErrors(updateRecordsDtos);
+
+           return new ResponseEntity<>(updateRecordsCashWithdrawal,HttpStatus.OK);
+       }
+
     }
 
     private List<CashWithDrawalRecordErrors> getAllCashwithDrawalRecordErrors(CashWithdrawal cashWithdrawalOld , CashWithdrawal cashWithdrawalNew, CashWithdrawalUpdateRecords cashWithdrawalUpdateRecords ) throws ParseException {
@@ -356,40 +394,40 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
 
         if(cashWithdrawalOld.getDate().compareTo(dates)==0) {
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
-            cashWithDrawalRecordErrors.setOldValue("{\"date\":\""+cashWithdrawalOld.getDate()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"date\":\""+cashWithdrawalNew.getDate()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("date:"+cashWithdrawalOld.getDate());
+            cashWithDrawalRecordErrors.setNewValue("date:"+cashWithdrawalNew.getDate());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
         }
         if(cashWithdrawalOld.getAccountNo() != cashWithdrawalNew.getAccountNo()) {
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
-            cashWithDrawalRecordErrors.setOldValue("{\"accountNo\":\""+cashWithdrawalOld.getAccountNo()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"accountNo\":\""+cashWithdrawalNew.getAccountNo()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("accountNo:"+cashWithdrawalOld.getAccountNo());
+            cashWithDrawalRecordErrors.setNewValue("accountNo:"+cashWithdrawalNew.getAccountNo());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
         }
         if(!cashWithdrawalOld.getAccountHolder().equals(cashWithdrawalNew.getAccountHolder())){
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
-            cashWithDrawalRecordErrors.setOldValue("{\"accountHolder\":\""+cashWithdrawalOld.getAccountHolder()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"accountHolder\":\""+cashWithdrawalNew.getAccountHolder()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("accountHolder:"+cashWithdrawalOld.getAccountHolder());
+            cashWithDrawalRecordErrors.setNewValue("accountHolder:"+cashWithdrawalNew.getAccountHolder());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
         }
         if(!cashWithdrawalOld.getCurrency().equals(cashWithdrawalNew.getCurrency())){
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
-            cashWithDrawalRecordErrors.setOldValue("{\"currency\":\""+cashWithdrawalOld.getCurrency()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"currency\":\""+cashWithdrawalNew.getCurrency()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("currency:"+cashWithdrawalOld.getCurrency());
+            cashWithDrawalRecordErrors.setNewValue("currency:"+cashWithdrawalNew.getCurrency());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
         }
         if(cashWithdrawalOld.getAmount() != cashWithdrawalNew.getAmount()){
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
-            cashWithDrawalRecordErrors.setOldValue("{\"amount\":\""+cashWithdrawalOld.getAmount()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"amount\":\""+cashWithdrawalNew.getAmount()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("amount:"+cashWithdrawalOld.getAmount());
+            cashWithDrawalRecordErrors.setNewValue("amount:"+cashWithdrawalNew.getAmount());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
@@ -399,16 +437,16 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
 
             String var = "{\"amountInWords\":\""+cashWithdrawalNew.getAmountInWords()+"\"}";
-            cashWithDrawalRecordErrors.setOldValue("{\"amountInWords\":\""+cashWithdrawalOld.getAmountInWords()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"amountInWords\":\""+cashWithdrawalNew.getAmountInWords()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("amountInWords:"+cashWithdrawalOld.getAmountInWords());
+            cashWithDrawalRecordErrors.setNewValue("amountInWords:"+cashWithdrawalNew.getAmountInWords());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
         }
         if(!cashWithdrawalOld.getIdentity().equals(cashWithdrawalNew.getIdentity())){
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
-            cashWithDrawalRecordErrors.setOldValue("{\"identity\":\""+cashWithdrawalOld.getIdentity()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"identity\":\""+cashWithdrawalNew.getIdentity()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("identity:"+cashWithdrawalOld.getIdentity());
+            cashWithDrawalRecordErrors.setNewValue("identity:"+cashWithdrawalNew.getIdentity());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);
@@ -416,8 +454,8 @@ public class CashWithdrawalServiceImpl implements CashWithdrawalService {
         if(cashWithdrawalOld.getNdbBranch().getId() != cashWithdrawalNew.getNdbBranch().getId()){
             cashWithDrawalRecordErrors = new CashWithDrawalRecordErrors();
 
-            cashWithDrawalRecordErrors.setOldValue("{\"ndbBranch\":\""+cashWithdrawalOld.getNdbBranch().getBranch_name()+"\"}");
-            cashWithDrawalRecordErrors.setNewValue("{\"ndbBranch\":\""+cashWithdrawalNew.getNdbBranch().getBranch_name()+"\"}");
+            cashWithDrawalRecordErrors.setOldValue("ndbBranch:"+cashWithdrawalOld.getNdbBranch().getBranch_name());
+            cashWithDrawalRecordErrors.setNewValue("ndbBranch:"+cashWithdrawalNew.getNdbBranch().getBranch_name());
             cashWithDrawalRecordErrors.setCashWithdrawalUpdateRecords(cashWithdrawalUpdateRecords);
             cashWithDrawalRecordErrors = cashWithDrawalRecordErrorsRepository.save(cashWithDrawalRecordErrors);
             listofcashWithDrawalRecordErrors.add(cashWithDrawalRecordErrors);

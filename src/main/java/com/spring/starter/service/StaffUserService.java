@@ -5,6 +5,7 @@ import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.spring.starter.DTO.ChannelCreateDTO;
 import org.springframework.http.ResponseEntity;
 import com.spring.starter.DTO.LoginDTO;
 import com.spring.starter.DTO.StaffUserDTO;
@@ -32,5 +33,7 @@ public interface StaffUserService {
 	public ResponseEntity<?> getAllUsers(Principal principal, HttpServletRequest request);
 	
 	public ResponseEntity<?> saveStaffUserFirstTime(StaffUserDTO staffUserDTO);
+
+	public ResponseEntity<?> saveChannelData(ChannelCreateDTO channelCreateDTO);
 	
 }

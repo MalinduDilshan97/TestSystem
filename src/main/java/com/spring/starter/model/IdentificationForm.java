@@ -16,7 +16,7 @@ public class IdentificationForm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ChangeIdentificationFormId;
+    private int changeIdentificationFormId;
 
     @NotNull
     private String identification;
@@ -47,19 +47,19 @@ public class IdentificationForm {
         this.customerServiceRequest = customerServiceRequest;
     }
 
-    public IdentificationForm(int changeIdentificationFormId, @NotNull String identification, String documentUrl, CustomerServiceRequest customerServiceRequest) {
-        ChangeIdentificationFormId = changeIdentificationFormId;
+    public IdentificationForm(@NotNull String identification, String documentUrl, CustomerServiceRequest customerServiceRequest, boolean softReject) {
         this.identification = identification;
         this.documentUrl = documentUrl;
         this.customerServiceRequest = customerServiceRequest;
+        this.softReject = softReject;
     }
 
     public int getChangeIdentificationFormId() {
-        return ChangeIdentificationFormId;
+        return changeIdentificationFormId;
     }
 
     public void setChangeIdentificationFormId(int changeIdentificationFormId) {
-        ChangeIdentificationFormId = changeIdentificationFormId;
+        this.changeIdentificationFormId = changeIdentificationFormId;
     }
 
     public String getIdentification() {

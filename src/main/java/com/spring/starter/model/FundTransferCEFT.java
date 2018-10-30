@@ -26,6 +26,11 @@ public class FundTransferCEFT {
     private String accountName;
 
     @NotNull
+    @Size(min = 3)
+    @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
+    private String accountNumber;
+
+    @NotNull
     private double ammount;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -165,5 +170,13 @@ public class FundTransferCEFT {
 
     public void setRequestCompleteDate(Date requestCompleteDate) {
         this.requestCompleteDate = requestCompleteDate;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

@@ -55,7 +55,6 @@ public class CashDeposit {
     @Pattern(regexp = "^([A-Za-z0-9_\\s])*$")
     private String phoneNumberAndExtn;
 
-    @FutureOrPresent
     private Date date;
 
     @NotNull

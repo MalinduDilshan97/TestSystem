@@ -54,4 +54,12 @@ public interface ServiceRequestService {
 
     public ResponseEntity<?> rejectCustomerServiceRequest(int requestId);
 
+    public ResponseEntity<?> getAllSoftRejectedRequests();
+
+    public ResponseEntity<?> getAllSoftRejectedRequestsByDate(String date);
+
+    public ResponseEntity<?> getAllCustomerRequestsWithourSoftReject(int customerId);
+
+    public ResponseEntity<?> fileUploadForServiceRequest(String fileType,MultipartFile file,int customerServiceRequestId);
+
 }

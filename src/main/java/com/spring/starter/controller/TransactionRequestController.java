@@ -35,7 +35,7 @@ public class TransactionRequestController {
 
     @PutMapping("/update-transaction-customer/{recordId}")
     public ResponseEntity<?> updateTransactionCustomerDetails(@RequestBody @Valid TransactionCustomer transactionCustomer
-            ,@PathVariable int recordId){
+                                                                                           ,@PathVariable int recordId){
         return trancsactionRequestService.updateTransactionCustomerDetails(transactionCustomer,recordId);
     }
 
@@ -77,7 +77,8 @@ public class TransactionRequestController {
     }
 
     @GetMapping("/get-all-customer-transaction-requests-filter-by-date")
-    public ResponseEntity<?> getAllCustomerTransactionRequestsFilterByDate(@RequestParam("customerRequestId") int customerId,@RequestParam("date") String date){
+    public ResponseEntity<?> getAllCustomerTransactionRequestsFilterByDate
+                                  (@RequestParam("customerRequestId") int customerId,@RequestParam("date") String date){
         return trancsactionRequestService.getAllCustomerTransactionRequestsFilterByDate(customerId,date);
     }
 
@@ -92,7 +93,8 @@ public class TransactionRequestController {
     }
 
     @GetMapping("complete-a-transaction-request")
-    public ResponseEntity<?> completeATransactionRequest(@RequestParam(name="requestId") int requestId, Principal principal){
+    public ResponseEntity<?> completeATransactionRequest(@RequestParam(name="requestId") int requestId,
+                                                                                                   Principal principal){
         return trancsactionRequestService.completeTransactionRequest(requestId,principal);
     }
 

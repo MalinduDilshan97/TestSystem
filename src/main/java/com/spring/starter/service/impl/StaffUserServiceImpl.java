@@ -8,7 +8,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
-import com.spring.starter.DTO.LoginDisplayDTO;
+import com.spring.starter.DTO.*;
 import com.spring.starter.Repository.*;
 import com.spring.starter.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.spring.starter.DTO.AuthToken;
-import com.spring.starter.DTO.LoginDTO;
-import com.spring.starter.DTO.StaffUserDTO;
 import com.spring.starter.Exception.CustomException;
 import com.spring.starter.configuration.ApiParameters;
 import com.spring.starter.configuration.JwtAuthenticationConfig;
@@ -155,6 +152,26 @@ public class StaffUserServiceImpl implements StaffUserService {
 			return new ResponseEntity<>("{\"Message\":\"User Activated Successfully\",\"Status\":"+true+"}",HttpStatus.OK);
 		}
 	}
+
+	public ResponseEntity<?> saveChannelData(ChannelCreateDTO channelCreateDTO){
+
+		ResponseModel responseModel = new ResponseModel();
+		Optional<StaffUser> staffUserOpt = staffUserRepository.findById(channelCreateDTO.getStaffId());
+
+		if(!staffUserOpt.isPresent()){
+			responseModel.setMessage("Invalid User Id");
+			responseModel.setStatus(false);
+			return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+		} else {
+			StaffUser staffUser = staffUserOpt.get();
+			staffUser.setClientKey(channelCreateDTO.getClientKey());
+			staffUser.setBrowserKey(channelCreateDTO.getBrowserKey());
+
+			staffUser = staffUserRepository.save(staffUser);
+
+			return new ResponseEntity<>(staffUser,HttpStatus.CREATED);
+		}
+	}
 	
 	public ResponseEntity<?> saveStaffUser(StaffUserDTO staffUserDTO,HttpServletRequest request,Principal principal)
 	{
@@ -199,13 +216,14 @@ public class StaffUserServiceImpl implements StaffUserService {
 		staffUser.setBranch(optionalBranch.get());
 		staffUser.setEpfNumber(staffUserDTO.getEpfNumber());
 		try {
-		staffUserRepository.save(staffUser);
+		staffUser = staffUserRepository.save(staffUser);
 		saveLog.setMessage("User added Successfully");
 		saveLog.setSavedWho(staffUser);
 		saveUserSaveLog(saveLog, request, principal);
-		return new ResponseEntity<>("{\"message\":\"User Added Successfully\",\"Status\":"+true+"}",HttpStatus.CREATED);
+		return new ResponseEntity<>("{\"message\":\"User Added Successfully\",\"Status\":"+true+"," +
+				"\"staffId\":"+staffUser.getStaffId()+"}",HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<>("{\"Error\":\"User Adition Failed\",\"Status\":"+false+"}",HttpStatus.CREATED);
+			return new ResponseEntity<>("{\"Error\":\"User Addition Failed\",\"Status\":"+false+"}",HttpStatus.CREATED);
 		}
 	}
 
@@ -255,6 +273,8 @@ public class StaffUserServiceImpl implements StaffUserService {
 			LoginDisplayDTO loginDisplayDTO = new LoginDisplayDTO();
 			loginDisplayDTO.setAuthToken(accessToken);
 			loginDisplayDTO.setBranch(staffUserOpt.get().getBranch());
+			loginDisplayDTO.setBrowserKey(staffUserOpt.get().getBrowserKey());
+			loginDisplayDTO.setBrowserKey(staffUserOpt.get().getClientKey());
 
 		return new ResponseEntity<>(loginDisplayDTO,HttpStatus.OK);
 		}else 
@@ -307,7 +327,8 @@ public class StaffUserServiceImpl implements StaffUserService {
 			return new ResponseEntity<>(activeUsers, HttpStatus.OK);
 		}
 	}
-	
+
+	@Override
 	public ResponseEntity<?> saveStaffUserFirstTime(StaffUserDTO staffUserDTO)
 	{
 		ResponseModel responseModel = new ResponseModel();

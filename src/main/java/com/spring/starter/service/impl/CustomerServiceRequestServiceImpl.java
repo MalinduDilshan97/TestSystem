@@ -78,7 +78,7 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
                 Optional<IdentificationForm> optionalForm = changeIdentificationFormRepository.getFormFromCSR(identificationFormDTO.getCustomerServiceRequestId());
                 if (optionalForm.isPresent()) {
-                    identificationForm.setChangeIdentificationFormId(identificationFormDTO.getCustomerServiceRequestId());
+                    identificationForm.setChangeIdentificationFormId(optionalForm.get().getChangeIdentificationFormId());
                 }
 
                 identificationForm.setIdentification(identificationFormDTO.getIdentification());
@@ -154,7 +154,7 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
 
         Optional<IdentificationForm> optionalForm = changeIdentificationFormRepository.getFormFromCSR(identificationAddDTO.getCustomerServiceRequestId());
         if (optionalForm.isPresent()) {
-            identificationForm.setChangeIdentificationFormId(identificationAddDTO.getCustomerServiceRequestId());
+            identificationForm.setChangeIdentificationFormId(optionalForm.get().getChangeIdentificationFormId());
         }
         identificationForm.setIdentification(identificationAddDTO.getIdentification());
         identificationForm.setCustomerServiceRequest(optional.get());
@@ -187,7 +187,7 @@ public class CustomerServiceRequestServiceImpl implements CustomerServiceRequest
             ContactDetails contactDetails = new ContactDetails();
             Optional<ContactDetails> details = contactDetailsRepository.getFormFromCSR(contactDetailsDTO.getCustomerServiceRequestId());
             if (details.isPresent()) {
-                contactDetails.setContactDetailsId(contactDetailsDTO.getCustomerServiceRequestId());
+                contactDetails.setContactDetailsId(details.get().getContactDetailsId());
             }
 
             contactDetails.setMobileNumber(contactDetailsDTO.getMobileNumber());

@@ -128,7 +128,8 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     @Autowired
     private EffectOrRevokePaymentRepository effectOrRevokePaymentRepository;
 
-
+    @Autowired
+    private ServiceRequestFileUploadRepository serviceRequestFileUploadRepository;
 
     @Override
     public ResponseEntity<?> addNewServiceRequest(ServiceRequest serviceRequest) {
@@ -143,6 +144,64 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             throw new CustomException("Something went wrong with the DB Connection");
         }
     }
+
+    public ResponseEntity<?> fileUploadForServiceRequest(String fileType,MultipartFile file,int customerServiceRequestId){
+
+        ResponseModel responseModel = new ResponseModel();
+        ServiceRequestFileUpload serviceRequestFileUpload = new ServiceRequestFileUpload();
+
+        Optional<CustomerServiceRequest> customerServiceRequest = customerServiceRequestRepository
+                .findById(customerServiceRequestId);
+
+        if(!customerServiceRequest.isPresent()){
+            responseModel.setStatus(false);
+            responseModel.setMessage("Invalid customer service request Id.");
+            return new ResponseEntity<>(responseModel,HttpStatus.OK);
+        }
+
+        int serviceRequestId = customerServiceRequest.get().getServiceRequest().getDigiFormId();
+
+        Optional<ServiceRequest> serviceRequestOpt = serviceRequestRepository.getFromDigiId(serviceRequestId);
+        if(!serviceRequestOpt.isPresent()){
+            responseModel.setStatus(false);
+            responseModel.setMessage("Invalid bank service request Id.");
+            return new ResponseEntity<>(responseModel,HttpStatus.OK);
+        }
+
+        Customer customer = customerServiceRequest.get().getCustomer();
+
+        UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
+
+        String extention = file.getOriginalFilename();
+        extention = FilenameUtils.getExtension(extention);
+
+        String location = ("/ServiceRequest/fileUpload/"+serviceRequestOpt.get().getServiceRequestName()+"/"+customer.getCustomerId());
+        String filename = customerServiceRequest.get().getCustomerServiceRequestId() + "_uuid-" + randomUUIDString + extention;
+        String url = fileStorage.fileSaveWithRenaming(file, location, filename);
+        location = location + "/" + filename;
+        if (url.equals("Failed")) {
+            responseModel.setMessage(" Failed To Upload Signature!");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+        } else{
+            serviceRequestFileUpload.setBankserviceRequest(serviceRequestOpt.get());
+            serviceRequestFileUpload.setCustomer(customer);
+            serviceRequestFileUpload.setCustomerServiceRequest(customerServiceRequest.get());
+            serviceRequestFileUpload.setFileType(fileType);
+            serviceRequestFileUpload.setFileUrl(location);
+
+
+            try {
+                serviceRequestFileUpload = serviceRequestFileUploadRepository.save(serviceRequestFileUpload);
+            } catch (Exception e){
+                throw new CustomException(e.getMessage());
+            }
+
+            return new ResponseEntity<>(serviceRequestFileUpload,HttpStatus.OK);
+        }
+    }
+
 
     @Override
     public ResponseEntity<?> addNewCustomer(CustomerDTO customerDTO,HttpServletRequest request) {
@@ -161,7 +220,24 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             responsemodel.setStatus(false);
             return new ResponseEntity<>(responsemodel,HttpStatus.BAD_REQUEST);
         }
-
+        String num = customerDTO.getMobileNo();
+        if(num.length() == 10){
+            num = num.substring(1,10);
+            char a_char = num.charAt(0);
+            if(a_char != '7'){
+                responsemodel.setMessage("Please Insert A Correct Mobile number.");
+                responsemodel.setStatus(false);
+                return new ResponseEntity<>(responsemodel,HttpStatus.BAD_REQUEST);
+            }
+            customerDTO.setMobileNo(num);
+        } else if(num.length() == 9){
+            char a_char = num.charAt(0);
+            if(a_char != '7'){
+                responsemodel.setMessage("Plese Insert A Correct Mobile number.");
+                responsemodel.setStatus(false);
+                return new ResponseEntity<>(responsemodel,HttpStatus.BAD_REQUEST);
+            }
+        }
 
         ServiceRequestCustomerLog serviceRequestCustomerLog = new ServiceRequestCustomerLog();
         serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
@@ -263,7 +339,27 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             List<CustomerServiceRequest> customerServiceRequests = customerServiceRequestRepository.getAllCustomerRequest(customerId);
             return new ResponseEntity<>(customerServiceRequests, HttpStatus.OK);
         } catch (Exception e) {
-            responsemodel.setMessage("There is a problem with the database connection");
+            responsemodel.setMessage("There is a problem with the DB connection");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getAllCustomerRequestsWithourSoftReject(int customerId) {
+        ResponseModel responsemodel = new ResponseModel();
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if(!customerOptional.isPresent()){
+            responsemodel.setMessage("There is a no such customer available");
+            responsemodel.setStatus(true);
+            return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
+        }
+        try {
+            List<CustomerServiceRequest> customerServiceRequests = customerServiceRequestRepository
+                    .getAllCustomerRequestWithoutReject(customerId);
+            return new ResponseEntity<>(customerServiceRequests, HttpStatus.OK);
+        } catch (Exception e) {
+            responsemodel.setMessage("There is a problem with the database connection.");
             responsemodel.setStatus(true);
             return new ResponseEntity<>(responsemodel, HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -649,7 +745,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             }
         } else if (serviceRequestId == ServiceRequestIdConfig.EXCLUDE_ACCOUNTS_FROM_INTERNET_BANKING_FACILITY) {
             Optional<ExcludeInternetAccount> excludeAccountOPT = excludeInternetAccountRepository.getFormFromCSR(customerServiceRequestId);
-            if(excludeAccountOPT.isPresent()) {
+            if(!excludeAccountOPT.isPresent()) {
                return returnResponse();
             } else {
                 return new ResponseEntity<>(excludeAccountOPT,HttpStatus.OK);
@@ -794,14 +890,62 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     }
 
     @Override
+    public ResponseEntity<?> getAllSoftRejectedRequests(){
+        List<CustomerServiceRequest> customerServiceRequests = customerServiceRequestRepository.getAllSoftRejectRequests();
+        if(customerServiceRequests.isEmpty()){
+            ResponseModel  responseModel = new ResponseModel();
+            responseModel.setMessage("No contents to display");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(customerServiceRequests,HttpStatus.OK);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getAllSoftRejectedRequestsByDate(String date){
+        ResponseModel  responseModel = new ResponseModel();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date requestDate;
+        try {
+            requestDate = df.parse(date);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+        List<CustomerServiceRequest> customerServiceRequests = customerServiceRequestRepository
+                .getAllSoftRejectRequestsByDate(requestDate);
+        if(customerServiceRequests.isEmpty()){
+            responseModel.setMessage("No content to display.");
+            responseModel.setStatus(false);
+            return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(customerServiceRequests,HttpStatus.OK);
+        }
+    }
+
+    @Override
     public ResponseEntity<?> rejectCustomerServiceRequest(int requestId){
+        ResponseModel responseModel = new ResponseModel();
        Optional<CustomerServiceRequest> customerServiceRequestOpt = customerServiceRequestRepository.findById(requestId);
+       if(!customerServiceRequestOpt.isPresent()){
+          responseModel.setStatus(false);
+          responseModel.setMessage("There is no such customer request");
+          return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+       } else if (customerServiceRequestOpt.get().isSoftReject()){
+           responseModel.setStatus(false);
+           responseModel.setMessage("request is already rejected");
+           return new ResponseEntity<>(responseModel,HttpStatus.OK);
+       } else if(customerServiceRequestOpt.get().isStatus()){
+           responseModel.setStatus(false);
+           responseModel.setMessage("You cannot rejected a completed request");
+           return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
+       }
        CustomerServiceRequest customerServiceRequest = customerServiceRequestOpt.get();
        customerServiceRequest.setSoftReject(true);
        customerServiceRequest.setRequestCompleteDate(java.util.Calendar.getInstance().getTime());
        customerServiceRequest.setStatus(true);
        customerServiceRequest = customerServiceRequestRepository.save(customerServiceRequest);
-       int serviceRequestID = customerServiceRequest.getServiceRequest().getServiceRequestId();
+       int serviceRequestID = customerServiceRequest.getServiceRequest().getDigiFormId();
        int customerRequestId = customerServiceRequest.getCustomerServiceRequestId();
        return setSoftReject(serviceRequestID,customerRequestId,customerServiceRequest);
     }

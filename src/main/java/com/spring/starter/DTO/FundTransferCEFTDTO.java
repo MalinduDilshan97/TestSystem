@@ -8,6 +8,8 @@ public class FundTransferCEFTDTO {
 
     private String accountName;
 
+    private String accountNumber;
+
     private double ammount;
 
     private int bankId;
@@ -74,5 +76,13 @@ public class FundTransferCEFTDTO {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 }

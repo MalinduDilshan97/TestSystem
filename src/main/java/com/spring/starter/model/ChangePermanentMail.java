@@ -23,10 +23,8 @@ public class ChangePermanentMail {
 	private String city;
 
 	private String postalCode;
-	
 
 	private String stateOrProvince;
-	
 
 	private String country;
 	

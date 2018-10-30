@@ -110,15 +110,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/serviceRequest/addNewServiceToACustomer").permitAll()
                 .antMatchers("/serviceRequest/getcustomer").permitAll()
                 .antMatchers("/serviceRequest/getServicesOfACustomerByDate").permitAll()
-                .antMatchers("/serviceRequestgetAllCustomerRequests").permitAll()
-                .antMatchers("/serviceRequestgetAllCustomerDataWithRequests").permitAll()
-                .antMatchers("/serviceRequestcompleteACustomerRequest").permitAll()
-                .antMatchers("/serviceRequestaddAStaffHandled").permitAll()
+                .antMatchers("/serviceRequest/getAllCustomerRequests").permitAll()
+                .antMatchers("/serviceRequest/getAllCustomerDataWithRequests").permitAll()
+                .antMatchers("/serviceRequest/completeACustomerRequest").permitAll()
+                .antMatchers("/serviceRequest/addAStaffHandled").permitAll()
                 .antMatchers("/serviceRequest/getServiceRequestForm").permitAll()
                 .antMatchers("/serviceRequest/addSignature").permitAll()
                 .antMatchers("/serviceRequest/SMSAlertsforCreditCard").permitAll()
+                .antMatchers("/serviceRequest/get-all-customer-requests-filter-by-reject/**").permitAll()
                 .antMatchers("/Transaction-Request/add-service").permitAll()
+                .antMatchers("/Transaction-Request/getServiceRequestForm").permitAll()
                 .antMatchers("/Transaction-Request/ger-all-service").permitAll()
+                .antMatchers("/Transaction-Request/tif-image").permitAll()
+                .antMatchers("/Transaction-Request/getDocumentTypes/**").permitAll()
+                .antMatchers("/Transaction-Request/addSignature").permitAll()
+                .antMatchers("/Transaction-Request/softReject").permitAll()
+                .antMatchers("/Transaction-Request/softReject-all").permitAll()
                 .antMatchers("/Transaction-Request/add-transaction-customer").permitAll()
                 .antMatchers("/Transaction-Request/add-customer-to-trasaction-request").permitAll()
                 .antMatchers("/Transaction-Request/fund-transaction-within-ndb").permitAll()
@@ -148,7 +155,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/Currency/search/**").permitAll()
                 .antMatchers("/Currency/get-all").permitAll()
                 .anyRequest().authenticated();
-
-
     }
 }

@@ -11,7 +11,7 @@ public class EffectOrRevokePayment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int EffectOrRevokePaymentId;
+    private int effectOrRevokePaymentId;
     private String status;
     @NotNull
     private String customerAccountNo;
@@ -19,20 +19,15 @@ public class EffectOrRevokePayment {
     @JoinColumn(name = "customer_service_request_id")
     private CustomerServiceRequest customerServiceRequest;
 
-    @OneToMany
-    @JoinColumn(name = "effect_revoke_details_id")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "effectOrRevokePaymentId")
     private List<EffectOrRevokePaymentDetails> effectOrRevokePaymentDetails;
+
 
     private boolean softReject = false;
 
 
     public EffectOrRevokePayment() {
-    }
-
-    public EffectOrRevokePayment(String status, @NotNull String customerAccountNo, CustomerServiceRequest customerServiceRequest) {
-        this.status = status;
-        this.customerAccountNo = customerAccountNo;
-        this.customerServiceRequest = customerServiceRequest;
     }
 
     public boolean isSoftReject() {
@@ -44,11 +39,11 @@ public class EffectOrRevokePayment {
     }
 
     public int getEffectOrRevokePaymentId() {
-        return EffectOrRevokePaymentId;
+        return effectOrRevokePaymentId;
     }
 
     public void setEffectOrRevokePaymentId(int effectOrRevokePaymentId) {
-        EffectOrRevokePaymentId = effectOrRevokePaymentId;
+        this.effectOrRevokePaymentId = effectOrRevokePaymentId;
     }
 
     public String getStatus() {

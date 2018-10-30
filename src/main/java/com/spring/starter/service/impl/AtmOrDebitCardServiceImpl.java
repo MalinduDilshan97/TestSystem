@@ -206,7 +206,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(serviceRequestId);
+            Optional<SmsSubscription> subscription=smsSubscriptionRepository.getFormFromCSR(smsSubscriptionDTO.getCustomerServiceRequestId());
             if (subscription.isPresent()){
                 smsSubscription.setSubscriptionId(subscription.get().getSubscriptionId());
             }
@@ -292,7 +292,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
                 }
 
-                Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(serviceRequestId);
+                Optional<PosLimit> pos=posLimitRepository.getFormFromCSR(posLimitDTO.getCustomerServiceRequestId());
                 if (pos.isPresent()){
                     posLimit.setPosLimitId(pos.get().getPosLimitId());
                 }
@@ -303,7 +303,6 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                     return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
                 }
 
-                posLimit.setPosLimitId(posLimitDTO.getPosLimitId());
                 posLimit.setCardNumber(posLimitDTO.getCardNumber());
                 posLimit.setValue(posLimitDTO.getValue());
                 posLimit.setCustomerServiceRequest(customerServiceRequest);
@@ -323,7 +322,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                     serviceRequestFormLog.setFromId(customerServiceRequest.getServiceRequest().getServiceRequestId());
                     serviceRequestFormLog.setIp(request.getRemoteAddr());
                     serviceRequestFormLog.setStatus(true);
-                    serviceRequestFormLog.setMessage("  Request Form Successfully Saved To The System");
+                    serviceRequestFormLog.setMessage("Request Form Successfully Saved To The System.");
                     serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
                 }
 
@@ -376,7 +375,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(serviceRequestId);
+            Optional<LinkedAccount> account=linkedAccountRepository.getFormFromCSR(linkedAccountDTO.getCustomerServiceRequestId());
             if (account.isPresent()){
                 linkedAccount.setLinkedAccountId(account.get().getLinkedAccountId());
             }
@@ -457,7 +456,7 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
                 return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(serviceRequestId);
+            Optional<ChangePrimaryAccount> primaryAccount=changePrimaryAccountRepository.getFormFromCSR(changePrimaryAccountDTO.getCustomerServiceRequestId());
             if (primaryAccount.isPresent()){
                 changePrimaryAccount.setChangePrimaryAccountId(primaryAccount.get().getChangePrimaryAccountId());
             }
@@ -525,6 +524,4 @@ public class AtmOrDebitCardServiceImpl implements AtmOrDebitCardService {
             }
         }
     }
-
-
 }

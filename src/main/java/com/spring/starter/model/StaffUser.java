@@ -31,6 +31,11 @@ public class StaffUser {
 	@NotEmpty
 	@Column(unique=true) 
 	private String username;
+
+	private String clientKey;
+
+	private String browserKey;
+
 	@NonNull
 	@NotBlank
 	@NotEmpty
@@ -150,5 +155,21 @@ public class StaffUser {
 
 	public void setEpfNumber(String epfNumber) {
 		this.epfNumber = epfNumber;
+	}
+
+	public String getClientKey() {
+		return clientKey;
+	}
+
+	public void setClientKey(String clientKey) {
+		this.clientKey = clientKey;
+	}
+
+	public String getBrowserKey() {
+		return browserKey;
+	}
+
+	public void setBrowserKey(String browserKey) {
+		this.browserKey = browserKey;
 	}
 }

@@ -35,7 +35,6 @@ public class BillPayment {
     @NotNull
     private Branch branch;
 
-    @FutureOrPresent
     private Date date;
 
     private boolean currencyIsCash = false;

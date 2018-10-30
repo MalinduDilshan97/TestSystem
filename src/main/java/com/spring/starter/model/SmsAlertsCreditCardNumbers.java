@@ -13,7 +13,7 @@ public class SmsAlertsCreditCardNumbers {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int SmsAlertsCreditCardNumbers;
+	private int smsAlertsCreditCardNumbers;
 	
 	@NotNull
 	private String creditCardNumber;
@@ -22,18 +22,16 @@ public class SmsAlertsCreditCardNumbers {
 		super();
 	}
 
-	public SmsAlertsCreditCardNumbers(int smsAlertsCreditCardNumbers, @NotNull String creditCardNumber) {
-		super();
-		SmsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
+	public SmsAlertsCreditCardNumbers(@NotNull String creditCardNumber) {
 		this.creditCardNumber = creditCardNumber;
 	}
 
 	public int getSmsAlertsCreditCardNumbers() {
-		return SmsAlertsCreditCardNumbers;
+		return smsAlertsCreditCardNumbers;
 	}
 
 	public void setSmsAlertsCreditCardNumbers(int smsAlertsCreditCardNumbers) {
-		SmsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
+		this.smsAlertsCreditCardNumbers = smsAlertsCreditCardNumbers;
 	}
 
 	public String getCreditCardNumber() {

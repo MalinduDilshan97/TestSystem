@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import com.spring.starter.DTO.SignatureDTO;
 import com.spring.starter.model.CustomerServiceRequest;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,6 @@ public class ServiceRequestController {
     public ResponseEntity<?> addANewCustomer(@RequestBody @Valid CustomerDTO customerDTO) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         return serviceRequestService.addNewCustomer(customerDTO,request);
-        //return new ResponseEntity<>(customerDTO,HttpStatus.OK);
     }
 
     @PostMapping("/addNewServiceToACustomer")
@@ -75,6 +75,11 @@ public class ServiceRequestController {
     @GetMapping("/getAllCustomerRequests")
     public ResponseEntity<?> getAllCustomerDetails(@RequestParam(name = "customerId") int customerId) {
         return serviceRequestService.getAllCustomerRequests(customerId);
+    }
+
+    @GetMapping("/get-all-customer-requests-filter-by-reject")
+    public ResponseEntity<?> getAllCustomerDetailsFilterByDate(@RequestParam(name = "customerId") int customerId) {
+        return serviceRequestService.getAllCustomerRequestsWithourSoftReject(customerId);
     }
 
     @GetMapping("/getAllCustomerDataWithRequests")
@@ -121,29 +126,12 @@ public class ServiceRequestController {
     }
 
 
-    @GetMapping("/test")
-    public ResponseEntity<?> testModel() {
-        ChangePermanentMail changePermanentMail = new ChangePermanentMail();
+    @PostMapping("/file-upload")
+    public ResponseEntity<?> fileUpload(@RequestParam  MultipartFile file,
+                                     @RequestParam int customerServiceRequestId,
+                                     @RequestParam String fileType) throws Exception {
 
-        changePermanentMail.setNewPermanentAddress("thilakavilla,Thutthiripitiya,Halthota");
-        changePermanentMail.setCity("Bandaragama");
-        changePermanentMail.setPostalCode("kt12345");
-        changePermanentMail.setStateOrProvince("Kaluthara");
-        changePermanentMail.setCountry("SriLanka");
-        changePermanentMail.setIssuingAuthority("issuingAuthority");
-        changePermanentMail.setPlaceOfIssue("Kaluthara");
-
-        List<String> accountNo = new ArrayList<>();
-        accountNo.add("2131232132");
-        accountNo.add("2131232124");
-
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setIdentification("1232132132");
-        customerDTO.setMobileNo("0710873073");
-        customerDTO.setName("lakithMuthugala");
-        customerDTO.setAccountNos(accountNo);
-
-        return new ResponseEntity<>(customerDTO, HttpStatus.OK);
+        return serviceRequestService.fileUploadForServiceRequest(fileType,file,customerServiceRequestId);
     }
 
     @PutMapping("addSignature")
@@ -156,5 +144,15 @@ public class ServiceRequestController {
     @PutMapping("/softReject")
     public ResponseEntity<?> softReject(@RequestParam(name = "requestId") int requestId){
         return serviceRequestService.rejectCustomerServiceRequest(requestId);
+    }
+
+    @GetMapping("/softReject")
+    public ResponseEntity<?> getsoftRejectByDate(@RequestParam("date") String date){
+        return serviceRequestService.getAllSoftRejectedRequestsByDate(date);
+    }
+
+    @GetMapping("/softReject-all")
+    public ResponseEntity<?> getsoftRejectGetAll(){
+        return serviceRequestService.getAllSoftRejectedRequests();
     }
 }

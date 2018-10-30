@@ -14,7 +14,7 @@ public class AccountStatementIssueRequest implements Serializable {
     private long accountNo;
     private Date fromDate;
     private Date toDate;
-    private String NatureOfStatement;
+    private String natureOfStatement;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerServiceRequestId")
     private CustomerServiceRequest customerServiceRequest;
@@ -32,13 +32,13 @@ public class AccountStatementIssueRequest implements Serializable {
     public AccountStatementIssueRequest() {
     }
 
-    public AccountStatementIssueRequest(int accountStatementIssueRequestId, long accountNo, Date fromDate, Date toDate, String natureOfStatement, CustomerServiceRequest customerServiceRequest) {
-        this.accountStatementIssueRequestId = accountStatementIssueRequestId;
+    public AccountStatementIssueRequest(long accountNo, Date fromDate, Date toDate, String natureOfStatement, CustomerServiceRequest customerServiceRequest, boolean softReject) {
         this.accountNo = accountNo;
         this.fromDate = fromDate;
         this.toDate = toDate;
-        NatureOfStatement = natureOfStatement;
+        this.natureOfStatement = natureOfStatement;
         this.customerServiceRequest = customerServiceRequest;
+        this.softReject = softReject;
     }
 
     public int getAccountStatementIssueRequestId() {
@@ -74,11 +74,11 @@ public class AccountStatementIssueRequest implements Serializable {
     }
 
     public String getNatureOfStatement() {
-        return NatureOfStatement;
+        return natureOfStatement;
     }
 
     public void setNatureOfStatement(String natureOfStatement) {
-        NatureOfStatement = natureOfStatement;
+        this.natureOfStatement = natureOfStatement;
     }
 
     public CustomerServiceRequest getCustomerServiceRequest() {

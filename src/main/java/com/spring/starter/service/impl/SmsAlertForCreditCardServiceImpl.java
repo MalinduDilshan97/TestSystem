@@ -84,6 +84,12 @@ public class SmsAlertForCreditCardServiceImpl implements SmsAlertForCreditCardSe
 		Optional<SMSAlertsForCreditCard> smsAlertForCreditCardOpt = AlertsForCreditCardRepository.getFormFromCSR(customerServiceRequestId);
 		if(smsAlertForCreditCardOpt.isPresent()) {
 			smsAlertsForCreditCard.setSMSAlertsForCreditCardId(smsAlertForCreditCardOpt.get().getSMSAlertsForCreditCardId());
+
+			if(!smsAlertForCreditCardOpt.get().getSMSAlertsForCreditCard().isEmpty()){
+				for(SmsAlertsCreditCardNumbers smsAlertsCreditCardNumbers1 : smsAlertForCreditCardOpt.get().getSMSAlertsForCreditCard()){
+					smsAlertsCreditCardNumbersRepository.delete(smsAlertsCreditCardNumbers1);
+				}
+			}
 		}
 		smsAlertsForCreditCard.setCustomerServiceRequest(customerServiceRequest.get());
 		smsAlertsForCreditCard.setMobileNumber(smsAlertsForCreditCardDTO.getMobileNumber());

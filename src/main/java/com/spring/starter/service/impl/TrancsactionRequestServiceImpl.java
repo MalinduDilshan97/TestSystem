@@ -179,7 +179,7 @@ public class TrancsactionRequestServiceImpl implements TrancsactionRequestServic
         } else if(num.length() == 9){
              char a_char = num.charAt(0);
              if(a_char != '7'){
-                 responseModel.setMessage("Plese Insert A Correct Mobile number");
+                 responseModel.setMessage("Please Insert A Correct Mobile number");
                  responseModel.setStatus(false);
                  return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
              }

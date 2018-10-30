@@ -11,7 +11,7 @@ public class LinkedAccount implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int linkedAccountId;
     private long cardNumber;
-    private long PrimaryAccount;
+    private long primaryAccount;
     private long secondaryAccount;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customerServiceRequestId")
@@ -22,12 +22,13 @@ public class LinkedAccount implements Serializable {
     public LinkedAccount() {
     }
 
-    public LinkedAccount(int linkedAccountId, long cardNumber, long primaryAccount, long secondaryAccount, CustomerServiceRequest customerServiceRequest) {
-        this.linkedAccountId = linkedAccountId;
+    public LinkedAccount(long cardNumber, long primaryAccount, long secondaryAccount,
+                         CustomerServiceRequest customerServiceRequest, boolean softReject) {
         this.cardNumber = cardNumber;
-        PrimaryAccount = primaryAccount;
+        this.primaryAccount = primaryAccount;
         this.secondaryAccount = secondaryAccount;
         this.customerServiceRequest = customerServiceRequest;
+        this.softReject = softReject;
     }
 
     public int getLinkedAccountId() {
@@ -47,11 +48,11 @@ public class LinkedAccount implements Serializable {
     }
 
     public long getPrimaryAccount() {
-        return PrimaryAccount;
+        return primaryAccount;
     }
 
     public void setPrimaryAccount(long primaryAccount) {
-        PrimaryAccount = primaryAccount;
+        this.primaryAccount = primaryAccount;
     }
 
     public long getSecondaryAccount() {
@@ -77,5 +78,7 @@ public class LinkedAccount implements Serializable {
     public void setSoftReject(boolean softReject) {
         this.softReject = softReject;
     }
+
+
 }
 

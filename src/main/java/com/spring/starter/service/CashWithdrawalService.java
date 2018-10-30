@@ -17,6 +17,6 @@ public interface CashWithdrawalService {
     public ResponseEntity<?> updateCashWithdrawal (CashWithdrawalDTO cashWithdrawalDTO,
                    int customerTransactionRequestId, DetailsUpdateDTO detailsUpdateDTO) throws Exception;
 
-    public ResponseEntity<?> test ();
+    public ResponseEntity<?> getCashWithdrawalUpdateRecords(int requestId);
 
     }

@@ -73,9 +73,9 @@ public class CashWithdrawalController {
         return cashWithdrawalService.updateCashWithdrawal(cashWithdrawalDTO,customerServiceRequestId, detailsUpdateDTO);
     }
 
-    @GetMapping
-    public ResponseEntity<?> test(){
-        return cashWithdrawalService.test();
+    @GetMapping("cash-withdrawal-update-records")
+    public ResponseEntity<?> getBillPaymentUpdateRecords(@RequestParam(name="requestId") int requestId) {
+        return cashWithdrawalService.getCashWithdrawalUpdateRecords(requestId);
     }
 
 }

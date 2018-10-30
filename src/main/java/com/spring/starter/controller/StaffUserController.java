@@ -5,6 +5,7 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.spring.starter.DTO.ChannelCreateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -101,5 +102,10 @@ public class StaffUserController {
 	public ResponseEntity<?> saveStaffUserFirstTime(@RequestBody @Valid StaffUserDTO staffUserDTO)
 	{
 		return staffUserService.saveStaffUserFirstTime(staffUserDTO);
-	}	
+	}
+
+	@PostMapping("/save-channel-data")
+	public ResponseEntity<?> saveChannelData(@RequestBody ChannelCreateDTO channelCreateDTO){
+		return staffUserService.saveChannelData(channelCreateDTO);
+	}
 }

@@ -32,8 +32,6 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
     @Autowired
     private EffectOrRevokePaymentDetailsRepository effectOrRevokePaymentDetailsRepository;
     @Autowired
-    private CustomerAccountNoRepository customerAccountNoRepository;
-    @Autowired
     private CustomerServiceRequestRepository customerServiceRequestRepository;
     @Autowired
     private ServiceRequestCustomerLogService serviceRequestCustomerLogService;
@@ -59,7 +57,10 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
             return new ResponseEntity<>(responsemodel, HttpStatus.NO_CONTENT);
         }
 
+
+
         int serviceRequestId = customerServiceRequestOpt.get().getServiceRequest().getDigiFormId();
+
         if(serviceRequestId != ServiceRequestIdConfig.STOP_REVOKE_PAYMENT)
         {
             responsemodel.setMessage("Invalided Request");
@@ -73,42 +74,39 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
         Optional<EffectOrRevokePayment> optionalPayment = effectOrRevokePaymentRepository
                 .getFormFromCSR(effectOrRevokePaymentDTO.getCustomerServiceRequestId());
         EffectOrRevokePayment effectOrRevokePayment = new EffectOrRevokePayment();
+
         if(optionalPayment.isPresent()){
             effectOrRevokePayment.setEffectOrRevokePaymentId(optionalPayment.get().getEffectOrRevokePaymentId());
 
             if(!optionalPayment.get().getEffectOrRevokePaymentDetails().isEmpty()){
-                effectOrRevokePaymentDetails =  optionalPayment.get().getEffectOrRevokePaymentDetails();
-            } else {
-                effectOrRevokePaymentDetails = new ArrayList<>();
+
+                for(EffectOrRevokePaymentDetails effectOrRevokePaymentDetails1 : optionalPayment.get().getEffectOrRevokePaymentDetails()){
+                    effectOrRevokePaymentDetailsRepository.delete(effectOrRevokePaymentDetails1);
+                }
             }
         }
 
-
-
         CustomerServiceRequest customerServiceRequest = customerServiceRequestOpt.get();
 
-        effectOrRevokePayment.setEffectOrRevokePaymentId(effectOrRevokePaymentDTO.getEffectOrRevokePaymentId());
         effectOrRevokePayment.setCustomerAccountNo(effectOrRevokePaymentDTO.getAccountNo());
         effectOrRevokePayment.setCustomerServiceRequest(customerServiceRequest);
         effectOrRevokePayment.setStatus(effectOrRevokePaymentDTO.getStatus());
 
-        EffectOrRevokePayment payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
+        effectOrRevokePayment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
 
 
-
-
-        if (payment != null) {
+        if (effectOrRevokePayment != null) {
             for (EffectOrRevokePaymentDetailsDTO dto : effectOrRevokePaymentDTO.getList()) {
                 try {
                     Date chequeDate = df.parse(dto.getDateOfCheque());
 
-                    EffectOrRevokePaymentDetails details = new EffectOrRevokePaymentDetails(0,
-                            dto.getChequeNumber(),
-                            dto.getValue(),
-                            dto.getPayeeName(),
-                            chequeDate,
-                            dto.getReason(),
-                            payment);
+                    EffectOrRevokePaymentDetails details = new EffectOrRevokePaymentDetails();
+                    details.setChequeNumber(dto.getChequeNumber());
+                    details.setValue(dto.getValue());
+                    details.setPayeeName(dto.getPayeeName());
+                    details.setDateOfCheque(chequeDate);
+                    details.setReason(dto.getReason());
+                    details.setEffectOrRevokePayment(effectOrRevokePayment);
 
                     details =  effectOrRevokePaymentDetailsRepository.save(details);
                     effectOrRevokePaymentDetails.add(details);
@@ -118,9 +116,6 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
                             " Input Date To This Format (YYYY-MM-DD)");
                 }
             }
-
-            payment.setEffectOrRevokePaymentDetails(effectOrRevokePaymentDetails);
-
 
 
             serviceRequestCustomerLog.setDate(java.util.Calendar.getInstance().getTime());
@@ -139,10 +134,12 @@ public class EffectOrRevokePaymentServiceImpl implements EffectOrRevokePaymentSe
                 serviceRequestFormLog.setMessage("Request Form Successfully Saved To The System");
                 serviceRequestFormLogService.saveServiceRequestFormLog(serviceRequestFormLog);
             }
-            payment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
+
+            effectOrRevokePayment.setEffectOrRevokePaymentDetails(effectOrRevokePaymentDetails);
+            effectOrRevokePayment = effectOrRevokePaymentRepository.save(effectOrRevokePayment);
             res.setMessage(" Request Form Successfully Saved To The System");
             res.setStatus(true);
-            return new ResponseEntity<>(payment, HttpStatus.CREATED);
+            return new ResponseEntity<>(effectOrRevokePayment, HttpStatus.CREATED);
 
         } else {
 

@@ -86,25 +86,27 @@ public class BillPaymentServiceImpl implements BillPaymentService {
             billPayment.setCurrency(currency.get());
         }
        billPayment.setCustomerTransactionRequest(customerTransactionRequest.get());
-       if(billPayment.isCurrencyIsCash()) {
-           if (billPayment.getValueOf10Notes() == 0 && billPayment.getValueOf20Notes() == 0 &&
-                   billPayment.getValueOf50Notes() == 0 && billPayment.getValueOf100Notes() == 0 &&
-                   billPayment.getValueOf500Notes() == 0 && billPayment.getValueof1000Notes() == 0 &&
-                   billPayment.getValueOf2000Notes() == 0 && billPayment.getValueOf2000Notes() == 0) {
-               responseModel.setMessage("Please fill cash details");
+       if(billPayment.getCurrency().getCurrency().equals("LKR")) {
+           if (billPayment.isCurrencyIsCash()) {
+               if (billPayment.getValueOf10Notes() == 0 && billPayment.getValueOf20Notes() == 0 &&
+                       billPayment.getValueOf50Notes() == 0 && billPayment.getValueOf100Notes() == 0 &&
+                       billPayment.getValueOf500Notes() == 0 && billPayment.getValueof1000Notes() == 0 &&
+                       billPayment.getValueOf2000Notes() == 0 && billPayment.getValueOf2000Notes() == 0) {
+                   responseModel.setMessage("Please fill cash details");
+                   responseModel.setStatus(false);
+                   return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+               }
+           }
+           double sum = (double) (billPayment.getValueOf5000Notes() + billPayment.getValueOf2000Notes()
+                   + billPayment.getValueof1000Notes() + billPayment.getValueOf100Notes() +
+                   billPayment.getValueOf500Notes() + billPayment.getValueOf50Notes() +
+                   billPayment.getValueOf20Notes() + billPayment.getValueOf10Notes() +
+                   billPayment.getValueOfcoins());
+           if (sum != billPayment.getTotal()) {
+               responseModel.setMessage("Incorrect Cash Total");
                responseModel.setStatus(false);
                return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
            }
-       }
-       double sum = (double) (billPayment.getValueOf5000Notes() + billPayment.getValueOf2000Notes()
-                      + billPayment.getValueof1000Notes() + billPayment.getValueOf100Notes() +
-                      billPayment.getValueOf500Notes() + billPayment.getValueOf50Notes() +
-                      billPayment.getValueOf20Notes() + billPayment.getValueOf10Notes() +
-                      billPayment.getValueOfcoins());
-       if(sum != billPayment.getTotal()){
-           responseModel.setMessage("Incorrect Cash Total");
-           responseModel.setStatus(false);
-           return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
        }
 
        Optional<Branch> branchOpt = branchRepository.findById(billPayment.getBranch().getBranch_id());
@@ -135,7 +137,7 @@ public class BillPaymentServiceImpl implements BillPaymentService {
             Optional<CustomerTransactionRequest> customerTransactionRequest = customerTransactionRequestRepository
                     .findById(customerTransactionRequestId);
             if(!customerTransactionRequest.isPresent()){
-                responseModel.setMessage("Invalied Transaction Request");
+                responseModel.setMessage("Invalid Transaction Request");
                 responseModel.setStatus(false);
                 return new ResponseEntity<>(responseModel,HttpStatus.BAD_REQUEST);
             }
@@ -172,8 +174,12 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                 billPaymentUpdateRecords.setComment(billPaymentUpdateDTO.getComment());
                 billPaymentUpdateRecords.setCustomerTransactionRequest(customerTransactionRequest.get());
                 billPaymentUpdateRecords.setUrl(location);
-                billPaymentUpdateRecords = billPaymentUpdateRecordsRepository.save(billPaymentUpdateRecords);
 
+                try {
+                    billPaymentUpdateRecords = billPaymentUpdateRecordsRepository.save(billPaymentUpdateRecords);
+                } catch (Exception e){
+                    throw new Exception(e.getMessage());
+                }
                 List<BillPaymentErrorRecords> billPaymentErrorRecords = getBillPaymentErrors(billPaymentOptional.get()
                         ,billPayment,billPaymentUpdateRecords);
                 if(billPaymentErrorRecords.isEmpty()){
@@ -192,7 +198,7 @@ public class BillPaymentServiceImpl implements BillPaymentService {
                         Optional<BillPaymentReferance> billPaymentReferanceOpt = billPaymentReferanceRepository.findById(billPayment.getBillPaymentReferance().getBillPaymentReferanceId());
 
                         if(!billPaymentReferanceOpt.isPresent()){
-                            responseModel.setMessage("Invalied bill response details");
+                            responseModel.setMessage("Invalid bill response details");
                             responseModel.setStatus(false);
                             return new ResponseEntity<>(responseModel,HttpStatus.NO_CONTENT);
                         }
